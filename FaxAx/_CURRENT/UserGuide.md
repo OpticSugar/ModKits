@@ -1,0 +1,206 @@
+# 📠 FaxAx UserGuide (canonical)
+
+ModuleID: FaxAx  
+Version: 0.1.0  
+DocRole: UserGuide  
+Audience: Humans + module engineers (canonical source of truth)
+
+---
+
+## 0) What this is
+FaxAx is a chat efficiency protocol that:
+- Answers the asked question **first** (scope-first).
+- Makes deeper detail **opt-in** via expansions (`📠 …`).
+- Adds a **Hold / comment-stacking** latch so you can batch feedback (especially via “Ask ChatGPT”) without the assistant hijacking the podium.
+
+This doc is canonical. If anything conflicts with QuickRef/MachineManual/Install, **this wins**.
+
+## 1) Mission
+- Reduce token burn from side quests.
+- Reduce context bloat from repeated explanations.
+- Increase scan-speed and “choose your rabbit hole” control.
+- Support “review sessions” by buffering comments until you release.
+
+## 2) Architecture contract (PPP)
+### 2.1 Surface area
+**Triggers / inputs**
+- `📠` expansion request (numbers, keywords, emoji verbs, natural language).
+- SpeakerScale: `🔇 🔈 🔉 🔊` (one-shot unless latched).
+- Persistent mode command: `📠🔈` / `📠🔉` / `📠🔊` (mode only).
+- N-shot: `🔊3` (use mode for next N assistant replies).
+- Hold latch: `🔇` (edge-detected; see §6).
+
+**Outputs**
+- Main answer (scope-first).
+- Optional FaxCluster UI (FaxHeader + headlines + ChipRack).
+- Optional warnings parked in ChipRack.
+- Hold ACK gauge (ASK context) or quick reaction + sneak-peek ChipRack (CHAT context).
+- Consolidated reply on Hold release/auto-flush.
+
+### 2.2 State (authoritative)
+FaxAx keeps an internal State Block (authoritative) with:
+- `active` (bool): whether FaxAx behaviors run in this chat
+- `default_mode` (🔈/🔉/🔊): latched persistent mode (if any)
+- `n_shot_remaining` (int): countdown for `🔊3`-style
+- `hold_on` (bool)
+- `hold_context` (ASK/CHAT)
+- `comment_stack` (list of user messages captured during Hold)
+
+HUD is derived display only (avoid token tax).
+
+### 2.3 Lifecycle
+- **Available**: not loaded, no state.
+- **Loaded**: state exists but not necessarily operating.
+- **Active**: allowed to operate.
+- **Sleeping**: state exists but suppressed.
+
+Default when installed: **Active** (unless user says otherwise).
+
+## 3) Core behavior rules
+### 3.1 Scope-first (not tiny)
+- The main answer should fully answer the user’s question.
+- Avoid peripheral detours unless requested or truly necessary.
+
+### 3.2 Depth is opt-in
+- Offer deeper branches as expansions rather than dumping them.
+- Soft rule: if user clearly leans in (“spill the beans”), you may expand without forcing `📠`.
+
+### 3.3 Park warnings, don’t lecture
+- Default: warnings live in ChipRack.
+- Critical-only: surface inline.
+
+### 3.4 Improv zones (allowed vs forbidden)
+**Allowed improv**
+- FaxHeader copy (snark/topical).
+- Choosing among approved warning emojis.
+- Selecting which optional chips to offer (from approved legend).
+- 1-line reactions during CHAT Hold.
+
+**Forbidden improv**
+- Inventing new triggers/commands.
+- Quietly redefining templates.
+- Changing cluster hygiene rules.
+
+## 4) FaxCluster UI
+### 4.1 Components
+1) **FaxHeader**
+- Exactly one header line starting with **one** `📠`.
+- Text improvised (no canned phrase).
+
+2) **Headlines (optional)**
+- Up to 3 numbered items, each: chip + short description.
+
+3) **ChipRack (optional)**
+- Compact chips only (no descriptions).
+- Most warnings live here.
+
+### 4.2 Hygiene rules
+- Exactly **one** `📠` in the whole cluster (FaxHeader only).
+- No `📠` inside chips.
+- No double dashes in descriptions.
+- Avoid wrapping; insert deliberate breaks.
+
+### 4.3 Numbering rules
+- Headlines: `1.` `2.` `3.`
+- ChipRack: index outside the chip: `4:` glued to chip, spaces after.
+
+### 4.4 Template
+📠 If you’re still hungry, congrats, you’re my favorite problem.
+
+1. `🕵🏻‍♂️audit`  – where bloat sneaks in
+2. `🛠️refactor`  – shrink rules without losing power
+3. `👷🏽‍♂️implement`  – apply patches + regen docs
+
+4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`
+
+## 5) SpeakerScale (verbosity control)
+### 5.1 Modes
+- `🔈` LIGHT: yes/no or 1–2 tight lines.
+- `🔉` MED: default; focused, token-conscious.
+- `🔊` LOUD: max verbosity FaxAx allows while staying on-scope.
+- `🔇` HOLD/MUTE latch: no substantive answering (see §6). Assistant still emits minimal ACK/reaction.
+
+### 5.2 One-shot vs N-shot vs Persistent
+- **One-shot**: if message begins with `🔈/🔉/🔊/🔇`, it affects next assistant response.
+- **N-shot**: `🔊3` applies to the next 3 assistant replies (counts down).
+- **Persistent**: `📠🔈` / `📠🔉` / `📠🔊` sets default mode indefinitely (shown in HUD).
+
+### 5.3 Grammar rule
+- `📠🔈/🔉/🔊` is **mode command only** (no expansion implied).
+- Mode + expansion in same turn: `📠🔉 📠2,5,7,8`
+
+## 6) Hold / Comment stacking (the big deal)
+Hold exists because the UI can’t truly batch comments. FaxAx fakes batching by:
+- buffering your comments,
+- staying minimally reactive,
+- then answering everything at once when you release (or at max buffer).
+
+### 6.1 Hold trigger detection (edge-detect)
+Treat `🔇` as a command only when:
+1) It is **alone**: `🔇`
+2) It is a **prefix**: `🔇 hold …`
+3) It is the **final character**: `… 🔇`
+
+If `🔇` is buried mid-sentence, treat it as discussion, not a trigger.
+
+### 6.2 HoldContext latch (ASK vs CHAT)
+On entering Hold, lock a sub-mode for the entire stack:
+
+Set `HoldContext=ASK` if message content includes:
+- Ask wrapper lines (e.g., “Asked ChatGPT” + `↪ <CanvasName>`), **or**
+- a distinct quoted selection snippet.
+
+Otherwise: `HoldContext=CHAT`.
+
+Backup override (if wrapper disappears): allow `🔇 ask` or `🔇 chat`.
+
+### 6.3 While Hold is ON
+- Append each user message to `comment_stack`.
+- No substantive answers until release/auto-flush.
+
+#### HoldContext=ASK behavior (Ask ChatGPT micro-comment mode)
+ACK-only gauge (no jokes, no chips):
+- `🔇 : : : : 4/12 💬`  (colons = stack size)
+
+Pre-flush warning after item 11:
+- `🔇 : : : : : : : : : : : 11/12 ⚠️ only one 💬 left before AutoFlush 🧻`
+
+#### HoldContext=CHAT behavior (presentation mode)
+- One quick reaction line allowed (no interruptions).
+- Optional **unnumbered** ChipRack sneak-peek (no `📠` header). Teaser only.
+
+### 6.4 Buffer size + overflow
+- MAX = 12 items.
+- On capture of the **12th** item: **AUTO-FLUSH** immediately (exit Hold, answer all 12).
+
+### 6.5 Release Hold
+Any of these releases and triggers consolidated reply:
+- Message begins with `🔈` / `🔉` / `🔊` (or N-shot like `🔊3`)
+- Verbal cue: “your thoughts?”, “respond to the stack”, etc.
+
+Release icon controls consolidated verbosity and counts against N-shot.
+
+### 6.6 Consolidated reply formatting
+- Numbered: `1)` … `12)`
+- Each item gets a mini header:
+  - If user comment is one-line / won’t wrap: header may be verbatim.
+  - If long: paraphrase into recognizable headline.
+  - Avoid pasting long user comments unless needed for clarity.
+
+### 6.7 Cancel Hold
+- `🟥 cancel` or `cancel stack` clears buffer with an ACK.
+
+## 7) Conflicts + precedence
+Default: if multiple modules collide on triggers or output shape, **ask user to choose** (fail closed).
+
+## 8) Regression checklist (must-pass)
+1) Smoke: simple Q → main answer + (only if needed) valid FaxCluster.
+2) Cluster hygiene: one `📠` header; no `📠` in chips; ChipRack indices glued.
+3) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
+4) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
+5) N-shot: `🔊3` persists for 3 replies, then reverts.
+6) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
+7) Hold ASK: gauge ACK only; 11/12 warning; auto-flush on 12th.
+8) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
+9) Consolidated reply: numbered; mini headers; paraphrase long comments.
+10) Collision: two modules active → “choose” gate.
