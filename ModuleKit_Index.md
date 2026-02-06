@@ -1,14 +1,15 @@
 # ModuleKit Index
 
 ## FaxAx
-- v0.1.0
-  - UserGuide:  FaxAx/v0.1.0/FaxAx_UserGuide_v0.1.0.md
-  - QuickRef:   FaxAx/v0.1.0/FaxAx_QuickRefCard_v0.1.0.md
-  - MachineManual: FaxAx/v0.1.0/FaxAx_MachineManual_v0.1.0.md
-  - Install:    FaxAx/v0.1.0/READ_FIRST__FaxAx_install_v0.1.0.md
-  - InstructionBlocks: FaxAx/v0.1.0/FaxAx_instructionBlocks_R2.md
+- CURRENT
+  - UserGuide:       FaxAx/_CURRENT/UserGuide.md
+  - QuickRef:        FaxAx/_CURRENT/QuickRefCard.md
+  - MachineManual:   FaxAx/_CURRENT/MachineManual.md
+  - Install:         FaxAx/_CURRENT/Install.md
+  - Personalization: FaxAx/_CURRENT/Personalization_SML.md
 
 ## PPP
-- v0.1.0
-  - Bible:      PPP/v0.1.0/PPP_Bible.md
-  - Engineer Manual: PPP/v0.1.0/PPP_Engineer_MachineManual.md
+- CURRENT
+  - Bible:           PPP/_CURRENT/Bible.md
+  - Engineer Manual: PPP/_CURRENT/Engineer_MachineManual.md
+  - Compiler:        PPP/_CURRENT/Compiler_Lite.py
