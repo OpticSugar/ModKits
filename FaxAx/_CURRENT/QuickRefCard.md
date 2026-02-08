@@ -1,7 +1,7 @@
 # 🪪 FaxAx QuickRefCard (derived)
 
 ModuleID: FaxAx  
-Version: 0.1.0  
+Version: 0.2.0  
 DocRole: QuickRefCard  
 Audience: Users (pocket cheat sheet)
 
@@ -9,6 +9,14 @@ Audience: Users (pocket cheat sheet)
 
 ## Core
 - Scope-first answers. Depth is opt-in.
+- ResponseEnvelope: `main_plus_optional_faxcluster` (or `numbered_consolidated_reply` on hold release/auto-flush).
+
+## Lifecycle
+- `fax load` (or "Enable FaxAx in this chat")
+- `fax activate`
+- `fax sleep`
+- `fax unload` (or "Disable FaxAx in this chat")
+- `fax status`
 
 ## Expand
 - `📠2` / `📠 2,5,7`

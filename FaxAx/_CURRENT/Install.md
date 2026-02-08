@@ -1,7 +1,7 @@
 # .READ_FIRST__FaxAx_install (derived)
 
 ModuleID: FaxAx  
-Version: 0.1.0  
+Version: 0.2.0  
 DocRole: Install  
 Audience: Users + assistants (bootstrap + recovery)
 
@@ -12,6 +12,13 @@ Say one of:
 - “Enable FaxAx in this chat.”
 - “Disable FaxAx in this chat.”
 - “Sleep FaxAx for now.” (state kept, behavior suppressed)
+
+ASCII canon equivalents:
+- `fax load`
+- `fax activate`
+- `fax sleep`
+- `fax unload`
+- `fax status`
 
 ## 2) Default behavior once enabled
 - Scope-first answers.

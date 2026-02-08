@@ -20,7 +20,7 @@ If anything conflicts with derived framework docs, this file wins.
 
 ## 2) Taxonomy
 - `Module` / `Skill`: behavior contract executed by an assistant.
-- `ModuleKit`: document bundle for one module.
+- `ModuleKit`: document set for one module.
 - `ModuleManifest`: trigger and contract metadata for fast selection and fail-closed gating.
 - `KitRegistry`: deploy-time index of runtime modules and pointers to their docs.
 
@@ -37,6 +37,11 @@ Required bundle artifacts under `<Module>/_CURRENT/`:
 - `QuickRefCard.md`
 - `Install.md`
 - `ModuleManifest.yaml`
+
+Bundle policy:
+- Do not create or maintain `_BUNDLE.md` files as part of normal ModuleMill workflow.
+- If a bundle is created for temporary troubleshooting, treat it as disposable and out-of-contract.
+- Release and lint targets are the canonical `_CURRENT` role files plus `ModuleManifest.yaml`, not bundle files.
 
 Derived-doc rule:
 - `Install`, `QuickRefCard`, and `MachineManual` may not invent new commands, triggers, state keys, output shapes, or policies.

@@ -14,6 +14,7 @@ Audience: Codex or assistant executing ModuleMill rules
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
 - Require `ModuleManifest.yaml` for new modules and use it for initial module selection.
+- Do not require or produce `_BUNDLE.md` artifacts in normal authoring, lint, or release flows.
 
 ## 1) Intake checklist for module work
 Require (or safely infer) before writing or patching a module:
@@ -34,6 +35,10 @@ If critical fields are missing and cannot be inferred safely, ask targeted quest
 4. Derive `QuickRefCard` from canon.
 5. Derive or patch `Install` steps.
 6. Run lint and regression checks.
+
+Troubleshooting exception:
+- A temporary `_BUNDLE.md` may be used for ad hoc debugging only.
+- Never treat bundle files as canonical inputs or release artifacts.
 
 ## 3) Derived-doc tripwires
 - If `MachineManual` contains rationale or history: move rationale to `UserGuide`.

@@ -1,7 +1,7 @@
 # 📠 FaxAx UserGuide (canonical)
 
 ModuleID: FaxAx  
-Version: 0.1.0  
+Version: 0.2.0  
 DocRole: UserGuide  
 Audience: Humans + module engineers (canonical source of truth)
 
@@ -56,9 +56,24 @@ HUD is derived display only (avoid token tax).
 
 Default when installed: **Active** (unless user says otherwise).
 
-### 2.4 Canon command table (ASCII-first)
+Lifecycle control commands:
+- `fax load`
+- `fax activate`
+- `fax sleep`
+- `fax unload`
+- `fax status`
+
+### 2.4 ResponseEnvelope contract
+- Default response envelope: `main_plus_optional_faxcluster`.
+- Hold-release / auto-flush consolidated envelope: `numbered_consolidated_reply`.
+
+### 2.5 Canon command table (ASCII-first)
 | Command | Canon | Aliases | Inputs | Output shape | State effects |
 |---|---|---|---|---|---|
+| Load module | `fax load` | `Enable FaxAx in this chat` | none | `ack_only` | initialize `faxax.*`, set `faxax.active=true` |
+| Activate module | `fax activate` | `Enable FaxAx` | none | `ack_only` | set `faxax.active=true` |
+| Sleep module | `fax sleep` | `Sleep FaxAx for now` | none | `ack_only` | set `faxax.active=false` |
+| Unload module | `fax unload` | `Disable FaxAx in this chat` | none | `ack_only` | clear `faxax.*` state |
 | Expand branch | `fax expand <selectors>` | `📠2`, `📠 2,5,7`, `📠 keyword`, `📠🕵🏻‍♂️` | `selectors: list[int|string|emoji]` | `main_plus_optional_faxcluster` | none |
 | Set persistent mode | `fax mode <light|med|loud>` | `📠🔈`, `📠🔉`, `📠🔊` | `mode: enum(light,med,loud)` | `ack_only` | set `faxax.default_mode` |
 | Set one-shot mode | `fax say <light|med|loud>` | leading `🔈`, `🔉`, `🔊` | `mode: enum(light,med,loud)` | `main_only` | set one-shot response mode |

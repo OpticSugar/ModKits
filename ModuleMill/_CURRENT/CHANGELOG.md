@@ -8,6 +8,7 @@ All notable changes to ModuleMill are documented in this file.
 - New template: `ModuleMill/_CURRENT/templates/ModuleManifest.yaml`.
 - `FaxAx/_CURRENT/ModuleManifest.yaml` as first runtime manifest implementation.
 - Compiler lint checks for `ModuleManifest.yaml` schema and doc-pointer validation.
+- Explicit bundle policy: `_BUNDLE.md` files are optional troubleshooting artifacts and are not part of normal ModuleMill authoring or release workflow.
 
 ### Changed
 - `ModuleMill_DevGuide.md` updated with staged progressive-disclosure loading policy:

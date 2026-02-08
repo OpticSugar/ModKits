@@ -1,7 +1,7 @@
 # 📠 FaxAx Personalization + Project Instructions (S / M / L)
-**Includes ModuleKit version discovery (_CURRENT + SemVer vX.Y.Z)**  
-Version: v0.1.0 (instructions pack)  
-Last updated: 2026-02-05
+**Includes ModuleKit path discovery (_CURRENT canon paths)**  
+Version: v0.2.0 (instructions pack)  
+Last updated: 2026-02-08
 
 This pack includes TWO global styles:
 - **Global ACTIVE** (FaxAx runs by default everywhere) ✅ matches “old FaxAx lived in global/project instructions”
@@ -14,13 +14,12 @@ Choose ONE Global block set, and (optionally) one Project block set.
 ## ModuleKit discovery (drop-in snippet)
 ```text
 ModuleKit discovery (version-aware):
-- Prefer `FaxAx_UserGuide_CURRENT.md` if present (canonical).
-- Else, treat the highest SemVer `FaxAx_UserGuide_vX.Y.Z.md` as canonical.
+- Prefer `ModKits/FaxAx/_CURRENT/UserGuide.md` as canonical.
 - Prefer derived docs with the same version:
-  `FaxAx_MachineManual_vX.Y.Z.md`
-  `FaxAx_QuickRefCard_vX.Y.Z.md`
-  `.READ_FIRST__FaxAx_install_vX.Y.Z.md`
-- If versions mismatch: trust the highest UserGuide; treat mismatched derived docs as suspect.
+  `ModKits/FaxAx/_CURRENT/MachineManual.md`
+  `ModKits/FaxAx/_CURRENT/QuickRefCard.md`
+  `ModKits/FaxAx/_CURRENT/Install.md`
+- If paths diverge, trust `UserGuide.md` and treat derived docs as suspect until re-derived.
 ```
 
 ---
@@ -63,13 +62,12 @@ Formatting:
 - Conflict policy: if modules collide on triggers/format, ask me to choose (fail closed).
 
 ModuleKit discovery (version-aware):
-- Prefer `FaxAx_UserGuide_CURRENT.md` if present (canonical).
-- Else, treat the highest SemVer `FaxAx_UserGuide_vX.Y.Z.md` as canonical.
+- Prefer `ModKits/FaxAx/_CURRENT/UserGuide.md` as canonical.
 - Prefer derived docs with the same version:
-  `FaxAx_MachineManual_vX.Y.Z.md`
-  `FaxAx_QuickRefCard_vX.Y.Z.md`
-  `.READ_FIRST__FaxAx_install_vX.Y.Z.md`
-- If versions mismatch: trust the highest UserGuide; treat mismatched derived docs as suspect.
+  `ModKits/FaxAx/_CURRENT/MachineManual.md`
+  `ModKits/FaxAx/_CURRENT/QuickRefCard.md`
+  `ModKits/FaxAx/_CURRENT/Install.md`
+- If paths diverge, trust `UserGuide.md` and treat derived docs as suspect until re-derived.
 ```
 
 ## 1.3 L (max detail)
@@ -123,13 +121,12 @@ Conflicts:
 - If module formats/triggers collide, ask me to choose (fail closed).
 
 ModuleKit discovery (version-aware):
-- Prefer `FaxAx_UserGuide_CURRENT.md` if present (canonical).
-- Else, treat the highest SemVer `FaxAx_UserGuide_vX.Y.Z.md` as canonical.
+- Prefer `ModKits/FaxAx/_CURRENT/UserGuide.md` as canonical.
 - Prefer derived docs with the same version:
-  `FaxAx_MachineManual_vX.Y.Z.md`
-  `FaxAx_QuickRefCard_vX.Y.Z.md`
-  `.READ_FIRST__FaxAx_install_vX.Y.Z.md`
-- If versions mismatch: trust the highest UserGuide; treat mismatched derived docs as suspect.
+  `ModKits/FaxAx/_CURRENT/MachineManual.md`
+  `ModKits/FaxAx/_CURRENT/QuickRefCard.md`
+  `ModKits/FaxAx/_CURRENT/Install.md`
+- If paths diverge, trust `UserGuide.md` and treat derived docs as suspect until re-derived.
 ```
 
 ---
@@ -205,13 +202,12 @@ Formatting:
 - If module formats conflict, ask me to choose (fail closed).
 
 ModuleKit discovery (version-aware):
-- Prefer `FaxAx_UserGuide_CURRENT.md` if present (canonical).
-- Else, treat the highest SemVer `FaxAx_UserGuide_vX.Y.Z.md` as canonical.
+- Prefer `ModKits/FaxAx/_CURRENT/UserGuide.md` as canonical.
 - Prefer derived docs with the same version:
-  `FaxAx_MachineManual_vX.Y.Z.md`
-  `FaxAx_QuickRefCard_vX.Y.Z.md`
-  `.READ_FIRST__FaxAx_install_vX.Y.Z.md`
-- If versions mismatch: trust the highest UserGuide; treat mismatched derived docs as suspect.
+  `ModKits/FaxAx/_CURRENT/MachineManual.md`
+  `ModKits/FaxAx/_CURRENT/QuickRefCard.md`
+  `ModKits/FaxAx/_CURRENT/Install.md`
+- If paths diverge, trust `UserGuide.md` and treat derived docs as suspect until re-derived.
 ```
 
 ## 3.3 L (max detail)
@@ -247,11 +243,10 @@ Conflicts:
 - If other modules collide on output shape/triggers, ask the user to choose (fail closed).
 
 ModuleKit discovery (version-aware):
-- Prefer `FaxAx_UserGuide_CURRENT.md` if present (canonical).
-- Else, treat the highest SemVer `FaxAx_UserGuide_vX.Y.Z.md` as canonical.
+- Prefer `ModKits/FaxAx/_CURRENT/UserGuide.md` as canonical.
 - Prefer derived docs with the same version:
-  `FaxAx_MachineManual_vX.Y.Z.md`
-  `FaxAx_QuickRefCard_vX.Y.Z.md`
-  `.READ_FIRST__FaxAx_install_vX.Y.Z.md`
-- If versions mismatch: trust the highest UserGuide; treat mismatched derived docs as suspect.
+  `ModKits/FaxAx/_CURRENT/MachineManual.md`
+  `ModKits/FaxAx/_CURRENT/QuickRefCard.md`
+  `ModKits/FaxAx/_CURRENT/Install.md`
+- If paths diverge, trust `UserGuide.md` and treat derived docs as suspect until re-derived.
 ```

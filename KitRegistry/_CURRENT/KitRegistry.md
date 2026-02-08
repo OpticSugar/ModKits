@@ -47,6 +47,25 @@ Each module entry must include:
 - Version: `0.1.0`
 - Compatibility: `Uses ModuleMill-style doc roles; ask user to choose on output-shape collisions.`
 
+### Module: CanvasCanon
+- Mission: Canvas-as-canon workflow for fork-survivable project memory and decision governance.
+- 🎛️ EngagePolicy: `OFFER`
+- 🧲 NeedSignals:
+  - Keywords: `canvas`, `canon`, `fork`, `lastcall`, `open questions`, `resolved decisions`, `cleanup`
+  - Intents: `preserve project memory`, `govern decisions`, `prepare fork handoff`
+  - Formats: `markdown canvas`, `question-option shorthand`, `emoji aliases`
+  - DoNotFireIf: `user explicitly invokes another module with conflicting output envelope`
+- AutoRunScope: `canvas_governance`
+- DefaultLoad: `no`
+- Docs:
+  - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/ModuleManifest.yaml`
+  - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/Install.md`
+  - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/QuickRefCard.md`
+  - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/MachineManual.md`
+  - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/UserGuide.md`
+- Version: `0.2.0`
+- Compatibility: `Uses ModuleMill-style doc roles, ASCII-first canon commands, and fail-closed arbitration on output-shape conflicts.`
+
 ## 3) Boot contract (for BootStub consumers)
 - After second user message in a new chat, offer once: `boot / skip`.
 - `boot`: fetch this registry; load `DefaultLoad=yes` modules using Manifest + QuickRef first.

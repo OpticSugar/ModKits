@@ -1,0 +1,26 @@
+module: "CanvasCanon"
+version: "0.2.0"
+mission: "Canvas-as-canon workflow for fork-survivable project memory and decision governance."
+engage_policy: "OFFER"
+
+use_when:
+  - "User wants durable project canon in canvas instead of chat transcript"
+  - "User needs Open Questions governance, resolution, and prune workflow"
+  - "User is preparing a fork and wants structured handoff notes"
+
+do_not_use_when:
+  - "User explicitly requests a different module with conflicting output shape"
+  - "Authoritative canvas content is unavailable and user declines to provide it"
+
+required_inputs:
+  - "Current canonical canvas content"
+  - "Decision updates from user/chat"
+
+response_envelope: "main_plus_patch"
+failure_mode: "fail_closed_ask"
+
+docs:
+  install: "Install.md"
+  quickref: "QuickRefCard.md"
+  machinemanual: "MachineManual.md"
+  userguide: "UserGuide.md"
