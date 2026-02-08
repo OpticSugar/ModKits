@@ -21,7 +21,7 @@ This doc is canonical. If anything conflicts with QuickRef/MachineManual/Install
 - Increase scan-speed and “choose your rabbit hole” control.
 - Support “review sessions” by buffering comments until you release.
 
-## 2) Architecture contract (PPP)
+## 2) Architecture contract (ModuleMill)
 ### 2.1 Surface area
 **Triggers / inputs**
 - `📠` expansion request (numbers, keywords, emoji verbs, natural language).
@@ -39,12 +39,12 @@ This doc is canonical. If anything conflicts with QuickRef/MachineManual/Install
 
 ### 2.2 State (authoritative)
 FaxAx keeps an internal State Block (authoritative) with:
-- `active` (bool): whether FaxAx behaviors run in this chat
-- `default_mode` (🔈/🔉/🔊): latched persistent mode (if any)
-- `n_shot_remaining` (int): countdown for `🔊3`-style
-- `hold_on` (bool)
-- `hold_context` (ASK/CHAT)
-- `comment_stack` (list of user messages captured during Hold)
+- `faxax.active` (bool): whether FaxAx behaviors run in this chat
+- `faxax.default_mode` (🔈/🔉/🔊): latched persistent mode (if any)
+- `faxax.n_shot_remaining` (int): countdown for `🔊3`-style
+- `faxax.hold_on` (bool)
+- `faxax.hold_context` (ASK/CHAT)
+- `faxax.comment_stack` (list of user messages captured during Hold)
 
 HUD is derived display only (avoid token tax).
 
@@ -190,10 +190,25 @@ Release icon controls consolidated verbosity and counts against N-shot.
 ### 6.7 Cancel Hold
 - `🟥 cancel` or `cancel stack` clears buffer with an ACK.
 
-## 7) Conflicts + precedence
+## 7) EmojiGlossary
+| Emoji | Term | Meaning |
+|---|---|---|
+| `📠` | `FaxTrigger` | Namespace for FaxAx expansion and mode commands. |
+| `🔈` | `SpeakerScaleLight` | Low-verbosity response mode. |
+| `🔉` | `SpeakerScaleMed` | Default medium-verbosity response mode. |
+| `🔊` | `SpeakerScaleLoud` | High-verbosity response mode. |
+| `🔇` | `HoldLatch` | Enter/maintain hold mode and stack comments. |
+| `⚠️` | `WarningChip` | Non-critical warning token in compact chip form. |
+| `🧻` | `AutoFlushNotice` | Buffer limit warning and auto-flush hint. |
+| `💬` | `CommentCount` | Count of stacked comments in hold gauge. |
+| `🟥` | `CancelStack` | Explicit clear-stack command marker. |
+
+Rule: each emoji token can be expanded to its full term in user-facing text when clarity is needed.
+
+## 8) Conflicts + precedence
 Default: if multiple modules collide on triggers or output shape, **ask user to choose** (fail closed).
 
-## 8) Regression checklist (must-pass)
+## 9) Regression checklist (must-pass)
 1) Smoke: simple Q → main answer + (only if needed) valid FaxCluster.
 2) Cluster hygiene: one `📠` header; no `📠` in chips; ChipRack indices glued.
 3) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
