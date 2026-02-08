@@ -1,0 +1,27 @@
+module: "LogKit"
+version: "0.4.0"
+mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
+engage_policy: "OFFER"
+
+use_when:
+  - "User wants structured logging of decisions, issues, ideas, workflows, or production notes"
+  - "User needs append-safe chat logging with explicit flush controls"
+  - "User wants export/retrieval between project or account contexts"
+
+do_not_use_when:
+  - "User explicitly requests no logging or transient-only chat"
+  - "Another module is explicitly invoked with conflicting output shape"
+
+required_inputs:
+  - "One active 🖨️ Log canvas with valid META header"
+  - "User prompt and active chat context"
+  - "Optional attached/indexed LogPak or LogVault artifacts for retrieval"
+
+response_envelope: "main_plus_microtail"
+failure_mode: "fail_closed_queue_pending"
+
+docs:
+  install: "Install.md"
+  quickref: "QuickRefCard.md"
+  machinemanual: "MachineManual.md"
+  userguide: "UserGuide.md"

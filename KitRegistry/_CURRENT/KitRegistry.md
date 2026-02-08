@@ -66,6 +66,25 @@ Each module entry must include:
 - Version: `0.2.0`
 - Compatibility: `Uses ModuleMill-style doc roles, ASCII-first canon commands, and fail-closed arbitration on output-shape conflicts.`
 
+### Module: LogKit
+- Mission: Durable logging lifecycle from chat capture through triage, export, retrieval, and archive.
+- 🎛️ EngagePolicy: `OFFER`
+- 🧲 NeedSignals:
+  - Keywords: `log`, `capture`, `flush`, `pending`, `logpak`, `vault`, `triage`, `retrieve`
+  - Intents: `record durable decisions`, `track issues/ideas`, `export or retrieve logs across contexts`
+  - Formats: `json ledger`, `jsonl export`, `emoji aliases`
+  - DoNotFireIf: `user requests no logging`, `another module explicitly invoked with conflicting output envelope`
+- AutoRunScope: `durable_logging`
+- DefaultLoad: `no`
+- Docs:
+  - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/ModuleManifest.yaml`
+  - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/Install.md`
+  - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md`
+  - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md`
+  - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md`
+- Version: `0.4.0`
+- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, and configurable triage/security policies.`
+
 ## 3) Boot contract (for BootStub consumers)
 - After second user message in a new chat, offer once: `boot / skip`.
 - `boot`: fetch this registry; load `DefaultLoad=yes` modules using Manifest + QuickRef first.
