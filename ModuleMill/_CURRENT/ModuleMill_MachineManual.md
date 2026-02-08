@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.2.0
+(Enforcement Runbook for ModuleKit Engineering) v0.3.0
 
 ModuleID: ModuleMill
-Version: 0.2.0
+Version: 0.3.0
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -13,10 +13,12 @@ Audience: Codex or assistant executing ModuleMill rules
 - Derived docs must not invent commands, triggers, state keys, output shapes, or policies.
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
+- Require `ModuleManifest.yaml` for new modules and use it for initial module selection.
 
 ## 1) Intake checklist for module work
-Require (or safely infer) before writing/patching a module:
+Require (or safely infer) before writing or patching a module:
 - Mission
+- `ModuleManifest` fields: `engage_policy`, `use_when`, `do_not_use_when`, `required_inputs`, `response_envelope`, `failure_mode`
 - Canon command table (with ASCII canonical forms)
 - Inputs and typed argument grammar
 - Output shape and `ResponseEnvelope`
@@ -27,15 +29,17 @@ If critical fields are missing and cannot be inferred safely, ask targeted quest
 
 ## 2) Authoring order
 1. Update canonical `UserGuide` first.
-2. Derive `MachineManual` from canon.
-3. Derive `QuickRefCard` from canon.
-4. Derive/install `Install` steps.
-5. Run lint and regression checks.
+2. Update or create `ModuleManifest.yaml` from canon.
+3. Derive `MachineManual` from canon.
+4. Derive `QuickRefCard` from canon.
+5. Derive or patch `Install` steps.
+6. Run lint and regression checks.
 
 ## 3) Derived-doc tripwires
-- If `MachineManual` contains rationale/history: move rationale to `UserGuide`.
+- If `MachineManual` contains rationale or history: move rationale to `UserGuide`.
 - If executable rules exist only in prose: normalize into canonical tables in `UserGuide`.
 - If derived docs conflict with canon: canon wins and derived docs must be patched.
+- If `ModuleManifest` conflicts with `UserGuide` contract, patch `ModuleManifest` before release.
 
 ## 4) Arbitration protocol
 When multiple modules may respond in one turn:
@@ -44,10 +48,17 @@ When multiple modules may respond in one turn:
 3. Otherwise prefer already-loaded `AUTO` module.
 4. Persist winner for session until changed.
 
+Before asking user to choose, attempt deterministic filtering from `ModuleManifest` metadata:
+- reject modules matching `do_not_use_when`
+- keep modules matching `use_when`
+- keep modules whose `required_inputs` are satisfied
+
 ## 5) Deployment protocol (KitRegistry)
 - Use `KitRegistry/_CURRENT/KitRegistry.md` as source of truth for runtime module discovery.
 - Apply `🎛️ EngagePolicy` and `🧲 NeedSignals` as engagement hints, not command authority.
-- Load QuickRef first for boot defaults.
+- Load `ModuleManifest` and `QuickRefCard` first for boot defaults.
+- Load `MachineManual` for complex or risky operations.
+- Load `UserGuide` only for canon disputes, derivation, or module authoring.
 - If fetch fails, request pasted docs and halt speculative behavior.
 
 ## 6) ModuleMill runtime intent
@@ -62,9 +73,14 @@ Run compiler lint and enforce:
 - no role bleed warnings
 - no duplicate canon commands (manual review if needed)
 - glossary present for emoji-facing modules
+- `ModuleManifest.yaml` present for non-framework modules
+- required manifest keys present
+- manifest `docs` pointers map to existing files under `_CURRENT`
+- manifest `response_envelope` matches declared envelope in derived docs
 
 ## 8) Release routine
 - Bump SemVer.
 - Update `ModuleMill/_CURRENT/CHANGELOG.md`.
 - Record unresolved items as explicit open questions.
 - Keep naming consistent under `_CURRENT` paths.
+- Refresh the per-module regression prompt corpus when contract behavior changes.

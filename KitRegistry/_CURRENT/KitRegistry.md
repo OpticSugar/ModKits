@@ -1,9 +1,9 @@
 # 📇 KitRegistry
-Runtime Module Index v0.1.0
+Runtime Module Index v0.2.0
 
 RegistryID: KitRegistry
 ModuleID: KitRegistry
-Version: 0.1.0
+Version: 0.2.0
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
 Updated: 2026-02-08
@@ -23,7 +23,7 @@ Each module entry must include:
 - `🧲 NeedSignals` (`Keywords`, `Intents`, optional `Formats`, optional `DoNotFireIf`)
 - `AutoRunScope`
 - `DefaultLoad` (`yes|no`)
-- `Docs` (`Install`, `QuickRef`, `MachineManual`, `UserGuide`)
+- `Docs` (`Manifest`, `Install`, `QuickRef`, `MachineManual`, `UserGuide`)
 - `Version`
 - `Compatibility`
 
@@ -39,6 +39,7 @@ Each module entry must include:
 - AutoRunScope: `response_formatting`
 - DefaultLoad: `no`
 - Docs:
+  - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/ModuleManifest.yaml`
   - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/Install.md`
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/MachineManual.md`
@@ -48,6 +49,6 @@ Each module entry must include:
 
 ## 3) Boot contract (for BootStub consumers)
 - After second user message in a new chat, offer once: `boot / skip`.
-- `boot`: fetch this registry; load `DefaultLoad=yes` modules using QuickRef first.
+- `boot`: fetch this registry; load `DefaultLoad=yes` modules using Manifest + QuickRef first.
 - `skip`: persist skip state for the chat.
 - Fetch failure: fail closed and request pasted registry entry or required module doc.

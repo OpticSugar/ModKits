@@ -56,6 +56,18 @@ HUD is derived display only (avoid token tax).
 
 Default when installed: **Active** (unless user says otherwise).
 
+### 2.4 Canon command table (ASCII-first)
+| Command | Canon | Aliases | Inputs | Output shape | State effects |
+|---|---|---|---|---|---|
+| Expand branch | `fax expand <selectors>` | `📠2`, `📠 2,5,7`, `📠 keyword`, `📠🕵🏻‍♂️` | `selectors: list[int|string|emoji]` | `main_plus_optional_faxcluster` | none |
+| Set persistent mode | `fax mode <light|med|loud>` | `📠🔈`, `📠🔉`, `📠🔊` | `mode: enum(light,med,loud)` | `ack_only` | set `faxax.default_mode` |
+| Set one-shot mode | `fax say <light|med|loud>` | leading `🔈`, `🔉`, `🔊` | `mode: enum(light,med,loud)` | `main_only` | set one-shot response mode |
+| Set N-shot mode | `fax nshot loud <count>` | `🔊3` | `count: int>=1` | `ack_only` | set `faxax.n_shot_remaining` |
+| Enter hold | `fax hold on [ask|chat]` | `🔇`, `🔇 ask`, `🔇 chat` | `context?: enum(ask,chat)` | `ack_only` | set `faxax.hold_on=true`, set `faxax.hold_context` |
+| Release hold and answer stack | `fax hold release [light|med|loud]` | leading `🔈`, `🔉`, `🔊`, verbal release cue | `mode?: enum(light,med,loud)` | `numbered_consolidated_reply` | set `faxax.hold_on=false`, clear stack after reply |
+| Cancel hold stack | `fax hold cancel` | `🟥 cancel`, `cancel stack` | none | `ack_only` | clear `faxax.comment_stack`, set `faxax.hold_on=false` |
+| Report status | `fax status` | `FaxAx status` | none | `structured_status` | none |
+
 ## 3) Core behavior rules
 ### 3.1 Scope-first (not tiny)
 - The main answer should fully answer the user’s question.

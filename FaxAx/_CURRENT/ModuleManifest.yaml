@@ -1,0 +1,26 @@
+module: "FaxAx"
+version: "0.1.0"
+mission: "Scope-first response protocol with opt-in depth and hold/release comment stacking."
+engage_policy: "OFFER"
+
+use_when:
+  - "User asks for brevity, verbosity control, or expansion controls"
+  - "User wants to stack feedback and release a consolidated response"
+  - "Conversation benefits from scope-first answers with optional depth"
+
+do_not_use_when:
+  - "User explicitly requests raw JSON only"
+  - "Another module is explicitly invoked with conflicting output shape"
+
+required_inputs:
+  - "User prompt and active chat context"
+  - "Ability to store module state for hold and verbosity control"
+
+response_envelope: "main_plus_optional_faxcluster"
+failure_mode: "fail_closed_ask"
+
+docs:
+  install: "Install.md"
+  quickref: "QuickRefCard.md"
+  machinemanual: "MachineManual.md"
+  userguide: "UserGuide.md"

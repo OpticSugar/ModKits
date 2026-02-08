@@ -1,0 +1,28 @@
+# ModuleManifest template (ModuleMill v0.3)
+module: "<ModuleName>"
+version: "0.1.0"
+mission: "Single-line module mission"
+engage_policy: "OFFER"  # AUTO | OFFER | MANUAL
+
+# Trigger contract used before loading full docs.
+use_when:
+  - "keyword or intent that should engage this module"
+  - "another trigger phrase"
+
+do_not_use_when:
+  - "conditions where this module must not fire"
+
+# Minimum context needed to run safely.
+required_inputs:
+  - "required artifact, state, or user signal"
+
+# Output contract and failure behavior.
+response_envelope: "main_only"
+failure_mode: "fail_closed_ask"
+
+# Local pointers within <Module>/_CURRENT/
+docs:
+  install: "Install.md"
+  quickref: "QuickRefCard.md"
+  machinemanual: "MachineManual.md"
+  userguide: "UserGuide.md"

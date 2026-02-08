@@ -2,6 +2,26 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.3.0] - 2026-02-08
+### Added
+- New `ModuleManifest` contract in framework canon for trigger metadata and fail-closed gating.
+- New template: `ModuleMill/_CURRENT/templates/ModuleManifest.yaml`.
+- `FaxAx/_CURRENT/ModuleManifest.yaml` as first runtime manifest implementation.
+- Compiler lint checks for `ModuleManifest.yaml` schema and doc-pointer validation.
+
+### Changed
+- `ModuleMill_DevGuide.md` updated with staged progressive-disclosure loading policy:
+  - Registry + Manifest for selection
+  - QuickRef for low-cost runtime behavior
+  - MachineManual for execution hardening
+  - UserGuide for canon disputes and authoring
+- `ModuleMill_MachineManual.md` updated with manifest-first intake and enforcement workflow.
+- `ModuleMill_Compiler.py` upgraded to v0.3:
+  - Adds lint warnings/errors for missing runtime manifests
+  - Adds constrained manifest parser and `docs` pointer cross-checks
+  - Adds optional `--require-manifest` lint gate
+- `KitRegistry/_CURRENT/KitRegistry.md` schema now includes `Docs.Manifest` and boot guidance uses Manifest + QuickRef first.
+
 ## [0.2.0] - 2026-02-08
 ### Added
 - New canonical framework docs under `ModuleMill/_CURRENT/`:
