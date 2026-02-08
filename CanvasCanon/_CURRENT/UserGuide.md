@@ -158,6 +158,7 @@ On `canvascanon lastcall` / `🍺LastCall`:
 - Any canvas that follows CanvasCanon rules must start with `🛜`.
 - Required canvas title format: `🛜<ProjectName> - <Purpose>`.
 - Use PascalCase for `<ProjectName>` when applicable.
+- Naming validator (strict): `^🛜[A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
 - Example: `🛜LogKit - dev R6`.
 - Preferred canonical module folder and references use PascalCase: `CanvasCanon`.
 - Naming scheme remains configurable; if user provides an official naming variant, treat it as an explicit override.

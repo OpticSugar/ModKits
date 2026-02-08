@@ -64,6 +64,8 @@ On `canvascanon lastcall` / `🍺LastCall`:
 - Enforce canvas title format: `🛜<ProjectName> - <Purpose>`.
 - Require `🛜` prefix for all CanvasCanon-bound canvases.
 - Use PascalCase for `<ProjectName>` when applicable.
+- Runtime validator (strict): `^🛜[A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
+- If a CanvasCanon-bound title fails the validator, fail closed and request a corrected title before continuing canon operations.
 - Reference example: `🛜LogKit - dev R6`.
 - Module folder and references use PascalCase `CanvasCanon` unless user overrides naming policy.
 
