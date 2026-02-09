@@ -87,10 +87,12 @@ Run compiler lint and enforce:
 - manifest `response_envelope` matches declared envelope in derived docs
 - UserGuide completeness checks pass (context/mission depth, rationale/why, failure behavior, examples)
 - Over-compression heuristics pass for UserGuides in strict mode
+- Prefer `lint --strict --modulekit-only` for repo-level strict scans to avoid non-ModuleKit support files.
 
 ## 8) Release routine
 - Bump SemVer.
 - Update `ModuleMill/_CURRENT/CHANGELOG.md`.
+- If `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` changed, replace your ChatGPT global instructions by copy/paste.
 - Record unresolved items as explicit open questions.
 - Keep naming consistent under `_CURRENT` paths.
 - Refresh the per-module regression prompt corpus when contract behavior changes.

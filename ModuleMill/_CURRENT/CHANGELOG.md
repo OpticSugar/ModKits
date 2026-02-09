@@ -2,6 +2,18 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.4.1] - 2026-02-09
+### Added
+- `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` as the canonical copy/paste source for ChatGPT global instructions.
+- Compiler lint flag `--modulekit-only` to scope strict scans to canonical ModuleKit artifacts in `_CURRENT`.
+
+### Changed
+- Framework docs now require manual global-instructions replacement when `ChatGPT_GlobalInstructions.md` changes.
+- Strict scan guidance now prefers `lint --strict --modulekit-only` for repo-wide checks.
+
+### Removed
+- Obsolete `FaxAx/_CURRENT/Personalization_SML.md`.
+
 ## [0.4.0] - 2026-02-09
 ### Added
 - UserGuide completeness lint checks for runtime modules:

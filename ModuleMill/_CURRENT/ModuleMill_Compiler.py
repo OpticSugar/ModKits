@@ -27,6 +27,7 @@ REQUIRED_MANIFEST_KEYS = {
 }
 REQUIRED_MANIFEST_DOC_KEYS = {"install", "quickref", "machinemanual", "userguide"}
 REQUIRED_COMMAND_MARKERS = {"Command", "Canon", "Aliases", "Inputs", "Output shape", "State effects"}
+CANONICAL_MODULEKIT_DOC_FILENAMES = {"Install.md", "QuickRefCard.md", "MachineManual.md", "UserGuide.md"}
 REQUIRED_USERGUIDE_SECTION_GROUPS = {
     "context/mission depth": {"what this is", "mission", "scope", "context"},
     "rationale/why": {"rationale", "why", "tradeoff", "trade-off"},
@@ -455,28 +456,42 @@ def extract_section(text: str, want: str) -> str:
     return "\n".join(lines[start:end]).rstrip() + "\n"
 
 
-def collect_files(paths: List[Path]) -> Tuple[List[Path], List[Path]]:
+def is_canonical_modulekit_markdown(path: Path) -> bool:
+    return path.name in CANONICAL_MODULEKIT_DOC_FILENAMES and "_CURRENT" in path.parts
+
+
+def collect_files(paths: List[Path], modulekit_only: bool = False) -> Tuple[List[Path], List[Path]]:
     md_files: Set[Path] = set()
     manifest_files: Set[Path] = set()
 
     for p in paths:
         if p.is_dir():
-            md_files.update(p.rglob("*.md"))
-            manifest_files.update(p.rglob("ModuleManifest.yaml"))
+            if modulekit_only:
+                for md in p.rglob("*.md"):
+                    if is_canonical_modulekit_markdown(md):
+                        md_files.add(md)
+                for mf in p.rglob("ModuleManifest.yaml"):
+                    if "_CURRENT" in mf.parts:
+                        manifest_files.add(mf)
+            else:
+                md_files.update(p.rglob("*.md"))
+                manifest_files.update(p.rglob("ModuleManifest.yaml"))
         else:
             if p.suffix.lower() == ".md":
-                md_files.add(p)
+                if not modulekit_only or is_canonical_modulekit_markdown(p):
+                    md_files.add(p)
             if p.name == "ModuleManifest.yaml":
-                manifest_files.add(p)
+                if not modulekit_only or "_CURRENT" in p.parts:
+                    manifest_files.add(p)
 
     return sorted(md_files), sorted(manifest_files)
 
 
-def cmd_lint(paths: List[Path], strict: bool = False, require_manifest: bool = False) -> int:
+def cmd_lint(paths: List[Path], strict: bool = False, require_manifest: bool = False, modulekit_only: bool = False) -> int:
     all_errs: List[str] = []
     all_warns: List[str] = []
 
-    md_files, manifest_files = collect_files(paths)
+    md_files, manifest_files = collect_files(paths, modulekit_only=modulekit_only)
 
     for md in md_files:
         errs, warns = lint_markdown_file(md, strict=strict, require_manifest=require_manifest)
@@ -521,6 +536,11 @@ def main() -> int:
         action="store_true",
         help="treat missing ModuleManifest.yaml beside runtime UserGuide as an error",
     )
+    ap_lint.add_argument(
+        "--modulekit-only",
+        action="store_true",
+        help="lint only canonical ModuleKit artifacts under *_CURRENT (Install/QuickRefCard/MachineManual/UserGuide/ModuleManifest)",
+    )
 
     ap_ext = sub.add_parser("extract", help="extract section by heading prefix")
     ap_ext.add_argument("path", help="markdown file")
@@ -529,7 +549,12 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.cmd == "lint":
-        return cmd_lint([Path(x) for x in args.paths], strict=args.strict, require_manifest=args.require_manifest)
+        return cmd_lint(
+            [Path(x) for x in args.paths],
+            strict=args.strict,
+            require_manifest=args.require_manifest,
+            modulekit_only=args.modulekit_only,
+        )
     if args.cmd == "extract":
         return cmd_extract(Path(args.path), args.section)
 

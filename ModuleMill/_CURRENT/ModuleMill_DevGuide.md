@@ -156,6 +156,14 @@ If no winner can be selected deterministically from manifest metadata:
 ### 9.2 Canonical registry path
 `KitRegistry/_CURRENT/KitRegistry.md`
 
+### 9.2.1 ChatGPT global instructions source
+Maintain copy/paste-ready global instructions in:
+`KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md`
+
+Operational rule:
+- When that file changes, manually replace ChatGPT global instructions with the updated block.
+- ModuleMill release notes must explicitly call out this replacement requirement.
+
 ### 9.3 Registry required fields
 Each module entry must provide:
 - `Module`
@@ -193,6 +201,7 @@ If registry or docs cannot be fetched:
 - User-facing emoji aliases are documented in `EmojiGlossary`.
 - `ModuleManifest.yaml` is present and contains required fields.
 - `ModuleManifest` doc pointers map to existing local files in `_CURRENT`.
+- For repo-level strict scans, use `--modulekit-only` to target canonical artifacts.
 
 ### 10.2 Regression harness minimum
 For each module, define prompt tests with:
