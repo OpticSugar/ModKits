@@ -2,6 +2,22 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.4.4] - 2026-02-09
+### Added
+- Emoji-first module addressing is now mandatory in KitRegistry:
+  - `ModuleEmoji`
+  - `ModuleAliases`
+  - `SingleEmojiActivate`
+- Single-emoji activation semantics added to boot contract (for example `📠`, `🛜`, `🖨️`).
+- ModuleManifest template and compiler checks expanded for emoji module identity fields:
+  - `module_emoji`
+  - `module_aliases`
+  - `single_emoji_activate`
+
+### Changed
+- `FaxAx`, `CanvasCanon`, and `LogKit` manifests now include module emoji identity and alias lists.
+- Global instruction blocks now explicitly support single-emoji module activation/invocation.
+
 ## [0.4.3] - 2026-02-09
 ### Added
 - Enterprise bootstrap instructions file:

@@ -1,7 +1,10 @@
 module: "FaxAx"
+module_emoji: "📠"
+module_aliases: ["faxax", "fax", "📠"]
 version: "0.2.0"
 mission: "Scope-first response protocol with opt-in depth and hold/release comment stacking."
 engage_policy: "AUTO"
+single_emoji_activate: true
 
 use_when:
   - "User asks for brevity, verbosity control, or expansion controls"

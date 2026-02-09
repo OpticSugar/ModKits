@@ -1,7 +1,10 @@
 module: "CanvasCanon"
+module_emoji: "🛜"
+module_aliases: ["canvascanon", "canvas canon", "🛜"]
 version: "0.2.0"
 mission: "Canvas-as-canon workflow for fork-survivable project memory and decision governance."
 engage_policy: "OFFER"
+single_emoji_activate: true
 
 use_when:
   - "User wants durable project canon in canvas instead of chat transcript"

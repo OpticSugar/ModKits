@@ -1,7 +1,10 @@
 module: "LogKit"
+module_emoji: "🖨️"
+module_aliases: ["logkit", "log kit", "🖨️"]
 version: "0.4.1"
 mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
 engage_policy: "OFFER"
+single_emoji_activate: true
 
 use_when:
   - "User wants structured logging of decisions, issues, ideas, workflows, or production notes"

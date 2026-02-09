@@ -64,11 +64,13 @@ Before asking user to choose, attempt deterministic filtering from `ModuleManife
 ## 5) Deployment protocol (KitRegistry)
 - Use `KitRegistry/_CURRENT/KitRegistry.md` as source of truth for runtime module discovery.
 - Apply `🎛️ EngagePolicy` and `🧲 NeedSignals` as engagement hints, not command authority.
+- Treat `ModuleEmoji` and `ModuleAliases` as first-class module addressing forms.
 - Load `ModuleManifest` and `QuickRefCard` first for boot defaults.
 - Load `MachineManual` for complex or risky operations.
 - Load `UserGuide` only for canon disputes, derivation, or module authoring.
 - If fetch fails, request pasted docs and halt speculative behavior.
 - In enterprise/work environments with blocked fetch, ask user to enable Web Search before retrying.
+- If a message is exactly one registered module emoji and `SingleEmojiActivate=yes`, activate/invoke that module (load first when allowed).
 
 ## 6) ModuleMill runtime intent
 - ModuleMill is developer infrastructure.

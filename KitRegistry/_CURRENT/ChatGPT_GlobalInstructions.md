@@ -12,6 +12,8 @@ Load and use this registry as source of truth for my modules:
 https://raw.githubusercontent.com/OpticSugar/ModKits/main/KitRegistry/_CURRENT/KitRegistry.md
 
 At the start of each new chat, auto-load modules marked DefaultLoad=yes (Manifest + QuickRef first).
+Treat module emoji shorthand as valid module addressing/activation commands (for example: 📠, 🛜, 🖨️).
+If a message is just one module emoji, activate/invoke that module (load first if needed and allowed by registry).
 If I say "skip modules", disable module loading for that chat.
 If fetch fails (including cache miss): ask me to enable Web Search or paste the needed registry/doc. Never guess.
 ```

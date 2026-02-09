@@ -76,9 +76,12 @@ Rules:
 ### 4.2 ModuleManifest contract (required)
 Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with these keys:
 - `module`
+- `module_emoji`
+- `module_aliases`
 - `version`
 - `mission`
 - `engage_policy` (`AUTO | OFFER | MANUAL`)
+- `single_emoji_activate` (`true|false`)
 - `use_when` (list)
 - `do_not_use_when` (list)
 - `required_inputs` (list)
@@ -169,11 +172,14 @@ Operational rule:
 ### 9.3 Registry required fields
 Each module entry must provide:
 - `Module`
+- `ModuleEmoji` (single canonical emoji shorthand)
+- `ModuleAliases` (ASCII + emoji address forms)
 - `Mission` (single line)
 - `🎛️ EngagePolicy` (`AUTO | OFFER | MANUAL`)
 - `🧲 NeedSignals` (`Keywords`, `Intents`, optional `Formats`, optional `DoNotFireIf`)
 - `AutoRunScope`
 - `DefaultLoad` (`yes|no`)
+- `SingleEmojiActivate` (`yes|no`)
 - `Docs` (Install/QuickRef/MachineManual/UserGuide URLs)
 - `Version`
 - `Compatibility`
@@ -184,6 +190,8 @@ Registry guardrail:
 ### 9.4 Boot behavior
 - Start chat: fetch registry and auto-load `DefaultLoad=yes` modules using `ModuleManifest` + `QuickRefCard` first.
 - `skip modules`: persist opt-out state for the chat and suppress module loading.
+- Single-emoji module activation must work for all modules with `SingleEmojiActivate=yes`.
+- If user sends a single registered module emoji, treat it as module activation/invocation intent.
 
 ### 9.5 Failure behavior
 If registry or docs cannot be fetched:

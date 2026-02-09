@@ -1,8 +1,11 @@
-# ModuleManifest template (ModuleMill v0.3)
+# ModuleManifest template (ModuleMill v0.4)
 module: "<ModuleName>"
+module_emoji: "🧩"
+module_aliases: ["<modulename>", "🧩"]
 version: "0.1.0"
 mission: "Single-line module mission"
 engage_policy: "OFFER"  # AUTO | OFFER | MANUAL
+single_emoji_activate: true
 
 # Trigger contract used before loading full docs.
 use_when:

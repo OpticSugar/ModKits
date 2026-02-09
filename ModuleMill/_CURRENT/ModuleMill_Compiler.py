@@ -15,9 +15,12 @@ FRAMEWORK_MODULE_IDS = {"ModuleMill", "KitRegistry"}
 ENGAGE_POLICIES = {"AUTO", "OFFER", "MANUAL"}
 REQUIRED_MANIFEST_KEYS = {
     "module",
+    "module_emoji",
+    "module_aliases",
     "version",
     "mission",
     "engage_policy",
+    "single_emoji_activate",
     "use_when",
     "do_not_use_when",
     "required_inputs",
@@ -141,7 +144,7 @@ def parse_manifest(text: str) -> Dict[str, object]:
         key = key.strip()
         val = val.strip()
 
-        if key in {"use_when", "do_not_use_when", "required_inputs"}:
+        if key in {"module_aliases", "use_when", "do_not_use_when", "required_inputs"}:
             inline_items = parse_inline_list(val)
             if inline_items:
                 manifest[key] = inline_items
@@ -351,9 +354,13 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     if version and not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", version):
         errs.append(f"{path.name}: version '{version}' is not SemVer-like (MAJOR.MINOR[.PATCH])")
 
-    for list_key in ("use_when", "do_not_use_when", "required_inputs"):
+    for list_key in ("module_aliases", "use_when", "do_not_use_when", "required_inputs"):
         if list_key in manifest and not isinstance(manifest.get(list_key), list):
             errs.append(f"{path.name}: '{list_key}' must be a list")
+
+    module_emoji = str(manifest.get("module_emoji", "")).strip()
+    if module_emoji and not EMOJI_RE.search(module_emoji):
+        errs.append(f"{path.name}: module_emoji must contain an emoji token")
 
     docs = manifest.get("docs", {})
     if not isinstance(docs, dict):
