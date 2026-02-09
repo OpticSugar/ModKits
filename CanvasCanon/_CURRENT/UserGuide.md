@@ -12,6 +12,8 @@ CanvasCanon is a workflow that treats canvas as the durable project canon and ch
 
 Core law: if a decision affects future behavior, record it in canvas canon.
 
+CanvasCanon is not module-only. It applies to any long-running project where decisions, rationale, and unresolved choices must stay coherent across forks and time.
+
 This doc is canonical. If anything conflicts with Install, QuickRefCard, or MachineManual, this document wins.
 
 ## 1) Mission
@@ -112,38 +114,155 @@ Minimum viable headings for active projects:
 - `## Resolved Decisions`
 - `## Appendix A: Footnotes`
 
-## 5) Open Questions (OC) operating system
-### 5.1 Placement and separation
-- OC section must precede Resolved Decisions.
-- Open and resolved items are never mixed in the same active list.
+## 5) Open Questions (OQ) operating system
+This section defines the OQ system as a hard-format UX contract. The goal is self-serve decision flow with fast scan, shorthand replies, and low-noise resolution.
 
-### 5.2 Stable IDs
+### 5.0 What OQ solves
+- Each open question is a real markdown header for skim speed.
+- Each question carries plain-English context so users do not need follow-up clarification just to vote.
+- Option lists are numbered for shorthand replies (`B4`, `C2`, `F3`).
+- Assistant preference signals are visible at a glance (`🥇`, `🥈`, `🥉`, `👎🏼`).
+- User pruning preserves history through strikeout plus trailing `❌`.
+- Resolved questions keep letter slots but collapse to near-zero noise.
+
+### 5.1 Placement and separation
+- OQ section must precede Resolved Decisions.
+- Open and resolved items are never mixed in the same active list.
+- Canon section flow is `Open Questions -> Resolved Decisions`.
+- Recommended heading pair is:
+  - `## 3) Open questions (❓)`
+  - `## 4) Resolved decisions`
+
+### 5.2 Reply shorthand line (required)
+At the top of the OQ section include:
+- `*Reply shorthand:* \`B5\`, \`C2\`, \`F3\`, etc.`
+
+The shorthand line is always present and appears once per OQ section.
+
+### 5.3 Stable IDs
 - Questions use stable letter headers: `### B) Title`.
 - Option numbering uses markdown ordered lists (`1.`, `2.`, `3.`).
 - Do not renumber options once shorthand votes/references exist.
+- Do not express OQ questions as bullet points.
 
-### 5.3 Shorthand resolution
+### 5.4 Explanation block rules
+- Immediately under each question header, include a short paragraph explaining:
+  - what decision is being made
+  - why it matters
+  - what changes depending on the choice
+- Do not use a label such as `Layman:`.
+- Keep wording plain and human-readable.
+
+### 5.5 Option list rules
+- Use markdown ordered lists with `1.` style markers.
+- Do not use `1)` or lettered bullets for options.
+- Keep numbering stable after shorthand references begin.
+
+### 5.6 Visual signals
+Preference tags:
+- `🥇` strongest recommendation
+- `🥈` second recommendation
+- `🥉` third recommendation
+- `👎🏼` least recommended / avoid
+
+Rules:
+- Apply ranking symbols consistently within a question.
+- Rankings may change if new context arrives.
+- Neutral options may omit ranking symbols.
+
+### 5.7 Shorthand resolution
 - Accept shorthand replies like `B2`, `F1`.
 - On resolve, collapse question to:
   - `### ~~B) Title~~ ✅`
   - `Chosen: \`<value>\``
+- Keep the letter slot in place (no missing letters).
+- Remove explanation and option list once resolved.
 
-### 5.4 Pruning rule
+### 5.8 Pruning rule
 - Prune syntax: `❌B1,3,D3`.
 - Render pruned options as strikeout with trailing `❌`; do not silently delete.
 - If user places a lone `❌` at end of a line inside canvas content, strike/prune that target immediately.
+- Keep existing preference emoji inside strikeout when already present.
+- Place `❌` outside strikeout text.
 
-### 5.5 Hygiene
+### 5.9 Multi-answer shorthand
+User can answer multiple items in one line:
+- `C2, F3, G1`
+
+Assistant applies all in one pass.
+
+### 5.10 Leaning vs final
+If user indicates a non-final lean:
+- keep the question open
+- annotate the chosen option with `(Stu lean; discuss)` or equivalent
+
+### 5.11 Hygiene
 - Keep letters stable.
 - Keep numbering stable.
 - Keep explanations current.
 - Keep resolved items collapsed.
+- Never reorder question letters.
+- Pruning preserves history; deletion does not.
+
+### 5.12 OQ formatting template
+This is a formatting template. Replace domain content as needed, but preserve structure and mechanics.
+
+## 3) Open questions (❓)
+
+*Reply shorthand:* `B5`, `C2`, `F3`, etc.
+
+### ~~A) Version mapping (R3.2 -> SemVer)~~ ✅
+Chosen: `v0.3.2`
+
+### B) LogVault location (where the archive actually lives)
+After entries leave a chat, where do they physically live so future chats can load/search them without guesswork?
+
+1. ~~ChatGPT Project files (vault folder inside the project) 🥉~~ ❌
+2. Git repo folder (versioned vault) 🥈
+3. ~~Local synced folder (Drive/Dropbox/etc.) 👎🏼~~ ❌
+4. Hybrid (repo for index + cloud for bulk JSONL) 🥇
+5. Other: ________ (Stu lean; discuss)
+
+### C) Scope governance (tag drift control)
+\"Scope\" tags help retrieval later. This decides whether tags are locked-down (clean but rigid) or flexible (fast but messy over time).
+
+1. Controlled list (strict) 🥈
+2. Recommended list + alias mapping (soft strict) 🥇
+3. Freeform tags (status quo) 👎🏼
+
+### D) Sentry wrappers (BEGIN/END bulk vs integrity)
+Sentries reduce corruption risk but add body noise. This decides safety/readability tradeoff and whether compact mode exists.
+
+1. Mandatory (status quo) 🥈
+2. Optional compact mode + linter/validator 🥇
+3. ~~Remove sentries (not recommended) 👎🏼~~ ❌
+
+### E) Retrieval UX placement
+For \"find me that item from last month,\" this decides whether retrieval stays outside the module or includes a minimal internal read-only path.
+
+1. Retrieval outside module (separate retrieval module) 🥇
+2. Minimal retrieval inside module (read-only find/slice) 🥈
+3. Full retrieval inside module (likely bloat) 👎🏼
+
+### F) Fork cursor design (state vs movable marker)
+Fork cursor defines what is \"new\" after jumping across forks. This decides marker-only, state-only, or hybrid tracking.
+
+1. Movable marker only (position = cursor) 🥈
+2. Top-of-ledger state object only (cursor in state) 👎🏼
+3. Hybrid marker + state cursor key 🥇
+
+### G) Collision policy (trigger conflicts)
+If two modules can respond to the same input, this decides deterministic precedence vs in-the-moment user arbitration.
+
+1. Deterministic precedence list 🥈
+2. Ask user in the moment (selection chips) 🥇
+3. Namespace required in multi-module chats (`LK:` etc.) 👎🏼
 
 ## 6) Fork survival protocol
 ### 6.1 LastCall
 On `canvascanon lastcall` / `🍺LastCall`:
 1. Run canon pass on recent changes.
-2. Validate OC vs Resolved consistency.
+2. Validate OQ vs Resolved consistency.
 3. Produce/update Fork handoff notes.
 
 ### 6.2 Fork handoff notes template
@@ -191,4 +310,5 @@ On `canvascanon lastcall` / `🍺LastCall`:
 6. `canvascanon lastcall` produces fork handoff template output.
 7. `canvascanon export markdown` returns clean markdown payload.
 8. Canvas naming enforcement follows `🛜<ProjectName> - <Purpose>` with PascalCase project name when applicable.
-9. Missing canvas/sections triggers fail-closed clarification request.
+9. OQ formatting rules enforce: shorthand line, header-based questions, ordered options, stable letters, strikeout pruning, and resolved collapse.
+10. Missing canvas/sections triggers fail-closed clarification request.

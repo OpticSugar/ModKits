@@ -26,6 +26,8 @@ Audience: Users (pocket cheat sheet)
 ## Open Questions controls
 - Resolve: `canvascanon resolve B2` (or shorthand `B2`)
 - Prune: `canvascanon prune B1,3,D3` (or `❌B1,3,D3`)
+- OQ shorthand line (required): `*Reply shorthand:* \`B5\`, \`C2\`, \`F3\`, etc.`
+- OQ question format: `### B) Title` (header, not bullet)
 - Resolved collapse format:
   - `### ~~B) Title~~ ✅`
   - `Chosen: \`value\``
@@ -38,8 +40,9 @@ Audience: Users (pocket cheat sheet)
 - Use PascalCase for `<ProjectName>` when applicable.
 - Example: `🛜LogKit - dev R6`
 
-## OC hygiene
+## OQ hygiene
 - Stable question letters.
 - Stable option numbers.
+- Ordered-list options use `1.` style.
 - Strike pruned options with trailing `❌`.
 - Keep Open Questions and Resolved Decisions separate.

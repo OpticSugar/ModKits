@@ -38,19 +38,23 @@ Maintain:
 ### 3.1 Canon/care commands
 - `canvascanon canonize`: produce canon patch from recent decisions.
 - `canvascanon cleanup`: remove duplication/noise while preserving rules.
-- `canvascanon lastcall`: canon pass + OC/Resolved check + handoff notes.
+- `canvascanon lastcall`: canon pass + OQ/Resolved check + handoff notes.
 
 ### 3.2 Open Questions operations
 - `canvascanon resolve <letter><option>` accepts shorthand like `B2`.
 - `canvascanon prune <refs>` accepts syntax like `B1,3,D3` and applies strikeout with `❌`.
 - Lone trailing `❌` in canvas lines should be interpreted as prune intent for that line item.
+- OQ section must include the shorthand line: `*Reply shorthand:* \`B5\`, \`C2\`, \`F3\`, etc.`
+- OQ questions must be markdown headers (`### B) ...`), not bullets.
 
 ### 3.3 Export
 - `canvascanon export markdown` returns the current canonical canvas as markdown payload.
 
 ## 4) Open Questions enforcement
+- Use OQ terminology (`Open Questions` / `OQ`) consistently; do not emit `OC`.
 - Keep stable question letters.
 - Keep stable option numbering after references exist.
+- Keep options in markdown ordered-list format (`1.` style).
 - Resolved form must collapse to `~~<letter>) ...~~ ✅` plus `Chosen: <value>`.
 - Do not mix unresolved queue with resolved records.
 
