@@ -159,6 +159,8 @@ If no winner can be selected deterministically from manifest metadata:
 ### 9.2.1 ChatGPT global instructions source
 Maintain copy/paste-ready global instructions in:
 `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md`
+Enterprise variant:
+`KitRegistry/_CURRENT/ChatGPT_GlobalInstructions_Enterprise.md`
 
 Operational rule:
 - When that file changes, manually replace ChatGPT global instructions with the updated block.
@@ -187,6 +189,7 @@ Registry guardrail:
 If registry or docs cannot be fetched:
 - fail closed
 - ask for pasted registry entry or required module doc
+- in enterprise/work environments, instruct user to enable Web Search before retrying fetch
 - do not fabricate module behavior
 
 ## 10) Tooling and verification

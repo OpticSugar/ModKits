@@ -2,6 +2,19 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.4.3] - 2026-02-09
+### Added
+- Enterprise bootstrap instructions file:
+  - `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions_Enterprise.md`
+  - Includes explicit Web Search fallback guidance for work accounts where direct URL fetch can fail with cache miss.
+
+### Changed
+- Standard bootstrap instructions now explicitly handle cache-miss/blocked fetch by asking for Web Search enablement or pasted docs.
+- Framework deployment docs now formalize transport fallback:
+  - URL fetch preferred
+  - Web Search fallback in enterprise environments
+  - fail-closed pasted-doc fallback
+
 ## [0.4.2] - 2026-02-09
 ### Changed
 - Boot behavior switched to default-on loading:

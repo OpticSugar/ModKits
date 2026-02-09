@@ -68,6 +68,7 @@ Before asking user to choose, attempt deterministic filtering from `ModuleManife
 - Load `MachineManual` for complex or risky operations.
 - Load `UserGuide` only for canon disputes, derivation, or module authoring.
 - If fetch fails, request pasted docs and halt speculative behavior.
+- In enterprise/work environments with blocked fetch, ask user to enable Web Search before retrying.
 
 ## 6) ModuleMill runtime intent
 - ModuleMill is developer infrastructure.
@@ -92,7 +93,7 @@ Run compiler lint and enforce:
 ## 8) Release routine
 - Bump SemVer.
 - Update `ModuleMill/_CURRENT/CHANGELOG.md`.
-- If `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` changed, replace your ChatGPT global instructions by copy/paste.
+- If `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` or `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions_Enterprise.md` changed, replace your ChatGPT global instructions by copy/paste.
 - Record unresolved items as explicit open questions.
 - Keep naming consistent under `_CURRENT` paths.
 - Refresh the per-module regression prompt corpus when contract behavior changes.
