@@ -1,7 +1,7 @@
 # LogKit QuickRef
 
 ModuleID: LogKit
-Version: 0.4.0
+Version: 0.4.1
 DocRole: QuickRefCard
 Audience: Users and assistants
 
@@ -35,6 +35,17 @@ Audience: Users and assistants
 - `logkit export <filter>` (`🛅 export`)
 - `logkit retrieve "query"` (`🗄️ find`)
 - `logkit config set <key> <json>` (`🖨️ config`)
+
+## Emoji-Only Shortcuts
+- `🖨️` = authorize logging intent
+- `🖨️Flush` or `🖨️LogIt!` = commit all pending
+- `🖨️001,003` = commit selected chips
+- `🖨️Log: <text>` = capture text
+- `🛅 export` = export package
+- `🗄️ find <query>` = retrieve logs
+- `🖨️ status` = status report
+
+Hard rule: if an emoji shortcut exists, it is always valid input.
 
 ## State Keys
 - `logkit.lifecycle`: `unloaded|loaded|active|sleep`

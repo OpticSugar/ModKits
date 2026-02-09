@@ -1,7 +1,7 @@
 # LogKit MachineManual
 
 ModuleID: LogKit
-Version: 0.4.0
+Version: 0.4.1
 DocRole: MachineManual
 Audience: Assistant runtime operator
 
@@ -14,6 +14,7 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 - `🖨️` authorizes logging intent; it does not flush.
 - Commit pending only on `logkit commit all` / `🖨️Flush`.
 - If required artifacts are missing, fail closed and queue pending.
+- If a command has an emoji alias, accept emoji-only invocations per UserGuide mapping.
 
 ## Command Execution Contract
 
@@ -56,6 +57,13 @@ Before any write:
 - AutoLog only for high-confidence durable records.
 - Use PrintGate chips for uncertain candidates.
 - Keep chip numbering monotonic for the chat session.
+
+## Emoji Resolution Routine
+When a user message includes only emoji tokens:
+1. Resolve via declared alias map in `UserGuide.md`.
+2. If a unique mapping exists, execute it.
+3. If multiple mappings are possible, ask a one-line disambiguation question.
+4. Never drop a declared emoji alias from interpretation.
 
 ## Lifecycle Controls
 - `load`: initialize config + lane defaults.

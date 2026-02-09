@@ -1,7 +1,7 @@
 # LogKit UserGuide
 
 ModuleID: LogKit
-Version: 0.4.0
+Version: 0.4.1
 DocRole: UserGuide
 Audience: Users, developers, and assistants operating LogKit
 
@@ -38,6 +38,29 @@ The goal is one module that can handle software issues, product ideas, feedback 
 ### Trigger Rule
 - Any user message containing `🖨️` authorizes logging intent for the current turn.
 - Authorization does not imply commit. Commit is explicit via `logkit commit all` (or alias `🖨️Flush`).
+
+## Emoji-First Alias Contract
+- Emoji aliases are first-class language, not decorative hints.
+- If a concept has an emoji alias, assistants must preserve it in docs, runtime prompts, and examples.
+- Emoji-only user commands are valid when they match a declared alias.
+- Canonical ASCII commands remain the stable fallback.
+- If any alias is ambiguous in context, ask a one-line clarification instead of guessing.
+
+### Emoji-Only Command Map
+Use these direct mappings when users communicate only by emoji tokens.
+
+| Emoji input | Resolved command | Notes |
+|---|---|---|
+| `🖨️` | authorize logging intent for current turn | authorization only, not commit |
+| `🖨️Flush` | `logkit commit all` | commit pending queue |
+| `🖨️LogIt!` | `logkit commit all` | commit pending queue |
+| `🖨️001,003` | `logkit commit ids 001,003` | commit selected chip ids |
+| `🖨️Log: <text>` | `logkit capture <text>` | force capture |
+| `🖨️Amend <id>: <delta>` | `logkit amend <id> <delta>` | append amendment |
+| `🖨️Overwrite <id>: <replacement>` | `logkit overwrite <id> <replacement>` | replace entry |
+| `🛅 export` | `logkit export <filter>` | package export |
+| `🗄️ find <query>` | `logkit retrieve <query>` | retrieval query |
+| `🖨️ status` | `logkit status` | state report |
 
 ## ResponseEnvelope
 - Default runtime envelope: `main_plus_microtail`.
@@ -183,6 +206,8 @@ When multiple modules may respond:
 - `🛂`: PrintGate triage metaphor.
 - `🫟`: InkTest triage rubric metaphor.
 
+Rule: when a documented emoji alias exists, do not omit it from operational guidance; publish both ASCII canon and emoji alias forms.
+
 ## Regression Minimum
 Must pass before release:
 1. Missing ledger fails closed and queues pending.
@@ -197,4 +222,5 @@ Must pass before release:
 
 ## Version Notes
 - Previous runtime lineage mapped to `0.3.2`.
-- This upgrade is `0.4.0` for lifecycle + config + security expansion while remaining pre-1.0.
+- `0.4.0` introduced lifecycle + config + security expansion while remaining pre-1.0.
+- `0.4.1` restores emoji-first alias clarity and emoji-only command resolution guidance.

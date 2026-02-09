@@ -1,7 +1,7 @@
 # LogKit Install
 
 ModuleID: LogKit
-Version: 0.4.0
+Version: 0.4.1
 DocRole: Install
 Audience: Users and assistants deploying LogKit
 
@@ -29,6 +29,7 @@ Audience: Users and assistants deploying LogKit
 - `🖨️` alone does not flush pending entries.
 - `🖨️Flush` commits and clears pending.
 - Export produces JSONL with provenance entry.
+- Emoji-only invocation check: `🖨️ status` resolves to `logkit status`.
 
 ## Failure Handling
 - If canvas cannot be created: stop and request manual creation/opening of `LogKit Log` (or `🖨️ Log`).

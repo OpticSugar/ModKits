@@ -1,5 +1,5 @@
 module: "LogKit"
-version: "0.4.0"
+version: "0.4.1"
 mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
 engage_policy: "OFFER"
 

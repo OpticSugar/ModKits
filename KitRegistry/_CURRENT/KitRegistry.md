@@ -82,8 +82,8 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md`
-- Version: `0.4.0`
-- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, and configurable triage/security policies.`
+- Version: `0.4.1`
+- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, and emoji-first alias mapping.`
 
 ## 3) Boot contract (for BootStub consumers)
 - After second user message in a new chat, offer once: `boot / skip`.
