@@ -1,7 +1,7 @@
 # ChatGPT Global Instructions
 KitRegistry BootStub (copy/paste source)
 
-Version: 0.1.0
+Version: 0.2.0
 LastUpdated: 2026-02-09
 Owner: ModuleMill
 
@@ -11,9 +11,8 @@ Paste the following block into ChatGPT global instructions:
 Load and use this registry as source of truth for my modules:
 https://raw.githubusercontent.com/OpticSugar/ModKits/main/KitRegistry/_CURRENT/KitRegistry.md
 
-After my 2nd message in a new chat, ask once: boot / skip.
-If boot: load DefaultLoad modules (Manifest + QuickRef first).
-If skip: don’t ask again in that chat.
+At the start of each new chat, auto-load modules marked DefaultLoad=yes (Manifest + QuickRef first).
+If I say "skip modules", disable module loading for that chat.
 If fetch fails: ask me to paste the needed registry/doc. Never guess.
 ```
 

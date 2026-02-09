@@ -2,6 +2,16 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.4.2] - 2026-02-09
+### Changed
+- Boot behavior switched to default-on loading:
+  - Chat bootstrap now auto-loads `DefaultLoad=yes` modules at chat start.
+  - Explicit prompt flow `boot / skip` removed from canonical global instructions.
+  - Chat-level opt-out command is now `skip modules`.
+- `FaxAx` is now configured for default runtime load:
+  - `KitRegistry`: `DefaultLoad=yes`, `EngagePolicy=AUTO`
+  - `FaxAx ModuleManifest`: `engage_policy: AUTO`
+
 ## [0.4.1] - 2026-02-09
 ### Added
 - `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` as the canonical copy/paste source for ChatGPT global instructions.

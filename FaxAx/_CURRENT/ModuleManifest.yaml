@@ -1,7 +1,7 @@
 module: "FaxAx"
 version: "0.2.0"
 mission: "Scope-first response protocol with opt-in depth and hold/release comment stacking."
-engage_policy: "OFFER"
+engage_policy: "AUTO"
 
 use_when:
   - "User asks for brevity, verbosity control, or expansion controls"

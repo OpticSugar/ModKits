@@ -1,12 +1,12 @@
 # 📇 KitRegistry
-Runtime Module Index v0.2.0
+Runtime Module Index v0.2.1
 
 RegistryID: KitRegistry
 ModuleID: KitRegistry
-Version: 0.2.0
+Version: 0.2.1
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
-Updated: 2026-02-08
+Updated: 2026-02-09
 Scope: Runtime ModuleKits only
 
 ## 0) Policy
@@ -30,14 +30,14 @@ Each module entry must include:
 ## 2) Modules
 ### Module: FaxAx
 - Mission: Scope-first response protocol with opt-in depth and hold/release comment stacking.
-- 🎛️ EngagePolicy: `OFFER`
+- 🎛️ EngagePolicy: `AUTO`
 - 🧲 NeedSignals:
   - Keywords: `verbosity`, `short answer`, `expand`, `hold`, `stack comments`, `ask chatgpt`, `too long`
   - Intents: `control answer depth`, `batch feedback`, `delay response until release`
   - Formats: `emoji mode switches`, `expansion chips`
   - DoNotFireIf: `user requests raw JSON only`, `another module explicitly invoked`
 - AutoRunScope: `response_formatting`
-- DefaultLoad: `no`
+- DefaultLoad: `yes`
 - Docs:
   - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/ModuleManifest.yaml`
   - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/Install.md`
@@ -86,7 +86,6 @@ Each module entry must include:
 - Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, and emoji-first alias mapping.`
 
 ## 3) Boot contract (for BootStub consumers)
-- After second user message in a new chat, offer once: `boot / skip`.
-- `boot`: fetch this registry; load `DefaultLoad=yes` modules using Manifest + QuickRef first.
-- `skip`: persist skip state for the chat.
+- At start of a new chat, fetch this registry and auto-load `DefaultLoad=yes` modules using Manifest + QuickRef first.
+- User can opt out for the chat with: `skip modules`.
 - Fetch failure: fail closed and request pasted registry entry or required module doc.

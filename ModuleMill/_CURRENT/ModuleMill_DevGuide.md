@@ -180,10 +180,8 @@ Registry guardrail:
 - Registry never invents commands. It only points to canonical docs.
 
 ### 9.4 Boot behavior
-- Start chat: no automatic fetch.
-- After second user message (or explicit modules request): offer once `boot / skip`.
-- `boot`: fetch registry, load `DefaultLoad` modules using `ModuleManifest` + `QuickRefCard` first.
-- `skip`: persist skip state and suppress further boot prompts in that chat.
+- Start chat: fetch registry and auto-load `DefaultLoad=yes` modules using `ModuleManifest` + `QuickRefCard` first.
+- `skip modules`: persist opt-out state for the chat and suppress module loading.
 
 ### 9.5 Failure behavior
 If registry or docs cannot be fetched:
