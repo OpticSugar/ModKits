@@ -17,6 +17,22 @@ The goal is one module that can handle software issues, product ideas, feedback 
 - Long-term storage: `🗄️ LogVault` (service + files).
 - Retrieval in any chat/account/project by attaching or indexing LogPak/Vault artifacts.
 
+## Rationale and tradeoffs
+- LogKit favors durable capture over short-term speed because retrieval and auditability matter more than minimal turn latency.
+- Explicit commit is preserved as a guardrail to prevent accidental writes from ambiguous chat turns.
+- Emoji aliases stay first-class for ergonomics, while ASCII canon remains mandatory for deterministic fallback.
+- Fail-closed preconditions can feel strict, but they prevent silent corruption of ledger state.
+
+## Examples
+- Capture then commit all:
+  - `🖨️Log: tighten module lint checks`
+  - `🖨️Flush`
+- Commit selected chips only:
+  - `🖨️001,003`
+- Export and retrieve:
+  - `🛅 export lane=infra`
+  - `🗄️ find lint regressions`
+
 ## Canonical Commands
 
 | Command | Canon | Aliases | Inputs | Output shape | State effects |
@@ -200,11 +216,13 @@ When multiple modules may respond:
 4. Persist winner for session until changed.
 
 ## EmojiGlossary
-- `🖨️`: alias for logging intent and ledger canvas `LogKit Log`.
-- `🛅`: export/transport package alias (`LogPak`).
-- `🗄️`: archive/retrieval alias (`LogVault`).
-- `🛂`: PrintGate triage metaphor.
-- `🫟`: InkTest triage rubric metaphor.
+| Emoji | Term | Meaning |
+|---|---|---|
+| `🖨️` | `LogIntentOrLedgerAlias` | Alias for logging intent and ledger canvas `LogKit Log`. |
+| `🛅` | `LogPakAlias` | Export and transport package alias (`LogPak`). |
+| `🗄️` | `LogVaultAlias` | Archive and retrieval alias (`LogVault`). |
+| `🛂` | `PrintGateAlias` | PrintGate triage metaphor for explicit commit gating. |
+| `🫟` | `InkTestAlias` | InkTest triage rubric metaphor for confidence-based capture. |
 
 Rule: when a documented emoji alias exists, do not omit it from operational guidance; publish both ASCII canon and emoji alias forms.
 

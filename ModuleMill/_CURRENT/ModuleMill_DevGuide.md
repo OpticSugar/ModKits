@@ -1,8 +1,8 @@
 # 🏭 ModuleMill DevGuide
-(Developer Canon for ModuleKit Engineering) v0.3.0
+(Developer Canon for ModuleKit Engineering) v0.4.0
 
 ModuleID: ModuleMill
-Version: 0.3.0
+Version: 0.4.0
 DocRole: UserGuide
 Audience: Module developers (Codex-first), maintainers, and auditors
 
@@ -26,10 +26,15 @@ If anything conflicts with derived framework docs, this file wins.
 
 ## 3) Canon and derived roles
 For runtime modules, role boundaries remain strict:
-1. `UserGuide` (canonical)
-2. `MachineManual` (derived executable rules)
-3. `QuickRefCard` (derived quick operating surface)
-4. `Install` (derived setup and loading procedure)
+1. `UserGuide` (canonical and most detailed source of truth)
+2. `MachineManual` (derived executable runtime rules)
+3. `QuickRefCard` (derived compact operational reference)
+4. `Install` (derived deployment and runbook-only procedure)
+
+Non-negotiable canon depth:
+- `UserGuide` must remain verbose and complete.
+- `UserGuide` must retain full context, rationale, tradeoffs, failure modes, examples, and migration notes.
+- Compression that removes canonical detail is a framework violation.
 
 Required bundle artifacts under `<Module>/_CURRENT/`:
 - `UserGuide.md`
@@ -63,9 +68,10 @@ Required columns:
 - `State effects`
 
 Rules:
-- Emoji forms are aliases only.
+- Emoji forms are aliases only for canonical naming, but are first-class user input forms when declared.
 - Canonical invocation must always be representable in plain ASCII.
 - Bare-token overload is forbidden (for example `3`, `ok`, lone emoji).
+- If a module defines emoji aliases, docs must preserve them and map each alias deterministically to one behavior.
 
 ### 4.2 ModuleManifest contract (required)
 Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with these keys:
@@ -91,6 +97,7 @@ Rules:
 - Each emoji maps to a single term and behavior meaning.
 - The mapping must be expandable to full text in assistant responses.
 - If an emoji meaning changes, bump version and changelog.
+- Emoji aliases are first-class input forms and must not be omitted from canonical docs.
 
 ## 5) Progressive disclosure load policy
 Use staged loading to reduce context and improve precision:

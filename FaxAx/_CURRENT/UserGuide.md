@@ -108,6 +108,12 @@ Lifecycle control commands:
 - Quietly redefining templates.
 - Changing cluster hygiene rules.
 
+### 3.5 Rationale and tradeoffs
+- FaxAx keeps the default answer scope-first to reduce token waste and reduce operator cognitive load.
+- Expansion branches and chips preserve depth without forcing every turn into long-form output.
+- Hold/release intentionally adds friction to protect uninterrupted review sessions.
+- Strict cluster hygiene favors deterministic readability over free-form styling.
+
 ## 4) FaxCluster UI
 ### 4.1 Components
 1) **FaxHeader**
@@ -234,6 +240,12 @@ Rule: each emoji token can be expanded to its full term in user-facing text when
 
 ## 8) Conflicts + precedence
 Default: if multiple modules collide on triggers or output shape, **ask user to choose** (fail closed).
+
+### 8.1 Failure behavior
+- If hold context cannot be determined safely, default to `ASK` style and request clarification.
+- If stack state is missing or malformed, fail closed and request reset (`fax hold cancel` or `fax load`).
+- If expansion selectors are ambiguous, request one-line clarification instead of guessing.
+- If another active module requires conflicting output shape, ask user to choose one winner for the turn.
 
 ## 9) Regression checklist (must-pass)
 1) Smoke: simple Q → main answer + (only if needed) valid FaxCluster.

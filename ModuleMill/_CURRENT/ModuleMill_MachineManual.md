@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.3.0
+(Enforcement Runbook for ModuleKit Engineering) v0.4.0
 
 ModuleID: ModuleMill
-Version: 0.3.0
+Version: 0.4.0
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -10,9 +10,12 @@ Audience: Codex or assistant executing ModuleMill rules
 - Fail closed. Never fabricate unknown behavior.
 - Keep doc roles strict.
 - Treat `UserGuide` as canon.
+- Keep `UserGuide` verbose and complete; do not over-compress canonical detail.
+- `UserGuide` must preserve context, rationale, tradeoffs, failure behavior, examples, and migration notes.
 - Derived docs must not invent commands, triggers, state keys, output shapes, or policies.
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
+- If emoji aliases are defined, treat them as first-class input forms and preserve deterministic alias -> behavior mapping.
 - Require `ModuleManifest.yaml` for new modules and use it for initial module selection.
 - Do not require or produce `_BUNDLE.md` artifacts in normal authoring, lint, or release flows.
 
@@ -82,6 +85,8 @@ Run compiler lint and enforce:
 - required manifest keys present
 - manifest `docs` pointers map to existing files under `_CURRENT`
 - manifest `response_envelope` matches declared envelope in derived docs
+- UserGuide completeness checks pass (context/mission depth, rationale/why, failure behavior, examples)
+- Over-compression heuristics pass for UserGuides in strict mode
 
 ## 8) Release routine
 - Bump SemVer.

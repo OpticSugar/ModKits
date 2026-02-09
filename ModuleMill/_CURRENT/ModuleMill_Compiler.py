@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.3
+ModuleMill Compiler v0.4
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -27,6 +27,14 @@ REQUIRED_MANIFEST_KEYS = {
 }
 REQUIRED_MANIFEST_DOC_KEYS = {"install", "quickref", "machinemanual", "userguide"}
 REQUIRED_COMMAND_MARKERS = {"Command", "Canon", "Aliases", "Inputs", "Output shape", "State effects"}
+REQUIRED_USERGUIDE_SECTION_GROUPS = {
+    "context/mission depth": {"what this is", "mission", "scope", "context"},
+    "rationale/why": {"rationale", "why", "tradeoff", "trade-off"},
+    "failure behavior": {"failure behavior", "fail-closed", "fail closed", "guardrail", "error"},
+    "examples": {"example", "template", "sample", "walkthrough"},
+}
+USERGUIDE_MIN_NONEMPTY_LINES = 120
+USERGUIDE_MIN_HEADINGS = 8
 
 META_PATTERNS = {
     "ModuleID": re.compile(r"\bModuleID\s*[:=]\s*(\S+)", re.IGNORECASE),
@@ -151,6 +159,126 @@ def parse_manifest(text: str) -> Dict[str, object]:
     return manifest
 
 
+def route_issue(msg: str, strict: bool, errs: List[str], warns: List[str]) -> None:
+    if strict:
+        errs.append(msg)
+    else:
+        warns.append(msg)
+
+
+def heading_titles_lower(text: str) -> List[str]:
+    return [title.lower() for _, title, _ in build_heading_index(text)]
+
+
+def find_heading_section_lines(text: str, needle: str) -> List[str]:
+    lines = text.splitlines()
+    headings = build_heading_index(text)
+    match = None
+    for level, title, li in headings:
+        if needle.lower() in title.lower():
+            match = (level, li)
+            break
+    if not match:
+        return []
+
+    level, start = match
+    end = len(lines)
+    for lvl, _, li in headings:
+        if li > start and lvl <= level:
+            end = li
+            break
+    return lines[start:end]
+
+
+def lint_userguide_completeness(path: Path, text: str, strict: bool, errs: List[str], warns: List[str]) -> None:
+    titles = heading_titles_lower(text)
+    nonempty_lines = [line for line in text.splitlines() if line.strip()]
+
+    if len(nonempty_lines) < USERGUIDE_MIN_NONEMPTY_LINES:
+        route_issue(
+            f"{path.name}: UserGuide appears over-compressed ({len(nonempty_lines)} non-empty lines; expected >= {USERGUIDE_MIN_NONEMPTY_LINES})",
+            strict,
+            errs,
+            warns,
+        )
+
+    if len(titles) < USERGUIDE_MIN_HEADINGS:
+        route_issue(
+            f"{path.name}: UserGuide appears over-compressed ({len(titles)} headings; expected >= {USERGUIDE_MIN_HEADINGS})",
+            strict,
+            errs,
+            warns,
+        )
+
+    for label, keywords in REQUIRED_USERGUIDE_SECTION_GROUPS.items():
+        if not any(any(key in title for key in keywords) for title in titles):
+            route_issue(
+                f"{path.name}: UserGuide missing required section signal for {label}",
+                strict,
+                errs,
+                warns,
+            )
+
+
+def lint_emoji_glossary_contract(path: Path, text: str, strict: bool, errs: List[str], warns: List[str]) -> None:
+    if not EMOJI_RE.search(text):
+        return
+
+    if "EmojiGlossary" not in text:
+        errs.append(f"{path.name}: UserGuide contains emoji but no 'EmojiGlossary' section.")
+        return
+
+    section_lines = find_heading_section_lines(text, "EmojiGlossary")
+    if not section_lines:
+        errs.append(f"{path.name}: UserGuide contains emoji but 'EmojiGlossary' section could not be parsed.")
+        return
+
+    seen: Set[str] = set()
+    glossary_rows = 0
+
+    for raw in section_lines:
+        line = raw.strip()
+        if not line.startswith("|") or line.startswith("|---"):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 3:
+            continue
+        emoji_cell = cells[0].replace("`", "").strip()
+        term_cell = cells[1].replace("`", "").strip()
+        meaning_cell = cells[2].replace("`", "").strip()
+
+        if not EMOJI_RE.search(emoji_cell):
+            continue
+
+        glossary_rows += 1
+        emoji_tokens = "".join(EMOJI_RE.findall(emoji_cell))
+        if emoji_tokens in seen:
+            route_issue(
+                f"{path.name}: EmojiGlossary contains duplicate emoji mapping for '{emoji_tokens}'",
+                strict,
+                errs,
+                warns,
+            )
+        else:
+            seen.add(emoji_tokens)
+
+        if not term_cell or not meaning_cell:
+            route_issue(
+                f"{path.name}: EmojiGlossary must map emoji aliases to non-empty term and meaning fields.",
+                strict,
+                errs,
+                warns,
+            )
+
+    if glossary_rows == 0:
+        route_issue(
+            f"{path.name}: EmojiGlossary exists but no valid emoji mapping rows were found.",
+            strict,
+            errs,
+            warns,
+        )
+
+
 def lint_markdown_file(path: Path, strict: bool = False, require_manifest: bool = False) -> Tuple[List[str], List[str]]:
     text = read_text(path)
     meta = parse_meta(text)
@@ -183,19 +311,15 @@ def lint_markdown_file(path: Path, strict: bool = False, require_manifest: bool 
 
     module_id = meta.get("ModuleID", "")
 
-    # If user-facing emoji aliases are present, glossary must exist in canon docs.
-    if role == "UserGuide" and module_id not in FRAMEWORK_MODULE_IDS and EMOJI_RE.search(text) and "EmojiGlossary" not in text:
-        errs.append(f"{path.name}: UserGuide contains emoji but no 'EmojiGlossary' section.")
-
     # Encourage canon command table markers in runtime UserGuides.
     if role == "UserGuide" and module_id not in FRAMEWORK_MODULE_IDS:
+        lint_userguide_completeness(path, text, strict, errs, warns)
+        lint_emoji_glossary_contract(path, text, strict, errs, warns)
+
         missing_markers = [m for m in sorted(REQUIRED_COMMAND_MARKERS) if m not in text]
         if missing_markers:
             msg = f"{path.name}: UserGuide missing canon command markers: {', '.join(missing_markers)}"
-            if strict:
-                errs.append(msg)
-            else:
-                warns.append(msg)
+            route_issue(msg, strict, errs, warns)
 
         manifest_path = path.parent / "ModuleManifest.yaml"
         if not manifest_path.exists():

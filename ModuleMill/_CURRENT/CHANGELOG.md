@@ -2,6 +2,31 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.4.0] - 2026-02-09
+### Added
+- UserGuide completeness lint checks for runtime modules:
+  - context/mission depth
+  - rationale/why
+  - failure behavior
+  - examples/template coverage
+  - EmojiGlossary integrity checks when emoji aliases are used
+- UserGuide over-compression heuristics:
+  - non-empty line minimum
+  - heading count minimum
+  - strict mode escalates these findings to hard errors
+
+### Changed
+- Framework policy now explicitly requires verbose canonical UserGuides with preserved context, rationale, tradeoffs, failure modes, examples, and migration notes.
+- Role intent clarified:
+  - `UserGuide` = most detailed source of truth
+  - `MachineManual` = executable runtime rules
+  - `QuickRefCard` = compact operational reference
+  - `Install` = deployment/runbook only
+- Emoji alias policy hardened:
+  - emoji aliases are first-class input forms when declared
+  - alias mappings must remain deterministic in docs
+- `LogKit` and `FaxAx` UserGuides patched with explicit rationale/failure/examples sections to align with strict completeness checks.
+
 ## [0.3.0] - 2026-02-08
 ### Added
 - New `ModuleManifest` contract in framework canon for trigger metadata and fail-closed gating.
