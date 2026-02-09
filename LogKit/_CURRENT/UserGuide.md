@@ -12,7 +12,7 @@ LogKit captures durable signals from chat into a reliable log lifecycle:
 The goal is one module that can handle software issues, product ideas, feedback inboxes, household inventory logs, and creative production workflows.
 
 ## Scope
-- Canonical runtime ledger in chat: `🖨️ Log` canvas.
+- Canonical runtime ledger in chat: `LogKit Log` canvas (emoji alias: `🖨️ Log`).
 - Portable transfer format: `🛅 LogPak` (`.jsonl`).
 - Long-term storage: `🗄️ LogVault` (service + files).
 - Retrieval in any chat/account/project by attaching or indexing LogPak/Vault artifacts.
@@ -48,7 +48,7 @@ The goal is one module that can handle software issues, product ideas, feedback 
 
 ## State Contract
 Authoritative persisted artifacts:
-- `🖨️ Log` canvas (chat-level ledger)
+- `LogKit Log` canvas (emoji alias `🖨️ Log`, chat-level ledger)
 - `🛅 LogPak` JSONL exports
 - `🗄️ LogVault` data/index
 
@@ -60,10 +60,16 @@ Volatile runtime state keys:
 - `logkit.config`: config object (schema below)
 - `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate`
 
+## Canvas Naming Contract
+- Canonical ASCII ledger canvas name: `LogKit Log`
+- Emoji alias: `🖨️ Log`
+- If emoji rendering is unavailable or ambiguous, always use `LogKit Log`.
+- Assistants must never infer names like `️ Log`; unresolved names fail closed.
+
 ## Required Ledger Guardrails
-1. Single-ledger rule: exactly one `🖨️ Log` canvas per chat.
+1. Single-ledger rule: exactly one ledger canvas per chat named `LogKit Log` or `🖨️ Log`.
 2. Pre-write checks (both required):
-- Active canvas is `🖨️ Log`.
+- Active canvas is `LogKit Log` or `🖨️ Log`.
 - Line 1 META header exists exactly:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -171,7 +177,7 @@ When multiple modules may respond:
 4. Persist winner for session until changed.
 
 ## EmojiGlossary
-- `🖨️`: logging intent, LogKit aliases, and log commands.
+- `🖨️`: alias for logging intent and ledger canvas `LogKit Log`.
 - `🛅`: export/transport package alias (`LogPak`).
 - `🗄️`: archive/retrieval alias (`LogVault`).
 - `🛂`: PrintGate triage metaphor.

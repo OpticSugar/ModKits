@@ -8,12 +8,12 @@ Audience: Users and assistants
 ## Startup
 1. `logkit load [lane]`
 2. `logkit activate`
-3. Confirm one active `🖨️ Log` with valid META header
+3. Confirm one active ledger named `LogKit Log` (emoji alias `🖨️ Log`) with valid META header
 
 ## Guardrails
-- Single-ledger rule: one `🖨️ Log` per chat.
+- Single-ledger rule: one `LogKit Log` ledger per chat (emoji alias `🖨️ Log`).
 - Pre-write checks required:
-  - active canvas is `🖨️ Log`
+  - active canvas is `LogKit Log` or `🖨️ Log`
   - META line 1 is:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -67,3 +67,6 @@ Enums:
 
 ## Retrieval Context Rule
 Retrieval only works against attached/indexed LogPak/Vault artifacts in the current chat context (enterprise, personal, project, or root).
+
+## Naming Fallback
+If emoji rendering is unreliable, always use `LogKit Log` as the ledger name.

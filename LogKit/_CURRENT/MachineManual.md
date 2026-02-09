@@ -10,7 +10,7 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 
 ## Non-negotiables
 - Treat `UserGuide.md` as canon.
-- Write only to active `🖨️ Log` with valid META header.
+- Write only to active `LogKit Log` (emoji alias `🖨️ Log`) with valid META header.
 - `🖨️` authorizes logging intent; it does not flush.
 - Commit pending only on `logkit commit all` / `🖨️Flush`.
 - If required artifacts are missing, fail closed and queue pending.
@@ -43,8 +43,8 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 
 ## Ledger Validation Routine
 Before any write:
-1. Verify exactly one `🖨️ Log` exists.
-2. Verify active canvas is `🖨️ Log`.
+1. Verify exactly one ledger canvas exists named `LogKit Log` or `🖨️ Log`.
+2. Verify active canvas is `LogKit Log` or `🖨️ Log`.
 3. Verify line 1 META header:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -84,3 +84,4 @@ Before any write:
 - Missing ledger/canvas/meta: fail closed and provide exact remediation.
 - Duplicate ledger: halt commits until user designates canonical ledger.
 - Unavailable service/index: return failure and request artifact attachment.
+- Ambiguous or malformed emoji-only names (for example `️ Log`): fail closed and require `LogKit Log` or `🖨️ Log`.
