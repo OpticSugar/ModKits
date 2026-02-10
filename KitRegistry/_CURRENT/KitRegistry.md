@@ -1,12 +1,12 @@
 # 📇 KitRegistry
-Runtime Module Index v0.3.0
+Runtime Module Index v0.3.2
 
 RegistryID: KitRegistry
 ModuleID: KitRegistry
-Version: 0.3.0
+Version: 0.3.2
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
-Updated: 2026-02-09
+Updated: 2026-02-10
 Scope: Runtime ModuleKits only
 
 ## 0) Policy
@@ -94,12 +94,22 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md`
-- Version: `0.4.1`
+- Version: `0.4.2`
 - Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, and emoji-first alias mapping.`
 
 ## 3) Boot contract (for BootStub consumers)
-- At start of a new chat, fetch this registry and auto-load `DefaultLoad=yes` modules using Manifest + QuickRef first.
-- User can opt out for the chat with: `skip modules`.
+- In a virgin chat, first assistant message must include a one-line boot warning:
+  - `Unless you type HALT or cancel, I will auto-boot modules on my next response.`
+- If user sends `HALT`, `cancel`, or `skip modules` before the second assistant response, do not auto-boot for that chat.
+- If no halt/cancel signal appears, auto-load `DefaultLoad=yes` modules on the second assistant response using Manifest + QuickRef first.
+- Fetch discipline (mandatory):
+  - Resolve module docs from registry URLs first; do not browse for module names.
+  - Allowed doc sources are `raw.githubusercontent.com/OpticSugar/ModKits` (preferred) and direct GitHub mirrors only if raw links fail.
+  - If Web Search is required, constrain queries to `site:raw.githubusercontent.com/OpticSugar/ModKits/main`.
+  - Do not use unrelated websites for module bootstrapping.
+- Deterministic URL pattern (fallback when registry is known but one doc URL is missing):
+  - `https://raw.githubusercontent.com/OpticSugar/ModKits/main/<Module>/_CURRENT/<DocFile>`
+  - `<DocFile>`: `ModuleManifest.yaml`, `Install.md`, `QuickRefCard.md`, `MachineManual.md`, `UserGuide.md`
 - Single-emoji module addressing is valid:
   - If a message is exactly a module emoji, treat it as module activation/invocation intent for that module.
   - If module is loaded but inactive, activate it.

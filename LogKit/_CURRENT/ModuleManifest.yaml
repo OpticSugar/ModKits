@@ -1,8 +1,16 @@
 module: "LogKit"
 module_emoji: "🖨️"
 module_aliases: ["logkit", "log kit", "🖨️"]
-version: "0.4.1"
+version: "0.4.2"
 mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
+must_preserve:
+  - "authorizes logging intent"
+  - "Single-ledger rule"
+  - "LE-YYMMDD-aaa"
+  - "seconds-in-day / 2"
+  - "newspaper-style headline"
+  - "HH:MM:SS"
+  - "Retrieval requires explicit artifact availability"
 engage_policy: "OFFER"
 single_emoji_activate: true
 

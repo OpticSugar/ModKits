@@ -1,7 +1,7 @@
 # LogKit MachineManual
 
 ModuleID: LogKit
-Version: 0.4.1
+Version: 0.4.2
 DocRole: MachineManual
 Audience: Assistant runtime operator
 
@@ -15,6 +15,8 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 - Commit pending only on `logkit commit all` / `🖨️Flush`.
 - If required artifacts are missing, fail closed and queue pending.
 - If a command has an emoji alias, accept emoji-only invocations per UserGuide mapping.
+- Every entry includes `time` in `HH:MM:SS` (24-hour) for deterministic ID repair.
+- Entry `title` is a newspaper-style headline; if it needs horizontal scroll, rewrite shorter.
 
 ## Command Execution Contract
 
@@ -57,6 +59,22 @@ Before any write:
 - AutoLog only for high-confidence durable records.
 - Use PrintGate chips for uncertain candidates.
 - Keep chip numbering monotonic for the chat session.
+
+## Entry Schema Routine
+Before commit, enforce minimum entry fields:
+- `id`, `date`, `time`, `lane`, `source`, `title`, `description`, `status`, `kind`
+- `time` must match `HH:MM:SS` (24-hour local capture time)
+- `title` must be short headline style (not long sentence blocks)
+
+## ID Generation Routine
+Deterministic suffix formula (seconds-in-day / 2 rule):
+1. Parse `time` as `HH:MM:SS`.
+2. Compute `seconds_in_day = HH*3600 + MM*60 + SS`.
+3. Compute `tick = floor(seconds_in_day / 2)`.
+4. Compute `aaa = BASE36_UPPER(tick).padStart(3, "0")`.
+5. Assemble ID as `LE-YYMMDD-aaa` using `date` for `YYMMDD`.
+6. On collision, increment `tick` until unique.
+7. If existing `id` and `time` disagree, recompute from `time` and correct `id`.
 
 ## Emoji Resolution Routine
 When a user message includes only emoji tokens:

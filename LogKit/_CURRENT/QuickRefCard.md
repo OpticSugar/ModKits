@@ -1,7 +1,7 @@
 # LogKit QuickRef
 
 ModuleID: LogKit
-Version: 0.4.1
+Version: 0.4.2
 DocRole: QuickRefCard
 Audience: Users and assistants
 
@@ -56,7 +56,11 @@ Hard rule: if an emoji shortcut exists, it is always valid input.
 
 ## Entry Schema Minimum
 Required:
-- `id`, `date`, `lane`, `source`, `title`, `description`, `status`, `kind`
+- `id`, `date`, `time`, `lane`, `source`, `title`, `description`, `status`, `kind`
+
+Title rule:
+- Write titles like newspaper headlines.
+- If a title causes horizontal scrolling, shorten it.
 
 Enums:
 - `source`: `userDump|userDirect|assistantObservation|systemImport`
@@ -65,7 +69,10 @@ Enums:
 
 ## ID Rule
 - `LE-YYMMDD-aaa`
-- `aaa` is uppercase base36 2-second tick
+- `seconds_in_day = HH*3600 + MM*60 + SS`
+- `tick = floor(seconds_in_day / 2)`
+- `aaa = BASE36_UPPER(tick).padStart(3, "0")`
+- `aaa` is uppercase base36 2-second tick from `time`
 - bump tick on collision
 
 ## Output Envelope

@@ -1,7 +1,7 @@
 # LogKit UserGuide
 
 ModuleID: LogKit
-Version: 0.4.1
+Version: 0.4.2
 DocRole: UserGuide
 Audience: Users, developers, and assistants operating LogKit
 
@@ -119,9 +119,10 @@ Volatile runtime state keys:
 Required keys:
 - `id`: `LE-YYMMDD-aaa`
 - `date`: `YYYY-MM-DD`
+- `time`: `HH:MM:SS` (24-hour local capture time; required fallback for deterministic ID repair)
 - `lane`: string
 - `source`: `userDump|userDirect|assistantObservation|systemImport`
-- `title`: short headline (no horizontal scroll target)
+- `title`: short newspaper-style headline (scan-fast; no horizontal scroll target)
 - `description`: concise summary paragraph
 - `status`: `PROPOSED|LOCK`
 - `kind`: `WIN|LANDMINE|DECISION|EXPERIMENT|WORKFLOW|FIX|EXPORT|IDEA|ISSUE|SUGGESTION|ASSET`
@@ -137,6 +138,10 @@ Recommended keys:
 
 Compatibility rule:
 - Legacy `discovery` maps to `description` on ingest/export.
+
+Title writing rule:
+- Write `title` values like newspaper headlines, not article sentences.
+- If a title requires horizontal scrolling in common editor panes, shorten and tighten wording.
 
 ## Config Schema (`logkit.config.v1`)
 ```json
@@ -204,9 +209,15 @@ Compatibility rule:
 
 ## ID Strategy
 - Format: `LE-YYMMDD-aaa`
-- `aaa`: uppercase base36 2-second tick.
+- Deterministic suffix formula (seconds-in-day / 2 rule):
+  - `seconds_in_day = HH*3600 + MM*60 + SS` (from `time`)
+  - `tick = floor(seconds_in_day / 2)`
+  - `aaa = BASE36_UPPER(tick).padStart(3, "0")`
+- `aaa`: uppercase base36 2-second tick derived from `time`.
+- Full ID: `LE-YYMMDD-aaa` where `YYMMDD` comes from `date`.
 - On collision: bump tick until unique.
 - Overflow uses remaining base36^3 headroom.
+- If stored `id` suffix and `time` disagree, recompute from `time` and correct `id` deterministically.
 
 ## Arbitration Policy
 When multiple modules may respond:
@@ -242,3 +253,4 @@ Must pass before release:
 - Previous runtime lineage mapped to `0.3.2`.
 - `0.4.0` introduced lifecycle + config + security expansion while remaining pre-1.0.
 - `0.4.1` restores emoji-first alias clarity and emoji-only command resolution guidance.
+- `0.4.2` adds explicit ID suffix formula, required `time`, and headline-style title guidance.
