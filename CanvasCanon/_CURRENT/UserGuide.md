@@ -8,19 +8,34 @@ Audience: Humans + module engineers (canonical source of truth)
 ---
 
 ## 0) What this is
-CanvasCanon is a workflow that treats canvas as the durable project canon and chat as exploration.
+CanvasCanon is durable long-term project memory designed to survive a forking event with as little amnesia as possible.
+
+It separates exploration from law:
+- chat is where ideas are explored
+- canvas is where durable decisions, unresolved choices, constraints, and continuity notes are preserved
+
+Strategic purpose:
+- reduce restart cost after handoffs, pauses, and forks
+- prevent re-litigation of already-set decisions
+- preserve momentum by making next actions and context legible to the next operator
 
 Core law: if a decision affects future behavior, record it in canvas canon.
 
 CanvasCanon is not module-only. It applies to any long-running project where decisions, rationale, and unresolved choices must stay coherent across forks and time.
 
+Success condition: a new assistant (or future-you) can open the `🛜` canvas, grab the torch quickly, and continue with minimal context loss.
+
 This doc is canonical. If anything conflicts with Install, QuickRefCard, or MachineManual, this document wins.
 
 ## 1) Mission
-- Preserve decisions through long timelines and forks.
-- Keep project context skim-fast and executable.
+CanvasCanon exists to reduce project amnesia across long timelines, assistant handoffs, and forking events.
+
+Strategic outcomes:
+- Preserve durable decisions and constraints across forks, not just within one chat thread.
+- Keep project context skim-fast and executable so the next operator can resume quickly.
 - Reduce re-litigation by separating Open Questions from resolved law.
-- Preserve rationale in a compact footnote layer instead of bloating core sections.
+- Preserve rationale without bloating the body by using a compact footnote layer.
+- Convert "context currently in my head" into durable handoff memory before context is lost.
 
 ## 2) Architecture contract (ModuleMill)
 ### 2.1 Surface area
@@ -91,15 +106,43 @@ Default when installed: Active.
 ### 3.2 Canon inclusion rule
 If content changes future decisions or behavior, include it in canvas.
 
+High-priority examples:
+- decisions, constraints, assumptions, and definitions
+- unresolved options and explicit tradeoffs
+- dependencies, risks, and caveats that can break future execution
+- momentum-critical next actions and handoff pointers
+
 ### 3.3 Clean-body rule
 Main body should contain current law, not narrative history.
 Rejected options should not remain as active candidates.
 
+Keep historical signal without clutter:
+- use strikeout + `❌` for pruned options where history matters
+- collapse resolved items instead of leaving full deliberation blocks in active flow
+
 ### 3.4 Rationale rule
 Rationale belongs in `Appendix A: Footnotes` using inline markers (`[1]`, `[2]`).
 
+Purpose:
+- keep main sections fast to scan
+- keep reasoning recoverable when decisions are revisited later
+- reduce accidental loss of "why we chose this" during forks
+
+Required footnote capture:
+- When a material decision/rule is added, changed, or resolved, attach or update at least one footnote marker.
+- Each such footnote should capture:
+  - relevant context
+  - decision reasoning/tradeoff logic
+  - final rationale for the chosen direction
+- Do not strip existing rationale footnotes during cleanup unless the decision itself is removed or superseded and the change is explicitly reflected.
+
 ### 3.5 Fail-closed
 If the target canvas or required sections are missing/ambiguous, stop speculative edits and ask for exact section or latest canvas content.
+
+Fail-closed is mandatory because fabricated memory is worse than missing memory:
+- if unsure, ask
+- if artifacts are missing, pause canon edits
+- resume only with authoritative input
 
 ## 4) Canvas structure contract
 Recommended section order:
@@ -115,51 +158,60 @@ Minimum viable headings for active projects:
 - `## Appendix A: Footnotes`
 
 ## 5) Open Questions (OQ) operating system
-This section defines the OQ system as a hard-format UX contract. The goal is self-serve decision flow with fast scan, shorthand replies, and low-noise resolution.
+This section defines Open Questions (OQ) as a hard-format UX contract. The intent is fast scan, low-friction voting, and clean resolution without follow-up clarification.
 
 ### 5.0 What OQ solves
-- Each open question is a real markdown header for skim speed.
-- Each question carries plain-English context so users do not need follow-up clarification just to vote.
-- Option lists are numbered for shorthand replies (`B4`, `C2`, `F3`).
+- Questions are real markdown headers for skim speed.
+- Each question includes plain-English context so the header can stay brief.
+- Numbered options enable shorthand replies like `B4`, `C2`, `F3`.
 - Assistant preference signals are visible at a glance (`🥇`, `🥈`, `🥉`, `👎🏼`).
-- User pruning preserves history through strikeout plus trailing `❌`.
+- On resolve, the chosen answer keeps its vote emoji so recommendation context stays visible.
+- User pruning preserves history via strikeout plus trailing `❌`.
 - Resolved questions keep letter slots but collapse to near-zero noise.
 
 ### 5.1 Placement and separation
-- OQ section must precede Resolved Decisions.
+- OQ must appear before Resolved Decisions.
 - Open and resolved items are never mixed in the same active list.
 - Canon section flow is `Open Questions -> Resolved Decisions`.
-- Recommended heading pair is:
-  - `## 3) Open questions (❓)`
-  - `## 4) Resolved decisions`
+- Recommended heading pair:
+  - `## ❓ Open questions`
+  - `## ↔️ Resolved decisions`
 
-### 5.2 Reply shorthand line (required)
-At the top of the OQ section include:
-- `*Reply shorthand:* \`B5\`, \`C2\`, \`F3\`, etc.`
+### 5.2 Shorthand help (chat-only, conditional)
+Shorthand replies are supported, but do not embed a how-to-reply cluster inside canvas content (no `*Reply shorthand:* ...` and no `*Example answer line:* ...`).
 
-The shorthand line is always present and appears once per OQ section.
+If the user appears confused about response format, provide a tiny cheat sheet in chat only (not copied into canvas).
+
+Suggested chat-only cheat sheet (when needed):
+- `A2` = pick option 2 for question A
+- `A1,3` = keep-list (single-select) or multi-select (if the question says choose-many)
+- `Ax2` or `❌A2` = strike option 2
+- `C` resolved items: respond only if reopening is explicitly requested
 
 ### 5.3 Stable IDs
 - Questions use stable letter headers: `### B) Title`.
 - Option numbering uses markdown ordered lists (`1.`, `2.`, `3.`).
-- Do not renumber options once shorthand votes/references exist.
-- Do not express OQ questions as bullet points.
+- Do not renumber options after shorthand votes/references exist.
+- Do not express questions as bullet points.
 
 ### 5.4 Explanation block rules
-- Immediately under each question header, include a short paragraph explaining:
-  - what decision is being made
-  - why it matters
-  - what changes depending on the choice
-- Do not use a label such as `Layman:`.
+Immediately under each question header, include a short paragraph explaining:
+- what decision is being made
+- why it matters
+- what changes depending on the choice
+
+Rules:
+- Do not use labels like `Layman:`.
 - Keep wording plain and human-readable.
 
 ### 5.5 Option list rules
 - Use markdown ordered lists with `1.` style markers.
 - Do not use `1)` or lettered bullets for options.
 - Keep numbering stable after shorthand references begin.
+- If assistant rankings are present, put them at the end of each option line.
 
-### 5.6 Visual signals
-Preference tags:
+### 5.6 Assistant picks
+Assistant preference tags:
 - `🥇` strongest recommendation
 - `🥈` second recommendation
 - `🥉` third recommendation
@@ -169,29 +221,68 @@ Rules:
 - Apply ranking symbols consistently within a question.
 - Rankings may change if new context arrives.
 - Neutral options may omit ranking symbols.
+- Rankings go at the end of an option line.
+- Rankings should survive an answered question and remain with the chosen answer.
 
-### 5.7 Shorthand resolution
-- Accept shorthand replies like `B2`, `F1`.
-- On resolve, collapse question to:
-  - `### ~~B) Title~~ ✅`
-  - `Chosen: \`<value>\``
-- Keep the letter slot in place (no missing letters).
-- Remove explanation and option list once resolved.
+### 5.7 User answer lines (shorthand replies)
+Users may answer with compact tokens instead of full sentences.
 
-### 5.8 Pruning rule
+Accepted formats:
+- Single answer token: `B2`
+- Multi-question answer line: `C2, F3, G1` (commas optional)
+- Space-grouped answer line: `B2 C3 D1` (spaces optional)
+
+Optional answer-mode marker (for ambiguity):
+- `❓` (single leading emoji)
+- `[?]`
+- `[OQ]`
+- `[Answers]`
+
+These markers are equivalent and interchangeable. If surrounding context is clearly about Open Questions, the marker is optional.
+
+Multi-select within one question has two modes:
+- Mode 1, choose-many question: if the question explicitly says choose-many/select all that apply, `B1,3,5` selects those options and does not prune others.
+- Mode 2, single-select question (default): if not labeled choose-many, `B1,3,5` is keep-list shorthand. It means those are the only viable options, so all other options in B are struck while B stays open unless the user also gives one final choice.
+
+Practical upshot: `B1,3,5` either selects-many (for choose-many questions) or becomes keep-list with implied pruning (default single-select).
+
+### 5.8 Pruning shorthand
+Pruning removes options from contention without deleting history.
+
+Supported prune syntaxes:
 - Prune syntax: `❌B1,3,D3`.
+- Inline prune marker: `Bx4` or `Bx2,5` (the `x` means strike).
+
+Rules:
+- `x` is case-insensitive (`Bx4` = `BX4`).
+- Inline prune marker applies the same strike behavior as canonical prune syntax.
 - Render pruned options as strikeout with trailing `❌`; do not silently delete.
 - If user places a lone `❌` at end of a line inside canvas content, strike/prune that target immediately.
 - Keep existing preference emoji inside strikeout when already present.
 - Place `❌` outside strikeout text.
 
-### 5.9 Multi-answer shorthand
-User can answer multiple items in one line:
-- `C2, F3, G1`
+Keep-list implied pruning:
+- In a single-select question, `B1,3,5` means keep these and strike every other option in B.
+- Apply the same visual strikeout treatment used for explicit pruning.
+- If the question is explicitly choose-many, do not apply keep-list pruning.
 
-Assistant applies all in one pass.
+Example answer line using answer + prune + keep-list (documentation only):
+- `❓A1  B1,3,5  Cx4  Dx2,5`
 
-### 5.10 Leaning vs final
+### 5.9 Resolve (collapse) rules
+On resolve, collapse the question to:
+- `### ~~B) Title~~ ✅`
+- `Chosen: \`<value>\``
+
+Rules:
+- Keep the letter slot in place (no missing letters).
+- Remove explanation and option list once resolved.
+- `Chosen:` value is inline code.
+- Chosen value must include the assistant vote emoji (`🥇/🥈/🥉/👎🏼`).
+- Do not strip, relocate, or clean up vote emoji on resolve.
+- Best practice: copy selected option text verbatim, including vote emoji, into `Chosen:`.
+
+### 5.10 Leaning vs. final
 If user indicates a non-final lean:
 - keep the question open
 - annotate the chosen option with `(Stu lean; discuss)` or equivalent
@@ -207,70 +298,71 @@ If user indicates a non-final lean:
 ### 5.12 OQ formatting template
 This is a formatting template. Replace domain content as needed, but preserve structure and mechanics.
 
-## 3) Open questions (❓)
+## ❓ Open questions
 
-*Reply shorthand:* `B5`, `C2`, `F3`, etc.
+### A) First question
+This description provides enough context so the short header stays readable and self-explanatory.
 
-### ~~A) Version mapping (R3.2 -> SemVer)~~ ✅
-Chosen: `v0.3.2`
+1. ~~First multiple choice option 🥉~~ ❌
+2. Second multiple choice option 🥇
+3. Third multiple choice option 👎🏼
 
-### B) LogVault location (where the archive actually lives)
-After entries leave a chat, where do they physically live so future chats can load/search them without guesswork?
+### B) OQ mechanics placeholder topic
+This description demonstrates why lettered headers, numbered options, and line-end ranking emojis reduce decision friction.
 
-1. ~~ChatGPT Project files (vault folder inside the project) 🥉~~ ❌
-2. Git repo folder (versioned vault) 🥈
-3. ~~Local synced folder (Drive/Dropbox/etc.) 👎🏼~~ ❌
-4. Hybrid (repo for index + cloud for bulk JSONL) 🥇
-5. Other: ________ (Stu lean; discuss)
+1. Shorthand IDs reduce typing (`B1`) 🥇
+2. Line-end ranking emojis keep recommendations scannable 🥈
+3. ~~Unstructured prose-only options (avoid) 👎🏼~~ ❌
 
-### C) Scope governance (tag drift control)
-\"Scope\" tags help retrieval later. This decides whether tags are locked-down (clean but rigid) or flexible (fast but messy over time).
-
-1. Controlled list (strict) 🥈
-2. Recommended list + alias mapping (soft strict) 🥇
-3. Freeform tags (status quo) 👎🏼
-
-### D) Sentry wrappers (BEGIN/END bulk vs integrity)
-Sentries reduce corruption risk but add body noise. This decides safety/readability tradeoff and whether compact mode exists.
-
-1. Mandatory (status quo) 🥈
-2. Optional compact mode + linter/validator 🥇
-3. ~~Remove sentries (not recommended) 👎🏼~~ ❌
-
-### E) Retrieval UX placement
-For \"find me that item from last month,\" this decides whether retrieval stays outside the module or includes a minimal internal read-only path.
-
-1. Retrieval outside module (separate retrieval module) 🥇
-2. Minimal retrieval inside module (read-only find/slice) 🥈
-3. Full retrieval inside module (likely bloat) 👎🏼
-
-### F) Fork cursor design (state vs movable marker)
-Fork cursor defines what is \"new\" after jumping across forks. This decides marker-only, state-only, or hybrid tracking.
-
-1. Movable marker only (position = cursor) 🥈
-2. Top-of-ledger state object only (cursor in state) 👎🏼
-3. Hybrid marker + state cursor key 🥇
-
-### G) Collision policy (trigger conflicts)
-If two modules can respond to the same input, this decides deterministic precedence vs in-the-moment user arbitration.
-
-1. Deterministic precedence list 🥈
-2. Ask user in the moment (selection chips) 🥇
-3. Namespace required in multi-module chats (`LK:` etc.) 👎🏼
+### ~~C) Resolved example question~~ ✅
+Chosen: `Second multiple choice option 🥇`
 
 ## 6) Fork survival protocol
-### 6.1 LastCall
-On `canvascanon lastcall` / `🍺LastCall`:
-1. Run canon pass on recent changes.
-2. Validate OQ vs Resolved consistency.
-3. Produce/update Fork handoff notes.
+### 6.1 What LastCall is
+`canvascanon lastcall` / `🍺LastCall` is a pre-handoff continuity pass. It should leave the canvas in a state where the next assistant can resume with minimal guesswork and minimal momentum loss.
 
-### 6.2 Fork handoff notes template
+### 6.2 LastCall execution order (required)
+On `canvascanon lastcall` / `🍺LastCall`:
+1. Canon sync pass.
+2. OQ integrity sweep.
+3. Continuity capture and handoff write.
+4. Final confirmation snapshot.
+
+### 6.3 Canon sync pass (what "recent changes" means)
+"Run canon pass on recent changes" means compiling all material decisions and constraints from the current context into canvas canon, not just applying a cosmetic cleanup.
+
+Include, at minimum:
+- decisions or rules settled since the last canon pass
+- OQ activity in chat not yet reflected in canvas (`B2`, `❌B1,3`, keep-list outcomes, resolve actions)
+- constraints, assumptions, dependencies, risks, and definitions now affecting future choices
+- important file/source pointers surfaced in chat but not yet captured in canvas
+- rationale/context that would be lost without Appendix A footnotes
+
+If required canvas sections are missing or ambiguous, fail closed and request authoritative canvas content before finalizing LastCall.
+
+### 6.4 OQ integrity sweep
+During LastCall, verify OQ mechanics are still coherent:
+- Open Questions and Resolved Decisions remain separate.
+- Letter IDs and option numbering remain stable.
+- Any resolve collapse preserves chosen-value ranking emoji.
+- Any prune action is rendered as strikeout plus trailing `❌`.
+
+### 6.5 Continuity capture (the handoff payload)
+LastCall must explicitly capture:
+- anything important in current context that is not yet in `🛜`
+- anything that would help the next operator "grab the torch" and keep momentum
+
+### 6.6 Fork handoff notes template
 - Phase + timestamp
-- In-flight thoughts (1-5 bullets)
-- Next actions (3-7 bullets)
-- Risks/gotchas
-- File or source pointers
+- What changed in this pass (3-7 bullets)
+- Context-only carry-forward items not yet canonized (critical)
+- Next actions (3-7 bullets, ordered)
+- Risks/gotchas (+ mitigation when known)
+- File/source pointers
+- Optional: "If I had to resume in 2 minutes, start with: ___"
+
+### 6.7 Optional tail note (fun but useful)
+At the bottom of the `🛜` canvas (or the handoff block), assistant may add one short "note to younger self" line. This can be reflective, funny, or human, but must stay brief and never replace required handoff facts.
 
 ## 7) Naming and branding
 - CanvasCanon branding emoji is `🛜`.
@@ -307,8 +399,9 @@ On `canvascanon lastcall` / `🍺LastCall`:
 3. `canvascanon cleanup` removes duplication and preserves law.
 4. `canvascanon resolve B2` collapses B and records chosen value.
 5. `canvascanon prune B1,3` strikes targeted options with `❌`.
-6. `canvascanon lastcall` produces fork handoff template output.
+6. `canvascanon lastcall` captures context-not-in-`🛜`, preserves OQ integrity, and produces momentum-ready handoff notes.
 7. `canvascanon export markdown` returns clean markdown payload.
 8. Canvas naming enforcement follows `🛜<ProjectName> - <Purpose>` with PascalCase project name when applicable.
-9. OQ formatting rules enforce: shorthand line, header-based questions, ordered options, stable letters, strikeout pruning, and resolved collapse.
-10. Missing canvas/sections triggers fail-closed clarification request.
+9. OQ formatting rules enforce: no canvas-embedded shorthand helper line, header-based questions, ordered options, stable letters, keep-list semantics, strikeout pruning, and resolved collapse with vote-emoji preservation.
+10. Material decisions retain footnote markers with rationale/context in `Appendix A: Footnotes`.
+11. Missing canvas/sections triggers fail-closed clarification request.

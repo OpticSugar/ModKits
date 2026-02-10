@@ -38,31 +38,72 @@ Maintain:
 ### 3.1 Canon/care commands
 - `canvascanon canonize`: produce canon patch from recent decisions.
 - `canvascanon cleanup`: remove duplication/noise while preserving rules.
-- `canvascanon lastcall`: canon pass + OQ/Resolved check + handoff notes.
+- `canvascanon lastcall`: pre-handoff continuity pass (canon sync + OQ integrity + momentum handoff capture).
+- For `canonize|cleanup|lastcall`, preserve rationale traceability:
+  - maintain `Appendix A: Footnotes` when present or fail closed if missing where rationale markers are required
+  - keep inline markers (`[1]`, `[2]`, ...) attached to material decisions/rules
+  - when a material decision changes, create/update a footnote that records context, reasoning, and final rationale
+  - do not drop rationale footnotes unless the linked decision is explicitly removed/superseded
 
 ### 3.2 Open Questions operations
-- `canvascanon resolve <letter><option>` accepts shorthand like `B2`.
-- `canvascanon prune <refs>` accepts syntax like `B1,3,D3` and applies strikeout with `❌`.
-- Lone trailing `❌` in canvas lines should be interpreted as prune intent for that line item.
-- OQ section must include the shorthand line: `*Reply shorthand:* \`B5\`, \`C2\`, \`F3\`, etc.`
-- OQ questions must be markdown headers (`### B) ...`), not bullets.
+- `canvascanon resolve <letter><option>` accepts `B2` shorthand.
+- Multi-question answer lines are valid: `C2, F3, G1` or `B2 C3 D1`.
+- Optional answer-mode marker is accepted when present: leading `❓`, `[?]`, `[OQ]`, or `[Answers]`.
+- `canvascanon prune <refs>` accepts `B1,3,D3`; emoji alias `❌B1,3,D3` is equivalent.
+- Inline prune syntax is valid: `Bx4`, `Bx2,5` (`x` is case-insensitive).
+- Lone trailing `❌` on a canvas line is prune intent for that line item.
+- Keep-list semantics: in single-select questions, `B1,3,5` means keep listed options and strike all others in B.
+- Choose-many override: if the question explicitly says choose-many/choose any/select all that apply, `B1,3,5` selects those options and does not prune the rest.
+- Keep-list interpretation does not finalize the question by itself; keep the question open unless user supplies a final single choice.
+- Do not inject shorthand helper lines into canvas content; if user appears confused, provide a tiny cheat sheet in chat only.
+- OQ questions are markdown headers (`### B) ...`), not bullets.
 
 ### 3.3 Export
 - `canvascanon export markdown` returns the current canonical canvas as markdown payload.
 
 ## 4) Open Questions enforcement
 - Use OQ terminology (`Open Questions` / `OQ`) consistently; do not emit `OC`.
+- OQ section appears before Resolved Decisions; unresolved and resolved items are not mixed in one active list.
+- Recommended heading pair is `## ❓ Open questions` then `## ↔️ Resolved decisions`.
 - Keep stable question letters.
+- Keep letter slots in place after resolution (no skipped letters).
+- Question format: `### <Letter>) <Title>`.
+- Each open question includes a short explanation paragraph describing decision, importance, and what changes by choice.
 - Keep stable option numbering after references exist.
 - Keep options in markdown ordered-list format (`1.` style).
-- Resolved form must collapse to `~~<letter>) ...~~ ✅` plus `Chosen: <value>`.
+- Do not use `1)` or lettered bullets for options.
+- If ranking emojis are present, place them at option line end and apply consistently within the question.
+- Ranking order is contextual and may change if new information arrives.
+- Neutral options may omit ranking emojis.
+- Pruned options are rendered as strikeout with trailing `❌`; never delete silently.
+- Keep existing ranking emoji inside strikeout when already present; keep trailing `❌` outside strikeout text.
+- Resolved form collapses to `### ~~<letter>) <Title>~~ ✅` plus `Chosen: \`<value>\``.
+- On resolve, remove explanation and option list.
+- Preserve ranking emoji in the resolved `Chosen:` value; do not strip or relocate it.
+- Best practice: copy selected option text verbatim (including ranking emoji) into `Chosen:`.
 - Do not mix unresolved queue with resolved records.
 
 ## 5) Fork protocol
 On `canvascanon lastcall` / `🍺LastCall`:
-1. Run canon pass.
-2. Validate Open vs Resolved consistency.
-3. Generate/update fork handoff notes with phase, in-flight items, next actions, risks, pointers.
+1. Run canon sync on recent context:
+   - write newly settled decisions/rules into canonical sections
+   - apply pending OQ actions reflected in chat (`B2`, `❌B1,3`, keep-list effects, resolved collapses)
+   - capture new constraints, dependencies, risks, assumptions, and source pointers that affect next choices
+   - capture/refresh rationale footnotes in `Appendix A: Footnotes` for material decision changes
+2. Run OQ integrity sweep:
+   - Open vs Resolved sections remain separate
+   - letter IDs and option numbering remain stable
+   - resolved entries preserve chosen-value ranking emoji
+   - pruned entries are strikeout plus trailing `❌`
+3. Write/update fork handoff notes with:
+   - phase + timestamp
+   - what changed in this pass
+   - context-only carry-forward items not yet canonized
+   - next actions (ordered), risks/gotchas, and pointers
+   - explicit momentum bridge: what lets the next operator "grab the torch" quickly
+4. Optional tail line:
+   - may append one short "note to younger self" line at the bottom of canvas/handoff block
+   - this is additive only and never replaces required handoff facts
 
 ## 6) Naming rules
 - Enforce canvas title format: `🛜<ProjectName> - <Purpose>`.
