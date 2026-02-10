@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.4.0
+(Enforcement Runbook for ModuleKit Engineering) v0.5.0
 
 ModuleID: ModuleMill
-Version: 0.4.0
+Version: 0.5.0
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -12,6 +12,7 @@ Audience: Codex or assistant executing ModuleMill rules
 - Treat `UserGuide` as canon.
 - Keep `UserGuide` verbose and complete; do not over-compress canonical detail.
 - `UserGuide` must preserve context, rationale, tradeoffs, failure behavior, examples, and migration notes.
+- Preserve `ModuleManifest.must_preserve` invariants in canonical `UserGuide` wording.
 - Derived docs must not invent commands, triggers, state keys, output shapes, or policies.
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
@@ -22,7 +23,7 @@ Audience: Codex or assistant executing ModuleMill rules
 ## 1) Intake checklist for module work
 Require (or safely infer) before writing or patching a module:
 - Mission
-- `ModuleManifest` fields: `engage_policy`, `use_when`, `do_not_use_when`, `required_inputs`, `response_envelope`, `failure_mode`
+- `ModuleManifest` fields: `engage_policy`, `use_when`, `do_not_use_when`, `required_inputs`, `response_envelope`, `failure_mode`, `must_preserve`
 - Canon command table (with ASCII canonical forms)
 - Inputs and typed argument grammar
 - Output shape and `ResponseEnvelope`
@@ -48,6 +49,7 @@ Troubleshooting exception:
 - If executable rules exist only in prose: normalize into canonical tables in `UserGuide`.
 - If derived docs conflict with canon: canon wins and derived docs must be patched.
 - If `ModuleManifest` conflicts with `UserGuide` contract, patch `ModuleManifest` before release.
+- If a `must_preserve` invariant is missing from `UserGuide`, fail the pipeline and restore canon wording before release.
 
 ## 4) Arbitration protocol
 When multiple modules may respond in one turn:
@@ -90,6 +92,8 @@ Run compiler lint and enforce:
 - manifest `response_envelope` matches declared envelope in derived docs
 - UserGuide completeness checks pass (context/mission depth, rationale/why, failure behavior, examples)
 - Over-compression heuristics pass for UserGuides in strict mode
+- `must_preserve` is present and all invariants are found in `UserGuide`
+- lifecycle/state parity checks between `UserGuide` and `MachineManual` pass
 - Prefer `lint --strict --modulekit-only` for repo-level strict scans to avoid non-ModuleKit support files.
 
 ## 8) Release routine

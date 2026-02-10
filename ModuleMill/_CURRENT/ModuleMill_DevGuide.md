@@ -1,8 +1,8 @@
 # 🏭 ModuleMill DevGuide
-(Developer Canon for ModuleKit Engineering) v0.4.0
+(Developer Canon for ModuleKit Engineering) v0.5.0
 
 ModuleID: ModuleMill
-Version: 0.4.0
+Version: 0.5.0
 DocRole: UserGuide
 Audience: Module developers (Codex-first), maintainers, and auditors
 
@@ -35,6 +35,8 @@ Non-negotiable canon depth:
 - `UserGuide` must remain verbose and complete.
 - `UserGuide` must retain full context, rationale, tradeoffs, failure modes, examples, and migration notes.
 - Compression that removes canonical detail is a framework violation.
+- Every runtime module must declare explicit non-negotiable invariants in `ModuleManifest.must_preserve`.
+- `must_preserve` terms are anti-neutering guards and must stay present in canonical `UserGuide` text.
 
 Required bundle artifacts under `<Module>/_CURRENT/`:
 - `UserGuide.md`
@@ -80,6 +82,7 @@ Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with t
 - `module_aliases`
 - `version`
 - `mission`
+- `must_preserve` (list of critical invariants that must not be compressed away)
 - `engage_policy` (`AUTO | OFFER | MANUAL`)
 - `single_emoji_activate` (`true|false`)
 - `use_when` (list)
@@ -92,6 +95,7 @@ Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with t
 Purpose:
 - Decouple trigger/selection metadata from long-form docs.
 - Enable deterministic arbitration and fail-closed behavior before loading large documents.
+- Preserve module identity and core guarantees even when documents are refactored or shortened.
 
 ### 4.3 Emoji glossary (required for user-facing modules)
 Any module that exposes emoji aliases must include an `EmojiGlossary` section in its `UserGuide`.
@@ -112,6 +116,7 @@ Use staged loading to reduce context and improve precision:
 Rules:
 - Do not start from full `UserGuide` for routine runtime usage.
 - Escalate stages only when uncertainty or conflict requires it.
+- Escalate to `UserGuide` before any policy edit, spec rewrite, or behavior dispute; do not resolve those from `QuickRefCard` alone.
 
 ## 6) State and lifecycle standards
 Each runtime module must define:
@@ -210,6 +215,8 @@ If registry or docs cannot be fetched:
 - User-facing emoji aliases are documented in `EmojiGlossary`.
 - `ModuleManifest.yaml` is present and contains required fields.
 - `ModuleManifest` doc pointers map to existing local files in `_CURRENT`.
+- `must_preserve` exists and every invariant term appears in canonical `UserGuide`.
+- Strict parity checks pass for lifecycle command/state coverage between `UserGuide` and `MachineManual`.
 - For repo-level strict scans, use `--modulekit-only` to target canonical artifacts.
 
 ### 10.2 Regression harness minimum

@@ -3,6 +3,11 @@ module_emoji: "📠"
 module_aliases: ["faxax", "fax", "📠"]
 version: "0.2.0"
 mission: "Scope-first response protocol with opt-in depth and hold/release comment stacking."
+must_preserve:
+  - "scope-first"
+  - "opt-in"
+  - "Hold / comment-stacking"
+  - "MAX = 12 items"
 engage_policy: "AUTO"
 single_emoji_activate: true
 

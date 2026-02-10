@@ -4,6 +4,9 @@ module_emoji: "🧩"
 module_aliases: ["<modulename>", "🧩"]
 version: "0.1.0"
 mission: "Single-line module mission"
+must_preserve:
+  - "critical module invariant phrase #1"
+  - "critical module invariant phrase #2"
 engage_policy: "OFFER"  # AUTO | OFFER | MANUAL
 single_emoji_activate: true
 

@@ -2,6 +2,21 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.5.0] - 2026-02-10
+### Added
+- Anti-neutering invariant contract for runtime modules:
+  - New required `ModuleManifest.must_preserve` list.
+  - Compiler strict lint now fails when `must_preserve` invariants are missing from canonical `UserGuide`.
+- Compiler strict parity checks between canonical and derived runtime docs:
+  - namespaced state keys declared in `UserGuide` must appear in `MachineManual`
+  - lifecycle canonical commands from `UserGuide` must appear in `MachineManual`
+  - QuickRef lifecycle gaps are reported as warnings
+
+### Changed
+- ModuleManifest template now includes `must_preserve`.
+- Runtime manifests for `CanvasCanon`, `FaxAx`, and `LogKit` now declare module-specific `must_preserve` invariants.
+- ModuleMill DevGuide and MachineManual now explicitly treat `must_preserve` as a non-negotiable anti-compression guard.
+
 ## [0.4.4] - 2026-02-09
 ### Added
 - Emoji-first module addressing is now mandatory in KitRegistry:

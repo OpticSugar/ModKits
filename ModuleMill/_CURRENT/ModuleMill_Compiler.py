@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.4
+ModuleMill Compiler v0.5
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -19,6 +19,7 @@ REQUIRED_MANIFEST_KEYS = {
     "module_aliases",
     "version",
     "mission",
+    "must_preserve",
     "engage_policy",
     "single_emoji_activate",
     "use_when",
@@ -39,6 +40,8 @@ REQUIRED_USERGUIDE_SECTION_GROUPS = {
 }
 USERGUIDE_MIN_NONEMPTY_LINES = 120
 USERGUIDE_MIN_HEADINGS = 8
+LIFECYCLE_VERBS = ("load", "activate", "sleep", "unload", "status")
+STATE_KEY_RE = re.compile(r"`([a-z][a-z0-9_]*\.[a-z0-9_.]+)`")
 
 META_PATTERNS = {
     "ModuleID": re.compile(r"\bModuleID\s*[:=]\s*(\S+)", re.IGNORECASE),
@@ -144,7 +147,7 @@ def parse_manifest(text: str) -> Dict[str, object]:
         key = key.strip()
         val = val.strip()
 
-        if key in {"module_aliases", "use_when", "do_not_use_when", "required_inputs"}:
+        if key in {"module_aliases", "use_when", "do_not_use_when", "required_inputs", "must_preserve"}:
             inline_items = parse_inline_list(val)
             if inline_items:
                 manifest[key] = inline_items
@@ -283,6 +286,137 @@ def lint_emoji_glossary_contract(path: Path, text: str, strict: bool, errs: List
         )
 
 
+def normalize_canon_command(raw: str) -> str:
+    token = raw.replace("`", "").strip()
+    token = re.sub(r"<[^>]+>", "", token)
+    token = re.sub(r"\[[^\]]+\]", "", token)
+    token = re.sub(r"\s+", " ", token).strip()
+    return token
+
+
+def extract_userguide_canon_commands(text: str) -> List[str]:
+    commands: List[str] = []
+    in_command_table = False
+
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line.startswith("|"):
+            if in_command_table and line:
+                in_command_table = False
+            continue
+
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 2:
+            continue
+
+        if cells[0].lower() == "command" and cells[1].lower() == "canon":
+            in_command_table = True
+            continue
+
+        if not in_command_table:
+            continue
+
+        if set("".join(cells)) <= {"-", " "}:
+            continue
+
+        canon_cell = cells[1]
+        m = re.search(r"`([^`]+)`", canon_cell)
+        canon = normalize_canon_command(m.group(1) if m else canon_cell)
+        if canon and canon not in commands:
+            commands.append(canon)
+
+    return commands
+
+
+def extract_namespaced_state_keys(text: str, module: str) -> List[str]:
+    keys: List[str] = []
+    module_prefix = f"{module.lower()}."
+    sections: List[str] = []
+    headings = build_heading_index(text)
+    lines = text.splitlines()
+
+    for idx, (level, title, start) in enumerate(headings):
+        if "state" not in title.lower():
+            continue
+        end = len(lines)
+        for lvl, _, li in headings[idx + 1 :]:
+            if li > start and lvl <= level:
+                end = li
+                break
+        sections.append("\n".join(lines[start:end]))
+
+    scan_text = "\n".join(sections) if sections else text
+    for m in STATE_KEY_RE.finditer(scan_text):
+        key = m.group(1)
+        if key.startswith(module_prefix) and key.count(".") == 1 and key not in keys:
+            keys.append(key)
+    return keys
+
+
+def lint_manifest_contract_parity(
+    path: Path,
+    manifest: Dict[str, object],
+    doc_texts: Dict[str, str],
+    strict: bool,
+    errs: List[str],
+    warns: List[str],
+) -> None:
+    module = str(manifest.get("module", "")).strip()
+    userguide_text = doc_texts.get("userguide", "")
+    machinemanual_text = doc_texts.get("machinemanual", "")
+    quickref_text = doc_texts.get("quickref", "")
+
+    must_preserve = manifest.get("must_preserve", [])
+    if not isinstance(must_preserve, list):
+        errs.append(f"{path.name}: 'must_preserve' must be a list")
+        must_preserve = []
+
+    for i, item in enumerate(must_preserve, start=1):
+        if not isinstance(item, str) or not item.strip():
+            errs.append(f"{path.name}: must_preserve item #{i} must be a non-empty string")
+
+    if userguide_text and isinstance(must_preserve, list):
+        userguide_lower = userguide_text.lower()
+        for item in must_preserve:
+            if isinstance(item, str) and item.strip():
+                if item.strip().lower() not in userguide_lower:
+                    errs.append(
+                        f"{path.name}: must_preserve term missing from UserGuide: '{item}'"
+                    )
+
+    if not strict or not module:
+        return
+
+    if userguide_text and machinemanual_text:
+        ug_state_keys = extract_namespaced_state_keys(userguide_text, module)
+        mm_lower = machinemanual_text.lower()
+        missing_state = [k for k in ug_state_keys if k.lower() not in mm_lower]
+        if missing_state:
+            errs.append(
+                f"{path.name}: MachineManual missing namespaced state key(s) from UserGuide: {', '.join(missing_state)}"
+            )
+
+        canon_commands = extract_userguide_canon_commands(userguide_text)
+        lifecycle_commands = [
+            cmd
+            for cmd in canon_commands
+            if any(cmd.lower().endswith(f" {verb}") for verb in LIFECYCLE_VERBS)
+        ]
+        missing_lifecycle = [cmd for cmd in lifecycle_commands if cmd.lower() not in mm_lower]
+        if missing_lifecycle:
+            errs.append(
+                f"{path.name}: MachineManual missing lifecycle canon command(s): {', '.join(missing_lifecycle)}"
+            )
+
+        if quickref_text:
+            qr_lower = quickref_text.lower()
+            missing_qr_lifecycle = [cmd for cmd in lifecycle_commands if cmd.lower() not in qr_lower]
+            if missing_qr_lifecycle:
+                warns.append(
+                    f"{path.name}: QuickRefCard missing lifecycle canon command text for: {', '.join(missing_qr_lifecycle)}"
+                )
+
+
 def lint_markdown_file(path: Path, strict: bool = False, require_manifest: bool = False) -> Tuple[List[str], List[str]]:
     text = read_text(path)
     meta = parse_meta(text)
@@ -354,7 +488,7 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     if version and not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", version):
         errs.append(f"{path.name}: version '{version}' is not SemVer-like (MAJOR.MINOR[.PATCH])")
 
-    for list_key in ("module_aliases", "use_when", "do_not_use_when", "required_inputs"):
+    for list_key in ("module_aliases", "use_when", "do_not_use_when", "required_inputs", "must_preserve"):
         if list_key in manifest and not isinstance(manifest.get(list_key), list):
             errs.append(f"{path.name}: '{list_key}' must be a list")
 
@@ -381,6 +515,8 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     module = str(manifest.get("module", "")).strip()
     is_template_manifest = any(part.lower() == "templates" for part in path.parts) or "<" in module or ">" in module
 
+    doc_texts: Dict[str, str] = {}
+
     for doc_key, expected_role in role_expectations.items():
         rel = str(docs.get(doc_key, "")).strip()
         if not rel:
@@ -398,7 +534,9 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
             warns.append(f"{path.name}: docs.{doc_key} expected markdown file, got '{rel}'")
             continue
 
-        doc_meta = parse_meta(read_text(doc_path))
+        doc_text = read_text(doc_path)
+        doc_texts[doc_key] = doc_text
+        doc_meta = parse_meta(doc_text)
         doc_role = doc_meta.get("DocRole", "")
         if doc_role and doc_role != expected_role:
             errs.append(
@@ -422,6 +560,9 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     failure_mode = str(manifest.get("failure_mode", "")).strip()
     if failure_mode and not failure_mode.startswith("fail_closed"):
         warns.append(f"{path.name}: failure_mode '{failure_mode}' should start with 'fail_closed' for safety")
+
+    if not is_template_manifest:
+        lint_manifest_contract_parity(path, manifest, doc_texts, strict, errs, warns)
 
     return errs, warns
 
