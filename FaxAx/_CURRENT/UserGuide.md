@@ -122,6 +122,7 @@ Lifecycle control commands:
 
 2) **Headlines (optional)**
 - Up to 3 numbered items, each: chip + short description.
+- Headline numbering uses `1:` `2:` `3:` (colon form, not `1.` list form).
 
 3) **ChipRack (optional)**
 - Compact chips only (no descriptions).
@@ -139,27 +140,30 @@ Lifecycle control commands:
 - Avoid wrapping; insert deliberate breaks.
 
 ### 4.3 Numbering rules
-- Headlines: `1.` `2.` `3.`
+- Headlines: `1:` `2:` `3:` (use colon, not dot).
 - ChipRack: index outside the chip: `4:` glued to chip, spaces after.
 
 ### 4.4 Template
-📠 If you’re still hungry, congrats, you’re my favorite problem.
+📠 TestMode: FaxCluster
 
-1. `🕵🏻‍♂️audit`  – where bloat sneaks in
-2. `🛠️refactor`  – shrink rules without losing power
-3. `👷🏽‍♂️implement`  – apply patches + regen docs
+1:`🧲showCluster`  – Force FaxCluster every reply so we can validate spacing + chip behavior.
+2:`🧼hygieneCheck`  – Verify trigger-only header. Glued indices. Clean rack. No nesting weirdness.
+3:`🧷chipEmoji`  – Make ChipRack read like a control panel, not a sad text-only menu.
 
-4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`
+4:`🔥stressTest`  5:`📄onePager`  6:`🌳decisionTree`  7:`🛠️toolingSketch`  8:`⚠️contextLeak`
 
 ### 4.5 Template contract (must-pass)
 - The template in §4.4 is the canonical demonstration format for FaxCluster.
 - When demonstrating FaxCluster behavior (tests/docs/examples), preserve all three parts:
   - FaxHeader line that starts with `📠`
-  - Headlines `1.` to `3.` with `chip + short description`
+  - Headlines `1:` to `3:` with `chip + short description`
   - ChipRack entries `4:` and above with glued indices and compact chips only
 - Every ChipRack entry includes a leading emoji token.
 - ChipRack entries must use unique emoji tokens within the same rack.
+- Prefer unique emoji tokens across the entire cluster (headlines + ChipRack) for instant scanability.
+- Keep each headline description at 70 to 85 chars (hard max ~85) to avoid non-hanging-wrap ugliness.
 - Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples.
+- Renderer fix (preferred): hanging indent for wrapped headline lines.
 
 ## 5) SpeakerScale (verbosity control)
 ### 5.1 Modes
@@ -267,11 +271,13 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 2) Cluster hygiene: header starts with `📠`; no `📠` in chips; ChipRack indices glued.
 3) ChipRack emoji presence: every ChipRack chip has a leading emoji token.
 4) ChipRack emoji uniqueness: no repeated lead emoji within a single ChipRack.
-5) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
-6) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
-7) N-shot: `🔊3` persists for 3 replies, then reverts.
-8) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
-9) Hold ASK: gauge ACK only; 11/12 warning; auto-flush on 12th.
-10) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
-11) Consolidated reply: numbered; mini headers; paraphrase long comments.
-12) Collision: two modules active → “choose” gate.
+5) Headline numbering: use `1:` `2:` `3:` (never `1.` in FaxCluster lines).
+6) Headline width: each description stays <= ~85 chars (target 70-85).
+7) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
+8) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
+9) N-shot: `🔊3` persists for 3 replies, then reverts.
+10) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
+11) Hold ASK: gauge ACK only; 11/12 warning; auto-flush on 12th.
+12) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
+13) Consolidated reply: numbered; mini headers; paraphrase long comments.
+14) Collision: two modules active → “choose” gate.

@@ -54,7 +54,8 @@ Run these prompts:
 - “Show a canonical FaxCluster example.” → includes:
   - one `📠` header line
   - header starts with `📠`
-  - `1.`..`3.` headlines (chip + short description)
+  - `1:`..`3:` headlines (colon format; no markdown list dots)
   - ChipRack with glued indices (`4:`...)
   - every ChipRack chip has a leading emoji token
   - ChipRack chips with unique emoji (no duplicates)
+  - headline descriptions stay <= ~85 chars (target 70-85)

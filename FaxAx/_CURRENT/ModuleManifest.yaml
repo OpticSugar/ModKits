@@ -9,11 +9,12 @@ must_preserve:
   - "Hold / comment-stacking"
   - "MAX = 12 items"
   - "Exactly **one** `📠` in the whole cluster"
-  - "Headlines: `1.` `2.` `3.`"
+  - "Headlines: `1:` `2:` `3:` (use colon, not dot)."
   - "ChipRack entries `4:` and above with glued indices"
   - "Every ChipRack chip must include a leading emoji token"
   - "FaxHeader must start with `📠` in every FaxCluster instance"
   - "ChipRack chips must each have a distinct emoji"
+  - "Keep each headline description at 70 to 85 chars (hard max ~85)"
   - "Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples"
 must_preserve_runtime:
   - "Every ChipRack chip must include a leading emoji token"

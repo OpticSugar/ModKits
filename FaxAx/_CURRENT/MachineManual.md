@@ -98,24 +98,27 @@ If offering branches:
 - emit FaxCluster with exactly one `📠` in header
 - ensure FaxHeader begins with `📠`
 - headlines max 3
+- use headline numbering `1:` `2:` `3:` (colon form)
 - ChipRack indices glued to chips
 - require a leading emoji token on every ChipRack chip
 - enforce unique lead emoji per ChipRack chip (no repeats in one rack)
+- prefer unique emoji across headlines + ChipRack for scanability
+- keep headline descriptions <= ~85 chars (target 70-85)
 
 Warnings default to ChipRack with trailing emphasis emojis.
 
 ### 8.1 Canonical demonstration template
 When producing FaxCluster examples/regression outputs, use this exact structure:
 
-📠 If you’re still hungry, congrats, you’re my favorite problem.
+📠 TestMode: FaxCluster
 
-1. `🕵🏻‍♂️audit`  – where bloat sneaks in
-2. `🛠️refactor`  – shrink rules without losing power
-3. `👷🏽‍♂️implement`  – apply patches + regen docs
+1:`🧲showCluster`  – Force FaxCluster every reply so we can validate spacing + chip behavior.
+2:`🧼hygieneCheck`  – Verify trigger-only header. Glued indices. Clean rack. No nesting weirdness.
+3:`🧷chipEmoji`  – Make ChipRack read like a control panel, not a sad text-only menu.
 
-4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`
+4:`🔥stressTest`  5:`📄onePager`  6:`🌳decisionTree`  7:`🛠️toolingSketch`  8:`⚠️contextLeak`
 
 ### 8.2 Component mapping
 - FaxHeader: first line only, starts with one `📠`.
-- Headlines: items `1.` to `3.` only, each chip plus short description.
+- Headlines: items `1:` to `3:` only, each chip plus short description.
 - ChipRack: `4:` and above, index glued to chip, compact chips only, leading emoji on each chip, unique emoji per chip.
