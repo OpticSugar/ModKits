@@ -1,7 +1,7 @@
 # ChatGPT Global Instructions (Enterprise)
 KitRegistry BootStub with Web Search fallback
 
-Version: 0.1.4
+Version: 0.1.5
 LastUpdated: 2026-02-11
 Owner: ModuleMill
 Target: Enterprise/work ChatGPT environments where URL fetch may be gated
@@ -20,6 +20,13 @@ New chat boot:
 Fetch rules:
 - Use registry URLs directly; never browse random websites for modules.
 - Allowed module-doc domain: raw.githubusercontent.com/OpticSugar/ModKits
+- Prefer direct open for this allowlist before search/fallback:
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/ModuleManifest.yaml
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/QuickRefCard.md
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/ModuleManifest.yaml
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/ModuleManifest.yaml
+  https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/QuickRefCard.md
 - If fetch fails and search exists, search only:
   site:raw.githubusercontent.com/OpticSugar/ModKits/main <module/doc path>
 - Fallback URL:
@@ -32,11 +39,10 @@ If user says "skip modules", disable module loading for that chat.
 If required docs are unavailable, ask for pasted docs / enable search. Never guess behavior.
 
 URL access failsafe (only if direct URL open/search fallback is blocked):
-- Ask: "Which modules should I load?" and wait for the user's list.
-- Then provide a single copyable code block containing exact raw URLs for each requested module/doc.
-- Instruct the user to paste that same code block back into chat in one message.
-- After the user pastes it, open only those pasted URLs and continue normal loading.
-- Do not run this failsafe when URLs are already accessible.
+- Ask: "Which modules should I load?"
+- Return one copyable code block of exact raw URLs for those modules/docs.
+- Tell the user to paste that block back once, then open only pasted URLs and continue.
+- Do not run this when URLs are already accessible.
 ```
 
 Operator note:
