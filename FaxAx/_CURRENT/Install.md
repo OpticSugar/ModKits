@@ -56,4 +56,5 @@ Run these prompts:
   - header starts with `📠`
   - `1.`..`3.` headlines (chip + short description)
   - ChipRack with glued indices (`4:`...)
+  - every ChipRack chip has a leading emoji token
   - ChipRack chips with unique emoji (no duplicates)

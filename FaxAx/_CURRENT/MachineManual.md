@@ -99,6 +99,7 @@ If offering branches:
 - ensure FaxHeader begins with `📠`
 - headlines max 3
 - ChipRack indices glued to chips
+- require a leading emoji token on every ChipRack chip
 - enforce unique lead emoji per ChipRack chip (no repeats in one rack)
 
 Warnings default to ChipRack with trailing emphasis emojis.
@@ -117,4 +118,4 @@ When producing FaxCluster examples/regression outputs, use this exact structure:
 ### 8.2 Component mapping
 - FaxHeader: first line only, starts with one `📠`.
 - Headlines: items `1.` to `3.` only, each chip plus short description.
-- ChipRack: `4:` and above, index glued to chip, compact chips only, unique emoji per chip.
+- ChipRack: `4:` and above, index glued to chip, compact chips only, leading emoji on each chip, unique emoji per chip.

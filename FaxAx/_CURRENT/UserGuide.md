@@ -126,12 +126,14 @@ Lifecycle control commands:
 3) **ChipRack (optional)**
 - Compact chips only (no descriptions).
 - Most warnings live here.
+- Every ChipRack chip must include a leading emoji token.
 - Each ChipRack chip must use a unique emoji token (no repeated lead emoji inside one ChipRack).
 
 ### 4.2 Hygiene rules
 - Exactly **one** `📠` in the whole cluster (FaxHeader only).
 - No `📠` inside chips.
 - FaxHeader must start with `📠` in every FaxCluster instance.
+- Every ChipRack chip must include a leading emoji token.
 - ChipRack chips must each have a distinct emoji (no duplicates per cluster).
 - No double dashes in descriptions.
 - Avoid wrapping; insert deliberate breaks.
@@ -155,6 +157,7 @@ Lifecycle control commands:
   - FaxHeader line that starts with `📠`
   - Headlines `1.` to `3.` with `chip + short description`
   - ChipRack entries `4:` and above with glued indices and compact chips only
+- Every ChipRack entry includes a leading emoji token.
 - ChipRack entries must use unique emoji tokens within the same rack.
 - Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples.
 
@@ -262,12 +265,13 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 ## 9) Regression checklist (must-pass)
 1) Smoke: simple Q → main answer + (only if needed) valid FaxCluster.
 2) Cluster hygiene: header starts with `📠`; no `📠` in chips; ChipRack indices glued.
-3) ChipRack emoji uniqueness: no repeated lead emoji within a single ChipRack.
-4) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
-5) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
-6) N-shot: `🔊3` persists for 3 replies, then reverts.
-7) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
-8) Hold ASK: gauge ACK only; 11/12 warning; auto-flush on 12th.
-9) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
-10) Consolidated reply: numbered; mini headers; paraphrase long comments.
-11) Collision: two modules active → “choose” gate.
+3) ChipRack emoji presence: every ChipRack chip has a leading emoji token.
+4) ChipRack emoji uniqueness: no repeated lead emoji within a single ChipRack.
+5) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
+6) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
+7) N-shot: `🔊3` persists for 3 replies, then reverts.
+8) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
+9) Hold ASK: gauge ACK only; 11/12 warning; auto-flush on 12th.
+10) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
+11) Consolidated reply: numbered; mini headers; paraphrase long comments.
+12) Collision: two modules active → “choose” gate.
