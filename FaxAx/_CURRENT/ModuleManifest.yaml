@@ -8,6 +8,10 @@ must_preserve:
   - "opt-in"
   - "Hold / comment-stacking"
   - "MAX = 12 items"
+  - "Exactly **one** `📠` in the whole cluster"
+  - "Headlines: `1.` `2.` `3.`"
+  - "ChipRack entries `4:` and above with glued indices"
+  - "Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples"
 engage_policy: "AUTO"
 single_emoji_activate: true
 

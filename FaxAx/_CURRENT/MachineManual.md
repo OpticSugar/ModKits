@@ -100,3 +100,19 @@ If offering branches:
 - ChipRack indices glued to chips
 
 Warnings default to ChipRack with trailing emphasis emojis.
+
+### 8.1 Canonical demonstration template
+When producing FaxCluster examples/regression outputs, use this exact structure:
+
+📠 If you’re still hungry, congrats, you’re my favorite problem.
+
+1. `🕵🏻‍♂️audit`  – where bloat sneaks in
+2. `🛠️refactor`  – shrink rules without losing power
+3. `👷🏽‍♂️implement`  – apply patches + regen docs
+
+4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`
+
+### 8.2 Component mapping
+- FaxHeader: first line only, starts with one `📠`.
+- Headlines: items `1.` to `3.` only, each chip plus short description.
+- ChipRack: `4:` and above, index glued to chip, compact chips only.

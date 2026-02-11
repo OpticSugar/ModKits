@@ -51,3 +51,7 @@ Run these prompts:
 - `📠2` → expands item 2
 - `📠🔊` → latches loud mode
 - `🔇` + 3 notes + `🔉` → consolidated reply
+- “Show a canonical FaxCluster example.” → includes:
+  - one `📠` header line
+  - `1.`..`3.` headlines (chip + short description)
+  - ChipRack with glued indices (`4:`...)

@@ -44,3 +44,14 @@ Trigger `🔇` only when **alone / prefix / final char**.
 ## FaxCluster hygiene
 - One `📠` in header only.
 - No `📠` in chips.
+- Headlines use `1.` `2.` `3.` with chip + short description.
+- ChipRack uses glued indices: `4:` `5:` `6:` ...
+
+## FaxCluster canonical example
+📠 If you’re still hungry, congrats, you’re my favorite problem.
+
+1. `🕵🏻‍♂️audit`  – where bloat sneaks in
+2. `🛠️refactor`  – shrink rules without losing power
+3. `👷🏽‍♂️implement`  – apply patches + regen docs
+
+4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`

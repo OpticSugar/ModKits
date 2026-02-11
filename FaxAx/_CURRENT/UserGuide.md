@@ -146,6 +146,14 @@ Lifecycle control commands:
 
 4:`🧪stressTest`  5:`🧾onePager`  6:`🧭decisionTree`  7:`🧰toolingSketch`  8:`⚠️contextLeak`
 
+### 4.5 Template contract (must-pass)
+- The template in §4.4 is the canonical demonstration format for FaxCluster.
+- When demonstrating FaxCluster behavior (tests/docs/examples), preserve all three parts:
+  - FaxHeader line
+  - Headlines `1.` to `3.` with `chip + short description`
+  - ChipRack entries `4:` and above with glued indices and compact chips only
+- Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples.
+
 ## 5) SpeakerScale (verbosity control)
 ### 5.1 Modes
 - `🔈` LIGHT: yes/no or 1–2 tight lines.
