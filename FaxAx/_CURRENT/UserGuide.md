@@ -161,7 +161,7 @@ Lifecycle control commands:
 - Every ChipRack entry includes a leading emoji token.
 - ChipRack entries must use unique emoji tokens within the same rack.
 - Prefer unique emoji tokens across the entire cluster (headlines + ChipRack) for instant scanability.
-- Keep each headline description at 70 to 85 chars (hard max ~85) to avoid non-hanging-wrap ugliness.
+- Keep each full headline line at 96 chars max (measure from `1:` to the final punctuation).
 - Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples.
 - Renderer fix (preferred): hanging indent for wrapped headline lines.
 
@@ -272,7 +272,7 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 3) ChipRack emoji presence: every ChipRack chip has a leading emoji token.
 4) ChipRack emoji uniqueness: no repeated lead emoji within a single ChipRack.
 5) Headline numbering: use `1:` `2:` `3:` (never `1.` in FaxCluster lines).
-6) Headline width: each description stays <= ~85 chars (target 70-85).
+6) Headline width: each full headline line stays <= 96 chars.
 7) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
 8) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
 9) N-shot: `🔊3` persists for 3 replies, then reverts.

@@ -103,7 +103,7 @@ If offering branches:
 - require a leading emoji token on every ChipRack chip
 - enforce unique lead emoji per ChipRack chip (no repeats in one rack)
 - prefer unique emoji across headlines + ChipRack for scanability
-- keep headline descriptions <= ~85 chars (target 70-85)
+- keep each full headline line <= 96 chars (measure from `1:` to end punctuation)
 
 Warnings default to ChipRack with trailing emphasis emojis.
 

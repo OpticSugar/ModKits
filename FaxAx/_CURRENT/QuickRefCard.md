@@ -49,7 +49,7 @@ Trigger `🔇` only when **alone / prefix / final char**.
 - ChipRack uses glued indices: `4:` `5:` `6:` ...
 - Every ChipRack chip has a leading emoji token.
 - ChipRack chips must use unique emoji (no repeated lead emoji in one rack).
-- Keep headline descriptions <= ~85 chars (target 70-85).
+- Keep each full headline line <= 96 chars (from `1:` to end punctuation).
 
 ## FaxCluster canonical example
 📠 TestMode: FaxCluster

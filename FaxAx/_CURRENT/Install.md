@@ -58,4 +58,4 @@ Run these prompts:
   - ChipRack with glued indices (`4:`...)
   - every ChipRack chip has a leading emoji token
   - ChipRack chips with unique emoji (no duplicates)
-  - headline descriptions stay <= ~85 chars (target 70-85)
+  - each full headline line stays <= 96 chars (from `1:` to end punctuation)
