@@ -1,7 +1,7 @@
 # ChatGPT Global Instructions
 KitRegistry BootStub (copy/paste source)
 
-Version: 0.2.6
+Version: 0.2.7
 LastUpdated: 2026-02-11
 Owner: ModuleMill
 
@@ -19,18 +19,16 @@ New chat boot:
 Fetch rules:
 - Use registry URLs directly; never browse random websites for modules.
 - Allowed module-doc domain: raw.githubusercontent.com/OpticSugar/ModKits
-- Prefer direct open for this allowlist before search/fallback:
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/ModuleManifest.yaml
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/QuickRefCard.md
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/ModuleManifest.yaml
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/ModuleManifest.yaml
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/QuickRefCard.md
+- URL assembly shorthand (for brevity):
+  BASE=https://raw.githubusercontent.com/OpticSugar/ModKits/main
+  Module path: <Module>/_CURRENT/<DocFile>
+  DocFile priority: ModuleManifest.yaml then QuickRefCard.md
+  Supported modules: FaxAx | LogKit | CanvasCanon
+- Before opening assembled URLs, first emit exact expanded URLs in one code block and use those exact URLs.
 - If fetch fails and search exists, search only:
   site:raw.githubusercontent.com/OpticSugar/ModKits/main <module/doc path>
-- Fallback URL:
-  https://raw.githubusercontent.com/OpticSugar/ModKits/main/<Module>/_CURRENT/<DocFile>
-  DocFile = ModuleManifest.yaml|Install.md|QuickRefCard.md|MachineManual.md|UserGuide.md
+- Fallback DocFiles:
+  ModuleManifest.yaml | QuickRefCard.md | MachineManual.md | UserGuide.md | Install.md
 
 Emoji module addressing is valid (📠 🛜 🖨️).
 If a message is one module emoji, activate/invoke that module (load if allowed).
