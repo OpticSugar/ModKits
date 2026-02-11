@@ -11,6 +11,8 @@ must_preserve:
   - "Exactly **one** `📠` in the whole cluster"
   - "Headlines: `1.` `2.` `3.`"
   - "ChipRack entries `4:` and above with glued indices"
+  - "FaxHeader must start with `📠` in every FaxCluster instance"
+  - "ChipRack chips must each have a distinct emoji"
   - "Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples"
 engage_policy: "AUTO"
 single_emoji_activate: true

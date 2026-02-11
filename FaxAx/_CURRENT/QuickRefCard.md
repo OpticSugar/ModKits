@@ -43,9 +43,11 @@ Trigger `🔇` only when **alone / prefix / final char**.
 
 ## FaxCluster hygiene
 - One `📠` in header only.
+- Header must start with `📠`.
 - No `📠` in chips.
 - Headlines use `1.` `2.` `3.` with chip + short description.
 - ChipRack uses glued indices: `4:` `5:` `6:` ...
+- ChipRack chips must use unique emoji (no repeated lead emoji in one rack).
 
 ## FaxCluster canonical example
 📠 If you’re still hungry, congrats, you’re my favorite problem.

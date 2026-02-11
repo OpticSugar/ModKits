@@ -53,5 +53,7 @@ Run these prompts:
 - `🔇` + 3 notes + `🔉` → consolidated reply
 - “Show a canonical FaxCluster example.” → includes:
   - one `📠` header line
+  - header starts with `📠`
   - `1.`..`3.` headlines (chip + short description)
   - ChipRack with glued indices (`4:`...)
+  - ChipRack chips with unique emoji (no duplicates)
