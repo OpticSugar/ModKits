@@ -110,4 +110,4 @@ When a user message includes only emoji tokens:
 - Missing ledger/canvas/meta: fail closed and provide exact remediation.
 - Duplicate ledger: halt commits until user designates canonical ledger.
 - Unavailable service/index: return failure and request artifact attachment.
-- Ambiguous or malformed emoji-only names (for example `️ Log`): fail closed and require `LogKit Log` or `🖨️ Log`.
+- Ambiguous or malformed emoji-only names (for example, visually blank emoji-prefixed tokens): fail closed and require `LogKit Log` or `🖨️ Log`.

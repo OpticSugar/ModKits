@@ -25,6 +25,7 @@ Audience: Users (pocket cheat sheet)
 - “expand on X”
 
 ## SpeakerScale (verbosity)
+- **🪓AxFactor** is the named verbosity-control dial for SpeakerScale (`🔈`/`🔉`/`🔊`).
 - `🔈` light (1–2 lines)
 - `🔉` default focused
 - `🔊` max (on-scope)
@@ -43,16 +44,20 @@ Trigger `🔇` only when **alone / prefix / final char**.
 
 ## FaxCluster hygiene
 - One `📠` in header only.
-- Header must start with `📠`.
+- FaxHeader must start with `📠` in every FaxCluster instance.
+- FaxHeader copy is improvised and avoids repetitive canned phrasing.
+- Keep header tone playful/inviting; snark is allowed when context supports it.
+- FaxHeader should be topic-aware where possible and avoid immediate repeats.
+- For sensitive topics, FaxHeader tone should stay respectful and reduce snark.
 - No `📠` in chips.
 - Headlines use `1:` `2:` `3:` with chip + short description (colon form).
 - ChipRack uses glued indices: `4:` `5:` `6:` ...
-- Every ChipRack chip has a leading emoji token.
-- ChipRack chips must use unique emoji (no repeated lead emoji in one rack).
+- Every ChipRack chip must include a leading emoji token.
+- ChipRack chips must each have a distinct emoji.
 - Keep each full headline line <= 96 chars (from `1:` to end punctuation).
 
 ## FaxCluster canonical example
-📠 TestMode: FaxCluster
+📠 If you can't get enough of this topic, here's more to binge on!
 
 1:`🧲showCluster`  – Force FaxCluster every reply so we can validate spacing + chip behavior.
 2:`🧼hygieneCheck`  – Verify trigger-only header. Glued indices. Clean rack. No nesting weirdness.

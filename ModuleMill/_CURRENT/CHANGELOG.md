@@ -2,6 +2,32 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.6.0] - 2026-02-11
+### Added
+- Origin and intent canon in ModuleMill DevGuide:
+  - Modules are documented as "skills for regular ChatGPT."
+  - ModuleMill mission now explicitly frames anti-neutering protection for authored module behavior.
+- Codex skill sync contract in DevGuide:
+  - ModuleMill is authored in Git but operationally executed through the installed Codex skill.
+  - Every ModuleMill change must include exact skill update and verification commands.
+  - Assistants must not claim updates are active in Codex when skill files are stale.
+- Conflict-resolution documentation duty in DevGuide for policy disputes and behavior-preservation decisions.
+- Protected feature-name contract in ModuleMill canon:
+  - Any `Emoji + PascalCaseName` token is an official non-prunable mechanism.
+  - These names must be preserved verbatim and represented in `must_preserve` (and `must_preserve_runtime` when runtime-critical).
+  - Strict compiler lint enforces `EmojiGlossary` -> `must_preserve` anti-drift coverage for these tokens.
+- Emoji drift-prevention lint gates:
+  - Strict lint now fails on inline-code spans that start with variation-selector bytes (`\ufe0e`/`\ufe0f`) because this indicates a dropped emoji base token.
+  - Strict lint now enforces UserGuide command-alias emoji parity in `MachineManual` and `QuickRefCard`.
+
+### Changed
+- UserGuide preservation law hardened in framework canon:
+  - Canonical UserGuide is defined as maximal module DNA/blueprint.
+  - Heavy compression/cleanup of canonical UserGuide is forbidden unless functionality intentionally changes.
+- ModuleMill MachineManual enforcement updated:
+  - Explicitly prohibits trimming templates/scenarios/rationale from canonical UserGuide without explicit functional-change approval.
+  - Release routine now requires mandatory skill-sync handoff when framework artifacts change.
+
 ## [0.5.0] - 2026-02-10
 ### Added
 - Anti-neutering invariant contract for runtime modules:

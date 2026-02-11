@@ -8,6 +8,16 @@ must_preserve:
   - "record it in canvas canon"
   - "Appendix A: Footnotes"
   - "grab the torch"
+  - "🛜CanvasCanonMark"
+  - "🧹CleanUpPass"
+  - "🍺LastCallPass"
+  - "❓OpenQuestionTag"
+  - "✅ResolvedTag"
+  - "❌PruneTag"
+  - "🥇PreferredOptionGold"
+  - "🥈PreferredOptionSilver"
+  - "🥉PreferredOptionBronze"
+  - "👎🏼DeprioritizedOption"
 engage_policy: "OFFER"
 single_emoji_activate: true
 

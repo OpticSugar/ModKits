@@ -98,7 +98,8 @@ Lifecycle control commands:
 
 ### 3.4 Improv zones (allowed vs forbidden)
 **Allowed improv**
-- FaxHeader copy (snark/topical).
+- FaxHeader copy should read like a playful invitation (snark/topical is fine).
+- Keep FaxHeader copy fresh; avoid repetitive canned phrasing across turns.
 - Choosing among approved warning emojis.
 - Selecting which optional chips to offer (from approved legend).
 - 1-line reactions during CHAT Hold.
@@ -118,7 +119,10 @@ Lifecycle control commands:
 ### 4.1 Components
 1) **FaxHeader**
 - Exactly one header line starting with **one** `📠`.
-- Text improvised (no canned phrase).
+- FaxHeader copy is improvised and avoids repetitive canned phrasing.
+- Aim for a playful invitation tone; snark/fun is encouraged when context allows.
+- FaxHeader should be topic-aware where possible and avoid immediate repeats.
+- For sensitive topics, FaxHeader tone should stay respectful and reduce snark.
 
 2) **Headlines (optional)**
 - Up to 3 numbered items, each: chip + short description.
@@ -144,16 +148,16 @@ Lifecycle control commands:
 - ChipRack: index outside the chip: `4:` glued to chip, spaces after.
 
 ### 4.4 Template
-📠 TestMode: FaxCluster
+📠 If you can't get enough of this topic, here's more to binge on!
 
 1:`🧲showCluster`  – Force FaxCluster every reply so we can validate spacing + chip behavior.
 2:`🧼hygieneCheck`  – Verify trigger-only header. Glued indices. Clean rack. No nesting weirdness.
 3:`🧷chipEmoji`  – Make ChipRack read like a control panel, not a sad text-only menu.
-
 4:`🔥stressTest`  5:`📄onePager`  6:`🌳decisionTree`  7:`🛠️toolingSketch`  8:`⚠️contextLeak`
 
 ### 4.5 Template contract (must-pass)
 - The template in §4.4 is the canonical demonstration format for FaxCluster.
+- The §4.4 header text is an example tone target, not a required literal string.
 - When demonstrating FaxCluster behavior (tests/docs/examples), preserve all three parts:
   - FaxHeader line that starts with `📠`
   - Headlines `1:` to `3:` with `chip + short description`
@@ -164,9 +168,14 @@ Lifecycle control commands:
 - Keep each full headline line at 96 chars max (measure from `1:` to the final punctuation).
 - Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples.
 - Renderer fix (preferred): hanging indent for wrapped headline lines.
+- Header generation guidance (for live runtime use):
+  - Use skeleton: `📠 <one-line invitation to expand>`
+  - Vary phrasing across turns (verb, cadence, or topical hook)
+  - Do not use static labels like `📠 TestMode: FaxCluster` outside explicit tests/docs
 
 ## 5) SpeakerScale (verbosity control)
 ### 5.1 Modes
+- **🪓AxFactor** is the named verbosity-control dial for SpeakerScale (`🔈`/`🔉`/`🔊`).
 - `🔈` LIGHT: yes/no or 1–2 tight lines.
 - `🔉` MED: default; focused, token-conscious.
 - `🔊` LOUD: max verbosity FaxAx allows while staying on-scope.
@@ -246,6 +255,7 @@ Release icon controls consolidated verbosity and counts against N-shot.
 | Emoji | Term | Meaning |
 |---|---|---|
 | `📠` | `FaxTrigger` | Namespace for FaxAx expansion and mode commands. |
+| `🪓` | `AxFactor` | Named verbosity-control dial for SpeakerScale (`🔈`/`🔉`/`🔊`). |
 | `🔈` | `SpeakerScaleLight` | Low-verbosity response mode. |
 | `🔉` | `SpeakerScaleMed` | Default medium-verbosity response mode. |
 | `🔊` | `SpeakerScaleLoud` | High-verbosity response mode. |

@@ -35,4 +35,4 @@ Audience: Users and assistants deploying LogKit
 - If canvas cannot be created: stop and request manual creation/opening of `LogKit Log` (or `🖨️ Log`).
 - If duplicate ledgers exist: resolve to one canonical ledger before enabling commits.
 - If META is missing: add required line and re-run `logkit status`.
-- If emoji name renders blank/ambiguous (for example `️ Log`): rename to `LogKit Log`.
+- If emoji name renders blank/ambiguous (for example, visually blank emoji-prefixed tokens): rename to `LogKit Log`.

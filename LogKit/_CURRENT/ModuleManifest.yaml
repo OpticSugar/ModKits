@@ -11,6 +11,11 @@ must_preserve:
   - "newspaper-style headline"
   - "HH:MM:SS"
   - "Retrieval requires explicit artifact availability"
+  - "🖨️LogIntentOrLedgerAlias"
+  - "🛅LogPakAlias"
+  - "🗄️LogVaultAlias"
+  - "🛂PrintGateAlias"
+  - "🫟InkTestAlias"
 engage_policy: "OFFER"
 single_emoji_activate: true
 

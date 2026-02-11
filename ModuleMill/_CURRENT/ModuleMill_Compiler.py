@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.5
+ModuleMill Compiler v0.6
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -52,6 +52,7 @@ META_PATTERNS = {
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 EMOJI_RE = re.compile(r"[\u2600-\u27bf\U0001F300-\U0001FAFF]")
+PASCAL_CASE_RE = re.compile(r"^[A-Z][A-Za-z0-9]*$")
 
 
 def read_text(path: Path) -> str:
@@ -204,6 +205,63 @@ def find_heading_section_lines(text: str, needle: str) -> List[str]:
     return lines[start:end]
 
 
+def normalize_emoji_tokens(raw: str) -> str:
+    return "".join(EMOJI_RE.findall(raw))
+
+
+def is_pascal_case_term(raw: str) -> bool:
+    term = raw.replace("`", "").strip()
+    if not PASCAL_CASE_RE.match(term):
+        return False
+    # Avoid matching all-uppercase labels that are not PascalCase feature names.
+    return any(ch.islower() for ch in term)
+
+
+def extract_emoji_glossary_entries(text: str) -> List[Tuple[str, str, str]]:
+    entries: List[Tuple[str, str, str]] = []
+    section_lines = find_heading_section_lines(text, "EmojiGlossary")
+    if not section_lines:
+        return entries
+
+    for raw in section_lines:
+        line = raw.strip()
+        if not line.startswith("|") or line.startswith("|---"):
+            continue
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 3:
+            continue
+        emoji_cell = cells[0].replace("`", "").strip()
+        term_cell = cells[1].replace("`", "").strip()
+        meaning_cell = cells[2].replace("`", "").strip()
+        emoji_tokens = normalize_emoji_tokens(emoji_cell)
+        if not emoji_tokens:
+            continue
+        entries.append((emoji_tokens, term_cell, meaning_cell))
+
+    return entries
+
+
+def parse_emoji_pascal_token(raw: str) -> Tuple[str, str]:
+    token = raw.replace("`", "").strip()
+    if not token:
+        return "", ""
+    emoji_tokens = normalize_emoji_tokens(token)
+    if not emoji_tokens:
+        return "", ""
+    # Remove emoji and variation selector marks to isolate a possible PascalCase term.
+    term = EMOJI_RE.sub("", token)
+    term = re.sub(r"[\ufe0e\ufe0f\s]+", "", term)
+    if not is_pascal_case_term(term):
+        return "", ""
+    return emoji_tokens, term
+
+
+def must_preserve_item_matches_pair(item: str, emoji_token: str, pascal_term: str) -> bool:
+    cleaned = item.replace("`", "").strip()
+    item_emoji_tokens = normalize_emoji_tokens(cleaned)
+    return bool(emoji_token) and (emoji_token in item_emoji_tokens) and (pascal_term in cleaned)
+
+
 def lint_userguide_completeness(path: Path, text: str, strict: bool, errs: List[str], warns: List[str]) -> None:
     titles = heading_titles_lower(text)
     nonempty_lines = [line for line in text.splitlines() if line.strip()]
@@ -248,24 +306,9 @@ def lint_emoji_glossary_contract(path: Path, text: str, strict: bool, errs: List
         return
 
     seen: Set[str] = set()
-    glossary_rows = 0
+    entries = extract_emoji_glossary_entries(text)
 
-    for raw in section_lines:
-        line = raw.strip()
-        if not line.startswith("|") or line.startswith("|---"):
-            continue
-        cells = [c.strip() for c in line.split("|")[1:-1]]
-        if len(cells) < 3:
-            continue
-        emoji_cell = cells[0].replace("`", "").strip()
-        term_cell = cells[1].replace("`", "").strip()
-        meaning_cell = cells[2].replace("`", "").strip()
-
-        if not EMOJI_RE.search(emoji_cell):
-            continue
-
-        glossary_rows += 1
-        emoji_tokens = "".join(EMOJI_RE.findall(emoji_cell))
+    for emoji_tokens, term_cell, meaning_cell in entries:
         if emoji_tokens in seen:
             route_issue(
                 f"{path.name}: EmojiGlossary contains duplicate emoji mapping for '{emoji_tokens}'",
@@ -284,13 +327,27 @@ def lint_emoji_glossary_contract(path: Path, text: str, strict: bool, errs: List
                 warns,
             )
 
-    if glossary_rows == 0:
+    if not entries:
         route_issue(
             f"{path.name}: EmojiGlossary exists but no valid emoji mapping rows were found.",
             strict,
             errs,
             warns,
         )
+
+
+def lint_inline_code_emoji_render_safety(path: Path, text: str, strict: bool, errs: List[str], warns: List[str]) -> None:
+    # Variation-selector-leading spans (for example `️ Log`) indicate a dropped emoji base.
+    for m in re.finditer(r"`([^`]+)`", text):
+        token = m.group(1)
+        if token and token[0] in ("\ufe0e", "\ufe0f"):
+            line_no = text.count("\n", 0, m.start()) + 1
+            route_issue(
+                f"{path.name}:{line_no}: inline code span starts with variation selector; likely missing emoji base token",
+                strict,
+                errs,
+                warns,
+            )
 
 
 def normalize_canon_command(raw: str) -> str:
@@ -333,6 +390,44 @@ def extract_userguide_canon_commands(text: str) -> List[str]:
             commands.append(canon)
 
     return commands
+
+
+def extract_userguide_command_alias_emoji_map(text: str) -> List[Tuple[str, str]]:
+    aliases: List[Tuple[str, str]] = []
+    in_command_table = False
+
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line.startswith("|"):
+            if in_command_table and line:
+                in_command_table = False
+            continue
+
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 3:
+            continue
+
+        if cells[0].lower() == "command" and cells[1].lower() == "canon":
+            in_command_table = True
+            continue
+
+        if not in_command_table:
+            continue
+
+        if set("".join(cells)) <= {"-", " "}:
+            continue
+
+        command_label = cells[0].replace("`", "").strip()
+        alias_cell = cells[2].replace("`", "").strip()
+        emoji_tokens = normalize_emoji_tokens(alias_cell)
+        if not command_label or not emoji_tokens:
+            continue
+
+        # Preserve appearance order while removing duplicates.
+        dedup_tokens = "".join(dict.fromkeys(emoji_tokens))
+        aliases.append((command_label, dedup_tokens))
+
+    return aliases
 
 
 def extract_namespaced_state_keys(text: str, module: str) -> List[str]:
@@ -382,11 +477,25 @@ def lint_manifest_contract_parity(
         if not isinstance(item, str) or not item.strip():
             errs.append(f"{path.name}: must_preserve item #{i} must be a non-empty string")
 
+    glossary_entries: List[Tuple[str, str, str]] = []
+    if userguide_text:
+        glossary_entries = extract_emoji_glossary_entries(userguide_text)
+
     if userguide_text and isinstance(must_preserve, list):
         userguide_lower = userguide_text.lower()
         for item in must_preserve:
             if isinstance(item, str) and item.strip():
-                if item.strip().lower() not in userguide_lower:
+                raw_item = item.strip()
+                if raw_item.lower() in userguide_lower:
+                    continue
+                emoji_token, pascal_term = parse_emoji_pascal_token(raw_item)
+                if emoji_token and pascal_term:
+                    if any(
+                        g_emoji == emoji_token and g_term == pascal_term
+                        for g_emoji, g_term, _ in glossary_entries
+                    ):
+                        continue
+                if raw_item.lower() not in userguide_lower:
                     errs.append(
                         f"{path.name}: must_preserve term missing from UserGuide: '{item}'"
                     )
@@ -423,6 +532,33 @@ def lint_manifest_contract_parity(
 
     if not strict or not module:
         return
+
+    # Global anti-drift rule: any Emoji + PascalCase feature token defined in EmojiGlossary
+    # must be protected in must_preserve.
+    for emoji_token, term_cell, _ in glossary_entries:
+        if not is_pascal_case_term(term_cell):
+            continue
+        if not any(
+            isinstance(item, str) and item.strip() and must_preserve_item_matches_pair(item, emoji_token, term_cell)
+            for item in must_preserve
+        ):
+            errs.append(
+                f"{path.name}: missing must_preserve anti-drift entry for Emoji+PascalCase token '{emoji_token}{term_cell}'"
+            )
+
+    command_alias_emoji = extract_userguide_command_alias_emoji_map(userguide_text)
+    for command_label, emoji_tokens in command_alias_emoji:
+        missing_mm = [token for token in emoji_tokens if token not in machinemanual_text]
+        if missing_mm:
+            errs.append(
+                f"{path.name}: MachineManual missing emoji alias token(s) for command '{command_label}': {''.join(missing_mm)}"
+            )
+        if quickref_text:
+            missing_qr = [token for token in emoji_tokens if token not in quickref_text]
+            if missing_qr:
+                errs.append(
+                    f"{path.name}: QuickRefCard missing emoji alias token(s) for command '{command_label}': {''.join(missing_qr)}"
+                )
 
     if userguide_text and machinemanual_text:
         ug_state_keys = extract_namespaced_state_keys(userguide_text, module)
@@ -485,6 +621,7 @@ def lint_markdown_file(path: Path, strict: bool = False, require_manifest: bool 
             errs.append(f"{path.name}: QuickRefCard is very long (>220 lines). Consider slimming.")
 
     module_id = meta.get("ModuleID", "")
+    lint_inline_code_emoji_render_safety(path, text, strict, errs, warns)
 
     # Encourage canon command table markers in runtime UserGuides.
     if role == "UserGuide" and module_id not in FRAMEWORK_MODULE_IDS:

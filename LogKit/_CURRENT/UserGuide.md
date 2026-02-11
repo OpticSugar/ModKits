@@ -103,7 +103,7 @@ Volatile runtime state keys:
 - Canonical ASCII ledger canvas name: `LogKit Log`
 - Emoji alias: `🖨️ Log`
 - If emoji rendering is unavailable or ambiguous, always use `LogKit Log`.
-- Assistants must never infer names like `️ Log`; unresolved names fail closed.
+- Assistants must never infer names from visually blank emoji-prefixed tokens; unresolved names fail closed.
 
 ## Required Ledger Guardrails
 1. Single-ledger rule: exactly one ledger canvas per chat named `LogKit Log` or `🖨️ Log`.

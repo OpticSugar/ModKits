@@ -39,6 +39,7 @@ Maintain:
 - `canvascanon canonize`: produce canon patch from recent decisions.
 - `canvascanon cleanup`: remove duplication/noise while preserving rules.
 - `canvascanon lastcall`: pre-handoff continuity pass (canon sync + OQ integrity + momentum handoff capture).
+- `🧹CleanUp` is an alias for `canvascanon cleanup`.
 - For `canonize|cleanup|lastcall`, preserve rationale traceability:
   - maintain `Appendix A: Footnotes` when present or fail closed if missing where rationale markers are required
   - keep inline markers (`[1]`, `[2]`, ...) attached to material decisions/rules

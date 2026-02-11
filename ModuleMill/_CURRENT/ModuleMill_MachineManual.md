@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.5.0
+(Enforcement Runbook for ModuleKit Engineering) v0.6.0
 
 ModuleID: ModuleMill
-Version: 0.5.0
+Version: 0.6.0
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -12,8 +12,14 @@ Audience: Codex or assistant executing ModuleMill rules
 - Treat `UserGuide` as canon.
 - Keep `UserGuide` verbose and complete; do not over-compress canonical detail.
 - `UserGuide` must preserve context, rationale, tradeoffs, failure behavior, examples, and migration notes.
+- Treat canonical `UserGuide` as module DNA/blueprint; do not treat it as a compact runtime summary.
+- Do not trim templates, scenarios, or rationale from canonical `UserGuide` unless user explicitly approves functional change.
 - Preserve `ModuleManifest.must_preserve` invariants in canonical `UserGuide` wording.
 - If `must_preserve_runtime` exists, enforce those terms across UserGuide + MachineManual + QuickRefCard.
+- Treat any `Emoji + PascalCaseName` feature name as a protected invariant; do not prune or rename without explicit approval.
+- Require any `Emoji + PascalCaseName` feature name to appear in `ModuleManifest.must_preserve`.
+- Enforce deterministic contracts without flattening behavior-critical guided-improv style rules from canon.
+- If canon marks style guidance as required behavior, preserve that guidance in derived docs.
 - Derived docs must not invent commands, triggers, state keys, output shapes, or policies.
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
@@ -51,6 +57,7 @@ Troubleshooting exception:
 - If derived docs conflict with canon: canon wins and derived docs must be patched.
 - If `ModuleManifest` conflicts with `UserGuide` contract, patch `ModuleManifest` before release.
 - If a `must_preserve` invariant is missing from `UserGuide`, fail the pipeline and restore canon wording before release.
+- If derived docs flatten guided-improv behavior cues into repetitive canned boilerplate, patch derived docs from canon before release.
 
 ## 4) Arbitration protocol
 When multiple modules may respond in one turn:
@@ -95,6 +102,10 @@ Run compiler lint and enforce:
 - Over-compression heuristics pass for UserGuides in strict mode
 - `must_preserve` is present and all invariants are found in `UserGuide`
 - `must_preserve_runtime` terms (if present) exist in `UserGuide`, `MachineManual`, and `QuickRefCard`
+- Every `Emoji + PascalCaseName` feature name in `EmojiGlossary` has matching anti-drift protection in `must_preserve`
+- Strict mode fails if any inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`) because this indicates dropped emoji bases.
+- Strict mode enforces emoji alias parity from UserGuide command aliases into `MachineManual` and `QuickRefCard`.
+- Manual parity check: behavior-critical guided-improv directives are preserved from `UserGuide` into derived docs.
 - lifecycle/state parity checks between `UserGuide` and `MachineManual` pass
 - Prefer `lint --strict --modulekit-only` for repo-level strict scans to avoid non-ModuleKit support files.
 
@@ -102,6 +113,8 @@ Run compiler lint and enforce:
 - Bump SemVer.
 - Update `ModuleMill/_CURRENT/CHANGELOG.md`.
 - If `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions.md` or `KitRegistry/_CURRENT/ChatGPT_GlobalInstructions_Enterprise.md` changed, replace your ChatGPT global instructions by copy/paste.
+- If ModuleMill framework docs/compiler/registry references changed, provide a mandatory Codex skill sync plan with exact commands.
+- Never claim ModuleMill behavior is updated in Codex until repo-vs-skill diffs are clean.
 - Record unresolved items as explicit open questions.
 - Keep naming consistent under `_CURRENT` paths.
 - Refresh the per-module regression prompt corpus when contract behavior changes.

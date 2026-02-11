@@ -1,12 +1,12 @@
 # 📇 KitRegistry
-Runtime Module Index v0.3.2
+Runtime Module Index v0.3.3
 
 RegistryID: KitRegistry
 ModuleID: KitRegistry
-Version: 0.3.2
+Version: 0.3.3
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
-Updated: 2026-02-10
+Updated: 2026-02-11
 Scope: Runtime ModuleKits only
 
 ## 0) Policy
@@ -50,7 +50,7 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/UserGuide.md`
-- Version: `0.1.0`
+- Version: `0.2.0`
 - Compatibility: `Uses ModuleMill-style doc roles; ask user to choose on output-shape collisions.`
 
 ### Module: CanvasCanon
@@ -99,7 +99,7 @@ Each module entry must include:
 
 ## 3) Boot contract (for BootStub consumers)
 - In a virgin chat, first assistant message must include a one-line boot warning:
-  - `Unless you type HALT or cancel, I will auto-boot modules on my next response.`
+  - `Unless you type HALT/cancel, I auto-boot modules on my next reply.`
 - If user sends `HALT`, `cancel`, or `skip modules` before the second assistant response, do not auto-boot for that chat.
 - If no halt/cancel signal appears, auto-load `DefaultLoad=yes` modules on the second assistant response using Manifest + QuickRef first.
 - Fetch discipline (mandatory):
