@@ -83,6 +83,7 @@ Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with t
 - `version`
 - `mission`
 - `must_preserve` (list of critical invariants that must not be compressed away)
+- `must_preserve_runtime` (optional list; if present, each term must appear in UserGuide + MachineManual + QuickRefCard)
 - `engage_policy` (`AUTO | OFFER | MANUAL`)
 - `single_emoji_activate` (`true|false`)
 - `use_when` (list)
@@ -216,6 +217,7 @@ If registry or docs cannot be fetched:
 - `ModuleManifest.yaml` is present and contains required fields.
 - `ModuleManifest` doc pointers map to existing local files in `_CURRENT`.
 - `must_preserve` exists and every invariant term appears in canonical `UserGuide`.
+- If `must_preserve_runtime` is provided, each term appears in `UserGuide`, `MachineManual`, and `QuickRefCard`.
 - Strict parity checks pass for lifecycle command/state coverage between `UserGuide` and `MachineManual`.
 - For repo-level strict scans, use `--modulekit-only` to target canonical artifacts.
 

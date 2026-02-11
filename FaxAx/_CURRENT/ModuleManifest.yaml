@@ -14,6 +14,9 @@ must_preserve:
   - "FaxHeader must start with `📠` in every FaxCluster instance"
   - "ChipRack chips must each have a distinct emoji"
   - "Do not replace the §4.4 chip legend with ad-hoc chips in canonical examples"
+must_preserve_runtime:
+  - "FaxHeader must start with `📠` in every FaxCluster instance"
+  - "ChipRack chips must each have a distinct emoji"
 engage_policy: "AUTO"
 single_emoji_activate: true
 

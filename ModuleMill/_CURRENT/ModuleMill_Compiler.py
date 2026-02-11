@@ -147,7 +147,14 @@ def parse_manifest(text: str) -> Dict[str, object]:
         key = key.strip()
         val = val.strip()
 
-        if key in {"module_aliases", "use_when", "do_not_use_when", "required_inputs", "must_preserve"}:
+        if key in {
+            "module_aliases",
+            "use_when",
+            "do_not_use_when",
+            "required_inputs",
+            "must_preserve",
+            "must_preserve_runtime",
+        }:
             inline_items = parse_inline_list(val)
             if inline_items:
                 manifest[key] = inline_items
@@ -384,6 +391,36 @@ def lint_manifest_contract_parity(
                         f"{path.name}: must_preserve term missing from UserGuide: '{item}'"
                     )
 
+    must_preserve_runtime = manifest.get("must_preserve_runtime", [])
+    if must_preserve_runtime and not isinstance(must_preserve_runtime, list):
+        errs.append(f"{path.name}: 'must_preserve_runtime' must be a list when provided")
+        must_preserve_runtime = []
+
+    for i, item in enumerate(must_preserve_runtime, start=1):
+        if not isinstance(item, str) or not item.strip():
+            errs.append(f"{path.name}: must_preserve_runtime item #{i} must be a non-empty string")
+
+    if isinstance(must_preserve_runtime, list) and must_preserve_runtime:
+        runtime_docs = {
+            "UserGuide": userguide_text,
+            "MachineManual": machinemanual_text,
+            "QuickRefCard": quickref_text,
+        }
+        for item in must_preserve_runtime:
+            if not isinstance(item, str) or not item.strip():
+                continue
+            needle = item.strip().lower()
+            for role, role_text in runtime_docs.items():
+                if not role_text:
+                    errs.append(
+                        f"{path.name}: must_preserve_runtime requires docs.{role.lower()} text for term '{item}'"
+                    )
+                    continue
+                if needle not in role_text.lower():
+                    errs.append(
+                        f"{path.name}: must_preserve_runtime term missing from {role}: '{item}'"
+                    )
+
     if not strict or not module:
         return
 
@@ -488,7 +525,14 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     if version and not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", version):
         errs.append(f"{path.name}: version '{version}' is not SemVer-like (MAJOR.MINOR[.PATCH])")
 
-    for list_key in ("module_aliases", "use_when", "do_not_use_when", "required_inputs", "must_preserve"):
+    for list_key in (
+        "module_aliases",
+        "use_when",
+        "do_not_use_when",
+        "required_inputs",
+        "must_preserve",
+        "must_preserve_runtime",
+    ):
         if list_key in manifest and not isinstance(manifest.get(list_key), list):
             errs.append(f"{path.name}: '{list_key}' must be a list")
 

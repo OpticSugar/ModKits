@@ -13,6 +13,7 @@ Audience: Codex or assistant executing ModuleMill rules
 - Keep `UserGuide` verbose and complete; do not over-compress canonical detail.
 - `UserGuide` must preserve context, rationale, tradeoffs, failure behavior, examples, and migration notes.
 - Preserve `ModuleManifest.must_preserve` invariants in canonical `UserGuide` wording.
+- If `must_preserve_runtime` exists, enforce those terms across UserGuide + MachineManual + QuickRefCard.
 - Derived docs must not invent commands, triggers, state keys, output shapes, or policies.
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
@@ -93,6 +94,7 @@ Run compiler lint and enforce:
 - UserGuide completeness checks pass (context/mission depth, rationale/why, failure behavior, examples)
 - Over-compression heuristics pass for UserGuides in strict mode
 - `must_preserve` is present and all invariants are found in `UserGuide`
+- `must_preserve_runtime` terms (if present) exist in `UserGuide`, `MachineManual`, and `QuickRefCard`
 - lifecycle/state parity checks between `UserGuide` and `MachineManual` pass
 - Prefer `lint --strict --modulekit-only` for repo-level strict scans to avoid non-ModuleKit support files.
 

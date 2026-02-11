@@ -7,6 +7,10 @@ mission: "Single-line module mission"
 must_preserve:
   - "critical module invariant phrase #1"
   - "critical module invariant phrase #2"
+# Optional runtime lock: if provided, each term must also appear in
+# UserGuide + MachineManual + QuickRefCard.
+must_preserve_runtime:
+  - "critical runtime-visible invariant phrase"
 engage_policy: "OFFER"  # AUTO | OFFER | MANUAL
 single_emoji_activate: true
 
