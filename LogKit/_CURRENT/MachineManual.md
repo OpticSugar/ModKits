@@ -1,7 +1,7 @@
 # LogKit MachineManual
 
 ModuleID: LogKit
-Version: 0.4.2
+Version: 0.4.4
 DocRole: MachineManual
 Audience: Assistant runtime operator
 
@@ -10,7 +10,7 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 
 ## Non-negotiables
 - Treat `UserGuide.md` as canon.
-- Write only to active `LogKit Log` (emoji alias `🖨️ Log`) with valid META header.
+- Write only to one active target ledger named `🖨️ <Name>` (default `🖨️ Log`, capital `L`) with valid META header.
 - `🖨️` authorizes logging intent; it does not flush.
 - Commit pending only on `logkit commit all` / `🖨️Flush`.
 - If required artifacts are missing, fail closed and queue pending.
@@ -46,13 +46,15 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 
 ## Ledger Validation Routine
 Before any write:
-1. Verify exactly one ledger canvas exists named `LogKit Log` or `🖨️ Log`.
-2. Verify active canvas is `LogKit Log` or `🖨️ Log`.
-3. Verify line 1 META header:
+1. Discover candidate ledgers whose names start with `🖨️ `.
+2. Verify exactly one target ledger is selected for the write turn.
+3. Verify active canvas equals selected target ledger.
+4. Verify selected target ledger name is either default `🖨️ Log` (capital `L`) or `🖨️ <PurposeName>`.
+5. Verify line 1 META header:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
 ```
-4. If any check fails, set `logkit.ledger_health` and queue pending.
+6. If any check fails, set `logkit.ledger_health` and queue pending.
 
 ## Triage Routine
 - Honor `logkit.config.triage_mode` (`strict|balanced|capture_all`).
@@ -108,6 +110,7 @@ When a user message includes only emoji tokens:
 
 ## Failure Behavior
 - Missing ledger/canvas/meta: fail closed and provide exact remediation.
-- Duplicate ledger: halt commits until user designates canonical ledger.
+- Ambiguous target when multiple ledgers exist: fail closed and request explicit target (`🖨️ <PurposeName>`).
 - Unavailable service/index: return failure and request artifact attachment.
-- Ambiguous or malformed emoji-only names (for example, visually blank emoji-prefixed tokens): fail closed and require `LogKit Log` or `🖨️ Log`.
+- Ambiguous or malformed emoji-only names (for example lone `️`): fail closed and require explicit `🖨️ <Name>` confirmation.
+- Never rename the ledger canvas to `LogKit Log`; treat that name as retired.

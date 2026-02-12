@@ -1,7 +1,7 @@
 # LogKit UserGuide
 
 ModuleID: LogKit
-Version: 0.4.2
+Version: 0.4.4
 DocRole: UserGuide
 Audience: Users, developers, and assistants operating LogKit
 
@@ -20,7 +20,9 @@ Non-negotiable intent:
 - preserve emoji-first operator ergonomics while maintaining ASCII canon fallback
 
 ## Scope
-- Canonical runtime ledger in chat: `LogKit Log` canvas (emoji alias: `🖨️ Log`).
+- Default runtime ledger in chat: `🖨️ Log` canvas (capital `L` required).
+- Additional ledgers are allowed when needed and must be named `🖨️ <PurposeName>`.
+- Every LogKit ledger canvas name must start with `🖨️ ` (emoji + one space).
 - Portable transfer format: `🛅 LogPak` (`.jsonl`).
 - Long-term storage: `🗄️ LogVault` (service + files).
 - Retrieval in any chat/account/project by attaching or indexing LogPak/Vault artifacts.
@@ -28,7 +30,8 @@ Non-negotiable intent:
 ## Rationale and tradeoffs
 - LogKit favors durable capture over short-term speed because retrieval and auditability matter more than minimal turn latency.
 - Explicit commit is preserved as a guardrail to prevent accidental writes from ambiguous chat turns.
-- Emoji aliases stay first-class for ergonomics, while ASCII canon remains mandatory for deterministic fallback.
+- Emoji aliases stay first-class for ergonomics, while ASCII canon remains mandatory for command fallback.
+- Ledger naming is emoji-canonical: default is `🖨️ Log`, and additional ledgers follow `🖨️ <PurposeName>`.
 - Fail-closed preconditions can feel strict, but they prevent silent corruption of ledger state.
 
 ## Guardrailed improvisation contract
@@ -127,7 +130,7 @@ Use these direct mappings when users communicate only by emoji tokens.
 
 ## State Contract
 Authoritative persisted artifacts:
-- `LogKit Log` canvas (emoji alias `🖨️ Log`, chat-level ledger)
+- One or more `🖨️ <Name>` canvases (default `🖨️ Log`; chat-level ledgers)
 - `🛅 LogPak` JSONL exports
 - `🗄️ LogVault` data/index
 
@@ -137,24 +140,31 @@ Volatile runtime state keys:
 - `logkit.pending`: array of uncommitted candidates
 - `logkit.last_chip_set`: map of chip id to candidate payload
 - `logkit.config`: config object (schema below)
-- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate`
+- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate|ambiguous_target`
 
 ## Canvas Naming Contract
-- Canonical ASCII ledger canvas name: `LogKit Log`
-- Emoji alias: `🖨️ Log`
-- If emoji rendering is unavailable or ambiguous, always use `LogKit Log`.
-- Assistants must never infer names from visually blank emoji-prefixed tokens; unresolved names fail closed.
-- Older docs may reference only `🖨️ Log`; treat that as the same canonical ledger target.
+- Single-active-ledger rule: multi-ledger is allowed, but each write turn targets exactly one active ledger.
+- Default ledger name: 🖨️ Log.
+- Emoji-first ledger naming: 🖨️ <PurposeName>.
+- Default ledger canvas name is `🖨️ Log` (capital `L` required).
+- Additional ledgers must be named `🖨️ <PurposeName>`.
+- The `🖨️` emoji must be the first character in every ledger canvas name.
+- No ASCII fallback canvas name is allowed for canonical operations.
+- Never rename any ledger to `LogKit Log`.
+- Assistants must never emit or treat a lone variation selector (`U+FE0F`) as a valid alias token.
+- If emoji rendering is unavailable or ambiguous, fail closed and ask user to confirm/open a canonical `🖨️ <Name>` canvas.
+- Older docs may reference `LogKit Log`; treat that as legacy wording and map to default `🖨️ Log`.
 
 ## Required Ledger Guardrails
-1. Single-ledger rule: exactly one ledger canvas per chat named `LogKit Log` or `🖨️ Log`.
-2. Pre-write checks (both required):
-- Active canvas is `LogKit Log` or `🖨️ Log`.
+1. Multi-ledger allowed, but exactly one target ledger may be active for a write turn.
+2. Target-ledger naming rule: active ledger name must match `🖨️ <Name>` (default `🖨️ Log`).
+3. Pre-write checks (both required):
+- Active canvas is the selected target ledger.
 - Line 1 META header exists exactly:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
 ```
-3. Fail closed: if checks fail, queue to `logkit.pending`; do not write elsewhere.
+4. Fail closed: if checks fail, queue to `logkit.pending`; do not write elsewhere.
 
 ## Entry Schema (`logkit.entry.v1`)
 Required keys:
@@ -270,7 +280,7 @@ When multiple modules may respond:
 ## EmojiGlossary
 | Emoji | Term | Meaning |
 |---|---|---|
-| `🖨️` | `LogIntentOrLedgerAlias` | Alias for logging intent and ledger canvas `LogKit Log`. |
+| `🖨️` | `LogIntentOrLedgerAlias` | Alias for logging intent and ledger namespace (`🖨️ Log`, `🖨️ <PurposeName>`). |
 | `🛅` | `LogPakAlias` | Export and transport package alias (`LogPak`). |
 | `🗄️` | `LogVaultAlias` | Archive and retrieval alias (`LogVault`). |
 | `🛂` | `PrintGateAlias` | PrintGate triage metaphor for explicit commit gating. |
@@ -281,7 +291,7 @@ Rule: when a documented emoji alias exists, do not omit it from operational guid
 ## Recovery and drift checks
 If behavior feels partially installed or inconsistent:
 1. Run `logkit status` and verify lifecycle + ledger health.
-2. Confirm active canvas naming and META header preconditions.
+2. Confirm active target ledger follows `🖨️ <Name>` and META header preconditions.
 3. Use a minimal smoke flow:
   - `🖨️Log: smoke entry`
   - `🖨️Flush`
@@ -306,7 +316,7 @@ https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGu
 ## Regression Minimum
 Must pass before release:
 1. Missing ledger fails closed and queues pending.
-2. Wrong active canvas never commits.
+2. Wrong or ambiguous target ledger never commits.
 3. `🖨️` alone does not flush.
 4. `🖨️Flush` commits and clears pending.
 5. Chip commit (`🖨️001,003`) writes selected only.
@@ -320,3 +330,5 @@ Must pass before release:
 - `0.4.0` introduced lifecycle + config + security expansion while remaining pre-1.0.
 - `0.4.1` restores emoji-first alias clarity and emoji-only command resolution guidance.
 - `0.4.2` adds explicit ID suffix formula, required `time`, and headline-style title guidance.
+- `0.4.3` removed `LogKit Log` fallback naming and standardized emoji-ledger operations.
+- `0.4.4` sets default ledger name to `🖨️ Log` (capital `L`) and allows additional ledgers via `🖨️ <PurposeName>`.

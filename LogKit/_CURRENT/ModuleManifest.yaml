@@ -1,11 +1,13 @@
 module: "LogKit"
 module_emoji: "🖨️"
 module_aliases: ["logkit", "log kit", "🖨️"]
-version: "0.4.2"
+version: "0.4.4"
 mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
 must_preserve:
   - "authorizes logging intent"
-  - "Single-ledger rule"
+  - "Single-active-ledger rule"
+  - "Default ledger name: 🖨️ Log"
+  - "Emoji-first ledger naming: 🖨️ <PurposeName>"
   - "LE-YYMMDD-aaa"
   - "seconds-in-day / 2"
   - "newspaper-style headline"
@@ -30,7 +32,7 @@ do_not_use_when:
   - "Another module is explicitly invoked with conflicting output shape"
 
 required_inputs:
-  - "One active 🖨️ Log canvas with valid META header"
+  - "One active 🖨️ <LogName> canvas with valid META header (default 🖨️ Log)"
   - "User prompt and active chat context"
   - "Optional attached/indexed LogPak or LogVault artifacts for retrieval"
 

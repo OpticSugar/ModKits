@@ -94,8 +94,8 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md`
-- Version: `0.4.2`
-- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, and emoji-first alias mapping.`
+- Version: `0.4.4`
+- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, emoji-first alias mapping, and emoji-first ledger naming (default `🖨️ Log`).`
 
 ## 3) Boot contract (for BootStub consumers)
 - In a virgin chat, first assistant message must include a one-line boot warning:

@@ -1,7 +1,7 @@
 # LogKit Install
 
 ModuleID: LogKit
-Version: 0.4.2
+Version: 0.4.4
 DocRole: Install
 Audience: Users and assistants deploying LogKit
 
@@ -9,20 +9,22 @@ Audience: Users and assistants deploying LogKit
 - `UserGuide.md` (canon)
 - `MachineManual.md`
 - `QuickRefCard.md`
-- `LogKit Log` canvas (JSON code canvas; emoji alias `🖨️ Log`)
+- Default `🖨️ Log` canvas (JSON code canvas)
 
 ## Install Steps
 1. Place LogKit docs in the project/module folder.
-2. Create or verify exactly one ledger canvas named `LogKit Log` (emoji alias `🖨️ Log`).
-3. Ensure line 1 is:
+2. Create or verify default ledger canvas named `🖨️ Log` (capital `L`).
+3. Optional: create additional ledgers using `🖨️ <PurposeName>`.
+4. Ensure line 1 is:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
 ```
-4. Start runtime:
+5. Ensure writes target exactly one active ledger per turn.
+6. Start runtime:
 - `logkit load [lane]`
 - `logkit activate`
 - `logkit status`
-5. Validate guardrails by attempting a capture and explicit flush.
+7. Validate guardrails by attempting a capture and explicit flush.
 
 ## Post-install Validation
 - `logkit status` returns `life=active` and `ledger=ok`.
@@ -32,7 +34,7 @@ Audience: Users and assistants deploying LogKit
 - Emoji-only invocation check: `🖨️ status` resolves to `logkit status`.
 
 ## Failure Handling
-- If canvas cannot be created: stop and request manual creation/opening of `LogKit Log` (or `🖨️ Log`).
-- If duplicate ledgers exist: resolve to one canonical ledger before enabling commits.
+- If canvas cannot be created: stop and request manual creation/opening of `🖨️ Log`.
+- If multiple ledgers exist: require explicit target selection before enabling commits.
 - If META is missing: add required line and re-run `logkit status`.
-- If emoji name renders blank/ambiguous (for example, visually blank emoji-prefixed tokens): rename to `LogKit Log`.
+- If emoji name renders blank/ambiguous (for example, visually blank emoji-prefixed tokens): fail closed and request explicit `🖨️ <Name>` confirmation.

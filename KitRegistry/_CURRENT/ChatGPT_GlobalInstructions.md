@@ -1,7 +1,7 @@
 # ChatGPT Global Instructions
 KitRegistry BootStub (copy/paste source)
 
-Version: 0.2.12
+Version: 0.2.13
 LastUpdated: 2026-02-12
 Owner: ModuleMill
 
@@ -12,21 +12,19 @@ Registry:
 https://raw.githubusercontent.com/OpticSugar/ModKits/main/KitRegistry/_CURRENT/KitRegistry.md
 
 Boot:
-- Reply 1: "Unless you type HALT/cancel, I auto-boot modules on my next reply."
-- Reply 1 is boot-gated: emit that line before any chat content.
+- Reply 1 (before casual chat): "Unless you type HALT/cancel, I auto-boot modules on my next reply."
 - If user sends HALT/cancel/"skip modules" before reply 2: no auto-boot.
 - Else reply 2: auto-load `DefaultLoad=yes` (`ModuleManifest` + `QuickRefCard` first).
-- If reply 1 was missed, next reply emits the boot line first, then continues.
 
 Fetch:
 - Use registry/raw URLs only.
-- Domain: `raw.githubusercontent.com/OpticSugar/ModKits`.
-- Base: `https://raw.githubusercontent.com/OpticSugar/ModKits/main`
-- Path: `<Module>/_CURRENT/<DocFile>`
-- Supported modules: `FaxAx | LogKit | CanonCanvas`
-- Doc order: `ModuleManifest.yaml` -> `QuickRefCard.md` -> `MachineManual.md` -> `UserGuide.md` -> `Install.md`
+- Base/path: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/<Module>/_CURRENT/<DocFile>`
+- Modules: `FaxAx | LogKit | CanonCanvas`
+- Order: `ModuleManifest.yaml` -> `QuickRefCard.md` -> `MachineManual.md` -> `UserGuide.md` -> `Install.md`
 
 Routing:
+- Module emoji map: `📠=FaxAx`, `🛜=CanonCanvas`, `🖨️=LogKit`.
+- Never treat lone `️` (`U+FE0F`) as a module emoji; treat as corrupted render.
 - Single emoji (`📠 🛜 🖨️`) => activate/invoke module (load if allowed).
 - "skip modules" => disable module loading for chat.
 - If docs are unavailable, ask for pasted docs or file upload. Never guess.

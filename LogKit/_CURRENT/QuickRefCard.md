@@ -1,19 +1,20 @@
 # LogKit QuickRef
 
 ModuleID: LogKit
-Version: 0.4.2
+Version: 0.4.4
 DocRole: QuickRefCard
 Audience: Users and assistants
 
 ## Startup
 1. `logkit load [lane]`
 2. `logkit activate`
-3. Confirm one active ledger named `LogKit Log` (emoji alias `🖨️ Log`) with valid META header
+3. Confirm target ledger is `🖨️ <Name>` with valid META header (default `🖨️ Log`, capital `L`)
 
 ## Guardrails
-- Single-ledger rule: one `LogKit Log` ledger per chat (emoji alias `🖨️ Log`).
+- Multi-ledger allowed, but only one target ledger may be active for a write turn.
 - Pre-write checks required:
-  - active canvas is `LogKit Log` or `🖨️ Log`
+  - active canvas is selected target `🖨️ <Name>`
+  - default target name uses capital `L`: `🖨️ Log`
   - META line 1 is:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -52,7 +53,7 @@ Hard rule: if an emoji shortcut exists, it is always valid input.
 - `logkit.pending`: pending entries queue
 - `logkit.lane`: active lane
 - `logkit.config`: runtime policy profile
-- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate`
+- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate|ambiguous_target`
 
 ## Entry Schema Minimum
 Required:
@@ -87,4 +88,8 @@ Enums:
 Retrieval only works against attached/indexed LogPak/Vault artifacts in the current chat context (enterprise, personal, project, or root).
 
 ## Naming Fallback
-If emoji rendering is unreliable, always use `LogKit Log` as the ledger name.
+- Default canonical ledger name is `🖨️ Log` (capital `L`).
+- Additional ledger names follow `🖨️ <PurposeName>`.
+- `🖨️` must be the first character in any ledger canvas name.
+- If emoji rendering is unreliable, fail closed and ask user to confirm/open target `🖨️ <Name>`.
+- Never rename the ledger to `LogKit Log` (retired fallback).
