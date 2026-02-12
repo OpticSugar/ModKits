@@ -1,8 +1,8 @@
 # 🏭 ModuleMill DevGuide
-(Developer Canon for ModuleKit Engineering) v0.7.0
+(Developer Canon for ModuleKit Engineering) v0.7.1
 
 ModuleID: ModuleMill
-Version: 0.7.0
+Version: 0.7.1
 DocRole: UserGuide
 Audience: Module developers (Codex-first), maintainers, and auditors
 
@@ -297,6 +297,7 @@ If registry or docs cannot be fetched:
 - Strict lint enforces emoji-alias parity from UserGuide command-table aliases into `MachineManual` and `QuickRefCard`.
 - Manual parity check: behavior-critical guided-improv directives in `UserGuide` are preserved in `MachineManual` and `QuickRefCard`.
 - Strict parity checks pass for lifecycle command/state coverage between `UserGuide` and `MachineManual`.
+- ChatGPT global-instruction ` ```text ` block length must stay <= 1400 chars to reserve personalization room.
 - After ModuleMill framework edits, repo-vs-skill parity diff checks pass for DevGuide, MachineManual, Compiler, and KitRegistry/global-instruction references.
 - For repo-level strict scans, use `--modulekit-only` to target canonical artifacts.
 

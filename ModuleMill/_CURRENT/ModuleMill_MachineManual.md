@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.7.0
+(Enforcement Runbook for ModuleKit Engineering) v0.7.1
 
 ModuleID: ModuleMill
-Version: 0.7.0
+Version: 0.7.1
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -118,6 +118,7 @@ Run compiler lint and enforce:
 - Every `Emoji + PascalCaseName` feature name in `EmojiGlossary` has matching anti-drift protection in `must_preserve`
 - Strict mode fails if any inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`) because this indicates dropped emoji bases.
 - Strict mode enforces emoji alias parity from UserGuide command aliases into `MachineManual` and `QuickRefCard`.
+- ChatGPT global-instruction ` ```text ` block length stays <= 1400 chars (reserves room for user personalization).
 - Manual parity check: behavior-critical guided-improv directives are preserved from `UserGuide` into derived docs.
 - lifecycle/state parity checks between `UserGuide` and `MachineManual` pass
 - Prefer `lint --strict --modulekit-only` for repo-level strict scans to avoid non-ModuleKit support files.

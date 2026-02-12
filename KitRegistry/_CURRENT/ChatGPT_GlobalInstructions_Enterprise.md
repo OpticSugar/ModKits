@@ -1,8 +1,8 @@
 # ChatGPT Global Instructions (Enterprise)
 KitRegistry BootStub with Web Search fallback
 
-Version: 0.1.10
-LastUpdated: 2026-02-11
+Version: 0.1.12
+LastUpdated: 2026-02-12
 Owner: ModuleMill
 Target: Enterprise/work ChatGPT environments where URL fetch may be gated
 
@@ -21,11 +21,9 @@ Boot:
 
 Fetch:
 - Use registry/raw URLs only; no random browsing.
-- Domain: `raw.githubusercontent.com/OpticSugar/ModKits`.
 - Base/path: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/<Module>/_CURRENT/<DocFile>`
 - Modules: `FaxAx | LogKit | CanonCanvas`
 - Doc order: `ModuleManifest.yaml` -> `QuickRefCard.md` -> `MachineManual.md` -> `UserGuide.md` -> `Install.md`
-- Search only: `site:raw.githubusercontent.com/OpticSugar/ModKits/main <module/doc path>`
 
 Routing:
 - Single emoji (`📠 🛜 🖨️`) activates module (load if allowed).

@@ -2,6 +2,18 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.7.1] - 2026-02-12
+### Added
+- Global-instructions budget guard in compiler:
+  - `ChatGPT_GlobalInstructions*.md` must contain a ` ```text ` copy/paste block.
+  - Block length now fails lint above `1400` chars.
+  - Budget rationale is encoded in lint output: reserve `100` chars for user personalization within ChatGPT's `1500` char limit.
+- `--modulekit-only` lint scans now include global-instruction markdown files so budget checks run in normal strict repo checks.
+
+### Changed
+- `ChatGPT_GlobalInstructions.md` and enterprise variant were trimmed to preserve personalization headroom.
+- Framework docs (`ModuleMill_DevGuide.md`, `ModuleMill_MachineManual.md`) now explicitly require <=1400-char global-instruction blocks.
+
 ## [0.7.0] - 2026-02-12
 ### Added
 - Natural-language command-intent contract in ModuleMill framework canon:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.7
+ModuleMill Compiler v0.7.1
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -14,6 +14,16 @@ DOC_ROLES = {"Install", "QuickRefCard", "MachineManual", "UserGuide"}
 FRAMEWORK_MODULE_IDS = {"ModuleMill", "KitRegistry"}
 ENGAGE_POLICIES = {"AUTO", "OFFER", "MANUAL"}
 INTENT_POLICIES = {"explicit_only", "infer_high_confidence"}
+GLOBAL_INSTRUCTION_FILENAMES = {
+    "ChatGPT_GlobalInstructions.md",
+    "ChatGPT_GlobalInstructions_Enterprise.md",
+}
+CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS = 1500
+GLOBAL_INSTRUCTION_RESERVED_PERSONALIZATION_CHARS = 100
+GLOBAL_INSTRUCTION_CODEBLOCK_MAX_CHARS = (
+    CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS - GLOBAL_INSTRUCTION_RESERVED_PERSONALIZATION_CHARS
+)
+GLOBAL_INSTRUCTION_CODEBLOCK_SOFT_TARGET = 1350
 REQUIRED_MANIFEST_KEYS = {
     "module",
     "module_emoji",
@@ -356,6 +366,45 @@ def lint_inline_code_emoji_render_safety(path: Path, text: str, strict: bool, er
             )
 
 
+def extract_first_text_codeblock(text: str) -> str:
+    m = re.search(r"```text\s*\n(.*?)\n```", text, flags=re.DOTALL)
+    if not m:
+        return ""
+    return m.group(1)
+
+
+def lint_global_instruction_codeblock_size(
+    path: Path, text: str, strict: bool, errs: List[str], warns: List[str]
+) -> None:
+    block = extract_first_text_codeblock(text)
+    if not block:
+        route_issue(
+            f"{path.name}: missing ```text fenced block for copy/paste instructions",
+            strict,
+            errs,
+            warns,
+        )
+        return
+
+    # Align with how users copy/paste the block as plain text (final newline included).
+    char_count = len(block) + 1
+
+    if char_count > GLOBAL_INSTRUCTION_CODEBLOCK_MAX_CHARS:
+        errs.append(
+            f"{path.name}: instruction code block length {char_count} exceeds ModuleMill budget {GLOBAL_INSTRUCTION_CODEBLOCK_MAX_CHARS} "
+            f"(ChatGPT limit {CHATGPT_CUSTOM_INSTRUCTIONS_MAX_CHARS} minus reserved {GLOBAL_INSTRUCTION_RESERVED_PERSONALIZATION_CHARS})"
+        )
+        return
+
+    if char_count > GLOBAL_INSTRUCTION_CODEBLOCK_SOFT_TARGET:
+        route_issue(
+            f"{path.name}: instruction code block length {char_count} exceeds soft target {GLOBAL_INSTRUCTION_CODEBLOCK_SOFT_TARGET}",
+            strict,
+            errs,
+            warns,
+        )
+
+
 def normalize_canon_command(raw: str) -> str:
     token = raw.replace("`", "").strip()
     token = re.sub(r"<[^>]+>", "", token)
@@ -614,6 +663,10 @@ def lint_markdown_file(path: Path, strict: bool = False, require_manifest: bool 
     errs: List[str] = []
     warns: List[str] = []
 
+    if path.name in GLOBAL_INSTRUCTION_FILENAMES:
+        lint_global_instruction_codeblock_size(path, text, strict, errs, warns)
+        return errs, warns
+
     # Bundle files intentionally aggregate multiple docs and do not map to one DocRole.
     if path.name.upper().endswith("_BUNDLE.MD"):
         return errs, warns
@@ -811,6 +864,14 @@ def is_canonical_modulekit_markdown(path: Path) -> bool:
     return path.name in CANONICAL_MODULEKIT_DOC_FILENAMES and "_CURRENT" in path.parts
 
 
+def is_modulemill_lint_markdown(path: Path, modulekit_only: bool) -> bool:
+    if path.name in GLOBAL_INSTRUCTION_FILENAMES:
+        return True
+    if not modulekit_only:
+        return True
+    return is_canonical_modulekit_markdown(path)
+
+
 def collect_files(paths: List[Path], modulekit_only: bool = False) -> Tuple[List[Path], List[Path]]:
     md_files: Set[Path] = set()
     manifest_files: Set[Path] = set()
@@ -819,7 +880,7 @@ def collect_files(paths: List[Path], modulekit_only: bool = False) -> Tuple[List
         if p.is_dir():
             if modulekit_only:
                 for md in p.rglob("*.md"):
-                    if is_canonical_modulekit_markdown(md):
+                    if is_modulemill_lint_markdown(md, modulekit_only=True):
                         md_files.add(md)
                 for mf in p.rglob("ModuleManifest.yaml"):
                     if "_CURRENT" in mf.parts:
@@ -829,7 +890,7 @@ def collect_files(paths: List[Path], modulekit_only: bool = False) -> Tuple[List
                 manifest_files.update(p.rglob("ModuleManifest.yaml"))
         else:
             if p.suffix.lower() == ".md":
-                if not modulekit_only or is_canonical_modulekit_markdown(p):
+                if is_modulemill_lint_markdown(p, modulekit_only=modulekit_only):
                     md_files.add(p)
             if p.name == "ModuleManifest.yaml":
                 if not modulekit_only or "_CURRENT" in p.parts:
