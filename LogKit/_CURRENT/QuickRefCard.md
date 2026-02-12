@@ -92,4 +92,4 @@ Retrieval only works against attached/indexed LogPak/Vault artifacts in the curr
 - Additional ledger names follow `🖨️ <PurposeName>`.
 - `🖨️` must be the first character in any ledger canvas name.
 - If emoji rendering is unreliable, fail closed and ask user to confirm/open target `🖨️ <Name>`.
-- Never rename the ledger to `LogKit Log` (retired fallback).
+- Never rename the ledger to a legacy ASCII fallback name.

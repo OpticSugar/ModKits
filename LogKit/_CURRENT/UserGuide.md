@@ -150,10 +150,10 @@ Volatile runtime state keys:
 - Additional ledgers must be named `🖨️ <PurposeName>`.
 - The `🖨️` emoji must be the first character in every ledger canvas name.
 - No ASCII fallback canvas name is allowed for canonical operations.
-- Never rename any ledger to `LogKit Log`.
+- Never rename any ledger to a legacy ASCII fallback name.
 - Assistants must never emit or treat a lone variation selector (`U+FE0F`) as a valid alias token.
 - If emoji rendering is unavailable or ambiguous, fail closed and ask user to confirm/open a canonical `🖨️ <Name>` canvas.
-- Older docs may reference `LogKit Log`; treat that as legacy wording and map to default `🖨️ Log`.
+- Older docs may reference a legacy ASCII fallback name; treat that as legacy wording and map to default `🖨️ Log`.
 
 ## Required Ledger Guardrails
 1. Multi-ledger allowed, but exactly one target ledger may be active for a write turn.
@@ -330,5 +330,5 @@ Must pass before release:
 - `0.4.0` introduced lifecycle + config + security expansion while remaining pre-1.0.
 - `0.4.1` restores emoji-first alias clarity and emoji-only command resolution guidance.
 - `0.4.2` adds explicit ID suffix formula, required `time`, and headline-style title guidance.
-- `0.4.3` removed `LogKit Log` fallback naming and standardized emoji-ledger operations.
+- `0.4.3` removed legacy ASCII fallback naming and standardized emoji-ledger operations.
 - `0.4.4` sets default ledger name to `🖨️ Log` (capital `L`) and allows additional ledgers via `🖨️ <PurposeName>`.

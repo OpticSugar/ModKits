@@ -113,4 +113,4 @@ When a user message includes only emoji tokens:
 - Ambiguous target when multiple ledgers exist: fail closed and request explicit target (`🖨️ <PurposeName>`).
 - Unavailable service/index: return failure and request artifact attachment.
 - Ambiguous or malformed emoji-only names (for example lone `️`): fail closed and require explicit `🖨️ <Name>` confirmation.
-- Never rename the ledger canvas to `LogKit Log`; treat that name as retired.
+- Never rename the ledger canvas to a legacy ASCII fallback name.
