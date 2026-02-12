@@ -2,6 +2,28 @@
 
 All notable changes to ModuleMill are documented in this file.
 
+## [0.7.0] - 2026-02-12
+### Added
+- Natural-language command-intent contract in ModuleMill framework canon:
+  - New required `ModuleManifest.intent_policy` key with allowed values:
+    - `explicit_only`
+    - `infer_high_confidence`
+  - Runtime policy now requires:
+    - high-confidence natural-language command intent -> execute mapped canon command
+    - low-confidence or ambiguous intent -> ask one short clarification
+- Compiler manifest lint validation for `intent_policy` values.
+- Advisory compiler parity check:
+  - warns when `intent_policy=infer_high_confidence` but canonical `UserGuide` lacks natural-language intent/confidence signals.
+- Failure-mode hardening in framework docs for missing remote docs:
+  - explicitly instruct enable-Web-Search retry first
+  - then provide copy/paste-ready URL block request
+  - never claim module-compliant execution when docs are unavailable
+
+### Changed
+- `ModuleMill_DevGuide.md` and `ModuleMill_MachineManual.md` upgraded to `v0.7.0` with inference-first command handling and stronger fail-closed transport guidance.
+- Runtime manifests for `FaxAx`, `CanonCanvas`, and `LogKit` now declare `intent_policy: "infer_high_confidence"`.
+- `ModuleMill` `ModuleManifest` template updated to include `intent_policy`.
+
 ## [0.6.0] - 2026-02-11
 ### Added
 - Origin and intent canon in ModuleMill DevGuide:
@@ -40,7 +62,7 @@ All notable changes to ModuleMill are documented in this file.
 
 ### Changed
 - ModuleManifest template now includes `must_preserve`.
-- Runtime manifests for `CanvasCanon`, `FaxAx`, and `LogKit` now declare module-specific `must_preserve` invariants.
+- Runtime manifests for `CanonCanvas`, `FaxAx`, and `LogKit` now declare module-specific `must_preserve` invariants.
 - ModuleMill DevGuide and MachineManual now explicitly treat `must_preserve` as a non-negotiable anti-compression guard.
 
 ## [0.4.4] - 2026-02-09
@@ -56,7 +78,7 @@ All notable changes to ModuleMill are documented in this file.
   - `single_emoji_activate`
 
 ### Changed
-- `FaxAx`, `CanvasCanon`, and `LogKit` manifests now include module emoji identity and alias lists.
+- `FaxAx`, `CanonCanvas`, and `LogKit` manifests now include module emoji identity and alias lists.
 - Global instruction blocks now explicitly support single-emoji module activation/invocation.
 
 ## [0.4.3] - 2026-02-09

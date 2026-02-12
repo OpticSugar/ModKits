@@ -1,8 +1,8 @@
 # 🤖 ModuleMill MachineManual
-(Enforcement Runbook for ModuleKit Engineering) v0.6.0
+(Enforcement Runbook for ModuleKit Engineering) v0.7.0
 
 ModuleID: ModuleMill
-Version: 0.6.0
+Version: 0.7.0
 DocRole: MachineManual
 Audience: Codex or assistant executing ModuleMill rules
 
@@ -24,13 +24,15 @@ Audience: Codex or assistant executing ModuleMill rules
 - Keep canonical command forms ASCII-first.
 - For user-facing emoji aliases, require an explicit `EmojiGlossary` in `UserGuide`.
 - If emoji aliases are defined, treat them as first-class input forms and preserve deterministic alias -> behavior mapping.
+- If `intent_policy=infer_high_confidence`, treat high-confidence natural-language command attempts as valid invocation.
+- Ask clarification only when confidence is low or command mapping is ambiguous.
 - Require `ModuleManifest.yaml` for new modules and use it for initial module selection.
 - Do not require or produce `_BUNDLE.md` artifacts in normal authoring, lint, or release flows.
 
 ## 1) Intake checklist for module work
 Require (or safely infer) before writing or patching a module:
 - Mission
-- `ModuleManifest` fields: `engage_policy`, `use_when`, `do_not_use_when`, `required_inputs`, `response_envelope`, `failure_mode`, `must_preserve`
+- `ModuleManifest` fields: `engage_policy`, `intent_policy`, `use_when`, `do_not_use_when`, `required_inputs`, `response_envelope`, `failure_mode`, `must_preserve`
 - Canon command table (with ASCII canonical forms)
 - Inputs and typed argument grammar
 - Output shape and `ResponseEnvelope`
@@ -71,6 +73,14 @@ Before asking user to choose, attempt deterministic filtering from `ModuleManife
 - keep modules matching `use_when`
 - keep modules whose `required_inputs` are satisfied
 
+### 4.1 Command-intent inference routine
+Use this for runtime execution in user-facing chats:
+1. Resolve explicit canonical/alias command hits first.
+2. If no explicit hit and `intent_policy=infer_high_confidence`, evaluate natural-language phrasing against canon commands, current state, and recent turns.
+3. If confidence is high and maps to one command, execute that command.
+4. If confidence is low or collides with multiple commands, ask one short clarification question.
+5. Never bypass required inputs, safety limits, or fail-closed behavior due to inferred intent.
+
 ## 5) Deployment protocol (KitRegistry)
 - Use `KitRegistry/_CURRENT/KitRegistry.md` as source of truth for runtime module discovery.
 - Apply `🎛️ EngagePolicy` and `🧲 NeedSignals` as engagement hints, not command authority.
@@ -78,8 +88,9 @@ Before asking user to choose, attempt deterministic filtering from `ModuleManife
 - Load `ModuleManifest` and `QuickRefCard` first for boot defaults.
 - Load `MachineManual` for complex or risky operations.
 - Load `UserGuide` only for canon disputes, derivation, or module authoring.
-- If fetch fails, request pasted docs and halt speculative behavior.
-- In enterprise/work environments with blocked fetch, ask user to enable Web Search before retrying.
+- If fetch fails, ask user to enable Web Search and retry before any module execution.
+- If fetch still fails, provide a code block containing required doc URLs and request pasted docs.
+- Do not claim module activation or module-compliant behavior while required docs are unavailable.
 - If a message is exactly one registered module emoji and `SingleEmojiActivate=yes`, activate/invoke that module (load first when allowed).
 
 ## 6) ModuleMill runtime intent
@@ -102,6 +113,8 @@ Run compiler lint and enforce:
 - Over-compression heuristics pass for UserGuides in strict mode
 - `must_preserve` is present and all invariants are found in `UserGuide`
 - `must_preserve_runtime` terms (if present) exist in `UserGuide`, `MachineManual`, and `QuickRefCard`
+- `intent_policy` exists and is valid (`explicit_only` or `infer_high_confidence`)
+- For inference-enabled modules, UserGuide includes explicit confidence behavior (`high => execute`, `low => clarify`)
 - Every `Emoji + PascalCaseName` feature name in `EmojiGlossary` has matching anti-drift protection in `must_preserve`
 - Strict mode fails if any inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`) because this indicates dropped emoji bases.
 - Strict mode enforces emoji alias parity from UserGuide command aliases into `MachineManual` and `QuickRefCard`.

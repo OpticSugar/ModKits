@@ -23,7 +23,7 @@ Fetch:
 - Domain: `raw.githubusercontent.com/OpticSugar/ModKits`.
 - Base: `https://raw.githubusercontent.com/OpticSugar/ModKits/main`
 - Path: `<Module>/_CURRENT/<DocFile>`
-- Supported modules: `FaxAx | LogKit | CanvasCanon`
+- Supported modules: `FaxAx | LogKit | CanonCanvas`
 - Doc order: `ModuleManifest.yaml` -> `QuickRefCard.md` -> `MachineManual.md` -> `UserGuide.md` -> `Install.md`
 - Search only: `site:raw.githubusercontent.com/OpticSugar/ModKits/main <module/doc path>`
 

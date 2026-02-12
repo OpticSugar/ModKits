@@ -21,6 +21,19 @@ This doc is canonical. If anything conflicts with QuickRef/MachineManual/Install
 - Increase scan-speed and “choose your rabbit hole” control.
 - Support “review sessions” by buffering comments until you release.
 
+### 1.1 Origin story and anti-neutering stance
+FaxAx started as an instruction-set skill for regular ChatGPT chats where users needed:
+- tight, scope-first answers by default
+- high-agency expansion controls when they want depth
+- playful, human-readable UX instead of robotic boilerplate
+
+Design intent:
+- deterministic contracts for commands/state/output shape
+- guided improvisation for phrasing, invitation copy, and chip framing
+- preservation of emoji handles and named feature terms as behavior-critical mechanisms, not decoration
+
+If a cleanup pass removes command handles, personality-bearing templates, or explicit rationale, that is drift and should be reverted.
+
 ## 2) Architecture contract (ModuleMill)
 ### 2.1 Surface area
 **Triggers / inputs**
@@ -74,7 +87,7 @@ Lifecycle control commands:
 | Activate module | `fax activate` | `Enable FaxAx` | none | `ack_only` | set `faxax.active=true` |
 | Sleep module | `fax sleep` | `Sleep FaxAx for now` | none | `ack_only` | set `faxax.active=false` |
 | Unload module | `fax unload` | `Disable FaxAx in this chat` | none | `ack_only` | clear `faxax.*` state |
-| Expand branch | `fax expand <selectors>` | `📠2`, `📠 2,5,7`, `📠 keyword`, `📠🕵🏻‍♂️` | `selectors: list[int|string|emoji]` | `main_plus_optional_faxcluster` | none |
+| Expand branch | `fax expand <selectors>` | `📠2`, `📠 2,5,7`, `📠 keyword`, `📠 <emoji chip>` | `selectors: list[int|string|emoji]` | `main_plus_optional_faxcluster` | none |
 | Set persistent mode | `fax mode <light|med|loud>` | `📠🔈`, `📠🔉`, `📠🔊` | `mode: enum(light,med,loud)` | `ack_only` | set `faxax.default_mode` |
 | Set one-shot mode | `fax say <light|med|loud>` | leading `🔈`, `🔉`, `🔊` | `mode: enum(light,med,loud)` | `main_only` | set one-shot response mode |
 | Set N-shot mode | `fax nshot loud <count>` | `🔊3` | `count: int>=1` | `ack_only` | set `faxax.n_shot_remaining` |
@@ -276,6 +289,21 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 - If expansion selectors are ambiguous, request one-line clarification instead of guessing.
 - If another active module requires conflicting output shape, ask user to choose one winner for the turn.
 
+### 8.2 Documentation access fail-closed policy
+If required FaxAx docs are unavailable, do not claim FaxAx is loaded, active, or being followed.
+
+Required recovery flow:
+1. Ask user to enable Web Search and retry doc fetch.
+2. If fetch still fails, provide this URL pack and ask user to copy/paste returned content:
+```text
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/ModuleManifest.yaml
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/Install.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/QuickRefCard.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/MachineManual.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/FaxAx/_CURRENT/UserGuide.md
+```
+3. Until docs are available, respond as a normal assistant and explicitly state that FaxAx module behavior is not active for that turn.
+
 ## 9) Regression checklist (must-pass)
 1) Smoke: simple Q → main answer + (only if needed) valid FaxCluster.
 2) Cluster hygiene: header starts with `📠`; no `📠` in chips; ChipRack indices glued.
@@ -283,7 +311,7 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 4) ChipRack emoji uniqueness: no repeated lead emoji within a single ChipRack.
 5) Headline numbering: use `1:` `2:` `3:` (never `1.` in FaxCluster lines).
 6) Headline width: each full headline line stays <= 96 chars.
-7) Expansion routing: `📠1`, `📠 keyword`, `📠🕵🏻‍♂️` behave.
+7) Expansion routing: `📠1`, `📠 keyword`, and emoji-chip selectors behave.
 8) SpeakerScale one-shot: `🔈` short; `🔊` deeper but on-scope.
 9) N-shot: `🔊3` persists for 3 replies, then reverts.
 10) Persistent mode: `📠🔉` latches; HUD shows `🔉∞`.
@@ -291,3 +319,21 @@ Default: if multiple modules collide on triggers or output shape, **ask user to 
 12) Hold CHAT: 1-line reaction + optional unnumbered sneak-peek ChipRack; no interruptions.
 13) Consolidated reply: numbered; mini headers; paraphrase long comments.
 14) Collision: two modules active → “choose” gate.
+
+## 10) Context and developer appendices
+### 10.1 Deployment lineage (why this doc is intentionally verbose)
+FaxAx originally ran through global/project instruction blocks before ModuleKit normalization. Those blocks carried practical operating context (activation modes, hold behavior, and conflict policy) that often got trimmed during cleanup passes.
+
+Canonical rule:
+- Keep this UserGuide as developer-facing module DNA, not a compact runtime cheat sheet.
+- Preserve context, rationale, migration notes, and concrete templates even when derived docs stay terse.
+
+### 10.2 Personalization scaffold lineage (S/M/L families)
+Historical FaxAx operation used three scaffold families that are still useful for integration planning:
+- `Global ACTIVE` (FaxAx default-on behavior)
+- `Global SLEEPING` (FaxAx summon-only behavior)
+- `Project ACTIVE` (project-local default-on behavior)
+
+Preservation note:
+- These scaffolds explain why FaxAx includes both lifecycle commands (`fax load|activate|sleep|unload`) and direct emoji handles (`📠`, `🔈`, `🔉`, `🔊`, `🔇`) in canon examples.
+- If these scaffolds are moved to separate docs, keep a durable pointer here and do not remove this lineage context.

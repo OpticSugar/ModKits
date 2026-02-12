@@ -1,4 +1,4 @@
-# ModuleManifest template (ModuleMill v0.4)
+# ModuleManifest template (ModuleMill v0.7)
 module: "<ModuleName>"
 module_emoji: "🧩"
 module_aliases: ["<modulename>", "🧩"]
@@ -12,6 +12,7 @@ must_preserve:
 must_preserve_runtime:
   - "critical runtime-visible invariant phrase"
 engage_policy: "OFFER"  # AUTO | OFFER | MANUAL
+intent_policy: "infer_high_confidence"  # explicit_only | infer_high_confidence
 single_emoji_activate: true
 
 # Trigger contract used before loading full docs.

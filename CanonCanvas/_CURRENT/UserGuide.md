@@ -1,6 +1,6 @@
-# CanvasCanon UserGuide (canonical)
+# CanonCanvas UserGuide (canonical)
 
-ModuleID: CanvasCanon
+ModuleID: CanonCanvas
 Version: 0.2.0
 DocRole: UserGuide
 Audience: Humans + module engineers (canonical source of truth)
@@ -8,7 +8,7 @@ Audience: Humans + module engineers (canonical source of truth)
 ---
 
 ## 0) What this is
-CanvasCanon is durable long-term project memory designed to survive a forking event with as little amnesia as possible.
+CanonCanvas is durable long-term project memory designed to survive a forking event with as little amnesia as possible.
 
 It separates exploration from law:
 - chat is where ideas are explored
@@ -19,16 +19,16 @@ Strategic purpose:
 - prevent re-litigation of already-set decisions
 - preserve momentum by making next actions and context legible to the next operator
 
-Core law: if a decision affects future behavior, record it in canvas canon.
+Core law: if a decision affects future behavior, record it in canon canvas.
 
-CanvasCanon is not module-only. It applies to any long-running project where decisions, rationale, and unresolved choices must stay coherent across forks and time.
+CanonCanvas is not module-only. It applies to any long-running project where decisions, rationale, and unresolved choices must stay coherent across forks and time.
 
 Success condition: a new assistant (or future-you) can open the `🛜` canvas, grab the torch quickly, and continue with minimal context loss.
 
 This doc is canonical. If anything conflicts with Install, QuickRefCard, or MachineManual, this document wins.
 
 ## 1) Mission
-CanvasCanon exists to reduce project amnesia across long timelines, assistant handoffs, and forking events.
+CanonCanvas exists to reduce project amnesia across long timelines, assistant handoffs, and forking events.
 
 Strategic outcomes:
 - Preserve durable decisions and constraints across forks, not just within one chat thread.
@@ -37,13 +37,23 @@ Strategic outcomes:
 - Preserve rationale without bloating the body by using a compact footnote layer.
 - Convert "context currently in my head" into durable handoff memory before context is lost.
 
+### 1.1 Origin story and operating posture
+CanonCanvas was built after repeated handoff/fork failures where critical reasoning lived only in transient chat text. By the time a new operator took over, the "why" behind key decisions was gone.
+
+Operating posture:
+- enforce deterministic structure for durable memory (`sections`, `question IDs`, `resolve/prune mechanics`)
+- allow human/adaptive phrasing when writing explanation blocks and handoff notes
+- preserve practical context and rationale even when cleanup pressure favors short rewrites
+
+If a refactor makes canon cleaner but less informative for the next operator, that refactor failed.
+
 ## 2) Architecture contract (ModuleMill)
 ### 2.1 Surface area
 Inputs/triggers:
-- Lifecycle controls (`canvascanon load|activate|sleep|unload|status`)
-- Canon pass controls (`canvascanon canonize`, `canvascanon cleanup`, `canvascanon lastcall`)
-- Open Questions controls (`canvascanon resolve`, `canvascanon prune`)
-- Export control (`canvascanon export markdown`)
+- Lifecycle controls (`canoncanvas load|activate|sleep|unload|status`)
+- Canon pass controls (`canoncanvas canonize`, `canoncanvas cleanup`, `canoncanvas lastcall`)
+- Open Questions controls (`canoncanvas resolve`, `canoncanvas prune`)
+- Export control (`canoncanvas export markdown`)
 - Emoji aliases (`🛜`, `🧹`, `🍺`, `❌`) when unambiguous
 
 Outputs:
@@ -53,14 +63,14 @@ Outputs:
 - Markdown export payload
 
 ### 2.2 State (authoritative)
-CanvasCanon keeps an internal state block:
-- `canvascanon.active` (bool)
-- `canvascanon.canvas_name` (string)
-- `canvascanon.canvas_bound` (bool)
-- `canvascanon.last_canon_pass_at` (timestamp or null)
-- `canvascanon.open_questions_index` (map letter -> question metadata)
-- `canvascanon.resolved_index` (map letter -> chosen option)
-- `canvascanon.footnote_counter` (int)
+CanonCanvas keeps an internal state block:
+- `canoncanvas.active` (bool)
+- `canoncanvas.canvas_name` (string)
+- `canoncanvas.canvas_bound` (bool)
+- `canoncanvas.last_canon_pass_at` (timestamp or null)
+- `canoncanvas.open_questions_index` (map letter -> question metadata)
+- `canoncanvas.resolved_index` (map letter -> chosen option)
+- `canoncanvas.footnote_counter` (int)
 
 ### 2.3 Lifecycle
 - Available: no active state
@@ -69,11 +79,11 @@ CanvasCanon keeps an internal state block:
 - Sleeping: state preserved, enforcement suppressed
 
 Lifecycle command canon:
-- `canvascanon load`
-- `canvascanon activate`
-- `canvascanon sleep`
-- `canvascanon unload`
-- `canvascanon status`
+- `canoncanvas load`
+- `canoncanvas activate`
+- `canoncanvas sleep`
+- `canoncanvas unload`
+- `canoncanvas status`
 
 Default when installed: Active.
 
@@ -85,17 +95,24 @@ Default when installed: Active.
 ### 2.5 Canon command table (ASCII-first)
 | Command | Canon | Aliases | Inputs | Output shape | State effects |
 |---|---|---|---|---|---|
-| Load module | `canvascanon load` | `Enable CanvasCanon` | none | `ack_only` | initialize `canvascanon.*`, set `canvascanon.active=true` |
-| Activate module | `canvascanon activate` | `Activate CanvasCanon` | none | `ack_only` | set `canvascanon.active=true` |
-| Sleep module | `canvascanon sleep` | `Sleep CanvasCanon` | none | `ack_only` | set `canvascanon.active=false` |
-| Unload module | `canvascanon unload` | `Disable CanvasCanon` | none | `ack_only` | clear `canvascanon.*` |
-| Show status | `canvascanon status` | `CanvasCanon status` | none | `structured_status` | none |
-| Canon pass | `canvascanon canonize` | `🛜 canon pass` | optional `scope:string` | `main_plus_patch` | update `canvascanon.last_canon_pass_at` |
-| Cleanup pass | `canvascanon cleanup` | `🧹CleanUp` | optional `scope:string` | `main_plus_patch` | none |
-| Fork prep pass | `canvascanon lastcall` | `🍺LastCall` | optional `scope:string` | `main_plus_patch` | update `canvascanon.last_canon_pass_at` |
-| Resolve question | `canvascanon resolve <letter><option>` | `B2`, `C1` | `letter: A-Z`, `option:int>=1` | `main_plus_patch` | update `canvascanon.resolved_index` |
-| Prune options | `canvascanon prune <refs>` | `❌B1,3,D3` | `refs:list` | `main_plus_patch` | none |
-| Export canvas | `canvascanon export markdown` | `🛜export` | none | `markdown_payload` | none |
+| Load module | `canoncanvas load` | `Enable CanonCanvas` | none | `ack_only` | initialize `canoncanvas.*`, set `canoncanvas.active=true` |
+| Activate module | `canoncanvas activate` | `Activate CanonCanvas` | none | `ack_only` | set `canoncanvas.active=true` |
+| Sleep module | `canoncanvas sleep` | `Sleep CanonCanvas` | none | `ack_only` | set `canoncanvas.active=false` |
+| Unload module | `canoncanvas unload` | `Disable CanonCanvas` | none | `ack_only` | clear `canoncanvas.*` |
+| Show status | `canoncanvas status` | `CanonCanvas status` | none | `structured_status` | none |
+| Canon pass | `canoncanvas canonize` | `🛜 canon pass` | optional `scope:string` | `main_plus_patch` | update `canoncanvas.last_canon_pass_at` |
+| Cleanup pass | `canoncanvas cleanup` | `🧹CleanUp` | optional `scope:string` | `main_plus_patch` | none |
+| Fork prep pass | `canoncanvas lastcall` | `🍺LastCall` | optional `scope:string` | `main_plus_patch` | update `canoncanvas.last_canon_pass_at` |
+| Resolve question | `canoncanvas resolve <letter><option>` | `B2`, `C1` | `letter: A-Z`, `option:int>=1` | `main_plus_patch` | update `canoncanvas.resolved_index` |
+| Prune options | `canoncanvas prune <refs>` | `❌B1,3,D3` | `refs:list` | `main_plus_patch` | none |
+| Export canvas | `canoncanvas export markdown` | `🛜export` | none | `markdown_payload` | none |
+
+### 2.6 Natural-language intent inference
+- CanonCanvas supports explicit commands and natural-language invocation when intent is clear.
+- If natural-language phrasing maps with high confidence to one canon command, execute it directly.
+- If confidence is low or multiple commands fit, ask one-line clarification before acting.
+- Confidence decisions should use recent chat context and current `canoncanvas.*` state.
+- Inferred intent never bypasses fail-closed rules for missing/ambiguous canvas artifacts.
 
 ## 3) Core behavior laws
 ### 3.1 Chat vs canvas contract
@@ -143,6 +160,20 @@ Fail-closed is mandatory because fabricated memory is worse than missing memory:
 - if unsure, ask
 - if artifacts are missing, pause canon edits
 - resume only with authoritative input
+
+### 3.6 Guardrailed improvisation contract
+CanonCanvas is not a rigid text template engine. Assistants should improvise phrasing where safe, but never improvise structure-critical mechanics.
+
+Safe improv zones:
+- explanation paragraph wording under each OQ header
+- handoff note voice/tone (while keeping required payload fields)
+- compact recap phrasing in chat responses
+
+Locked zones:
+- question letter stability
+- option numbering stability
+- resolve/prune semantics
+- preservation of ranking and strikeout signals when present
 
 ## 4) Canvas structure contract
 Recommended section order:
@@ -319,17 +350,17 @@ Chosen: `Second multiple choice option 🥇`
 
 ## 6) Fork survival protocol
 ### 6.1 What LastCall is
-`canvascanon lastcall` / `🍺LastCall` is a pre-handoff continuity pass. It should leave the canvas in a state where the next assistant can resume with minimal guesswork and minimal momentum loss.
+`canoncanvas lastcall` / `🍺LastCall` is a pre-handoff continuity pass. It should leave the canvas in a state where the next assistant can resume with minimal guesswork and minimal momentum loss.
 
 ### 6.2 LastCall execution order (required)
-On `canvascanon lastcall` / `🍺LastCall`:
+On `canoncanvas lastcall` / `🍺LastCall`:
 1. Canon sync pass.
 2. OQ integrity sweep.
 3. Continuity capture and handoff write.
 4. Final confirmation snapshot.
 
 ### 6.3 Canon sync pass (what "recent changes" means)
-"Run canon pass on recent changes" means compiling all material decisions and constraints from the current context into canvas canon, not just applying a cosmetic cleanup.
+"Run canon pass on recent changes" means compiling all material decisions and constraints from the current context into canon canvas, not just applying a cosmetic cleanup.
 
 Include, at minimum:
 - decisions or rules settled since the last canon pass
@@ -365,19 +396,20 @@ LastCall must explicitly capture:
 At the bottom of the `🛜` canvas (or the handoff block), assistant may add one short "note to younger self" line. This can be reflective, funny, or human, but must stay brief and never replace required handoff facts.
 
 ## 7) Naming and branding
-- CanvasCanon branding emoji is `🛜`.
-- Any canvas that follows CanvasCanon rules must start with `🛜`.
-- Required canvas title format: `🛜<ProjectName> - <Purpose>`.
+- CanonCanvas branding emoji is `🛜`.
+- Any canvas that follows CanonCanvas rules must start with `🛜 ` (emoji + space).
+- Required canvas title format: `🛜 <ProjectName> - <CanvasPurpose>`.
 - Use PascalCase for `<ProjectName>` when applicable.
-- Naming validator (strict): `^🛜[A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
-- Example: `🛜LogKit - dev R6`.
-- Preferred canonical module folder and references use PascalCase: `CanvasCanon`.
+- Canvas title must never include module names (`CanvasCanon`, `CanonCanvas`).
+- Naming validator (strict): `^🛜 [A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
+- Example: `🛜 LogKit - dev R6`.
+- Preferred canonical module folder and references use PascalCase: `CanonCanvas`.
 - Naming scheme remains configurable; if user provides an official naming variant, treat it as an explicit override.
 
 ## 8) EmojiGlossary
 | Emoji | Term | Meaning |
 |---|---|---|
-| `🛜` | `CanvasCanonMark` | Alias for CanvasCanon namespace and canon-pass intent. |
+| `🛜` | `CanonCanvasMark` | Alias for CanonCanvas namespace and canon-pass intent. |
 | `🧹` | `CleanUpPass` | Alias for cleanup/refactor pass over canvas structure. |
 | `🍺` | `LastCallPass` | Alias for pre-fork canon + handoff pass. |
 | `❓` | `OpenQuestionTag` | Marks unresolved decisions in Open Questions. |
@@ -391,17 +423,32 @@ At the bottom of the `🛜` canvas (or the handoff block), assistant may add one
 ## 9) Arbitration and precedence
 - Explicit module invocation wins.
 - If output-shape conflict exists with another active module, ask user to choose one winner.
-- If no conflict and CanvasCanon is active, keep using its response envelope for canon-edit tasks.
+- If no conflict and CanonCanvas is active, keep using its response envelope for canon-edit tasks.
+
+### 9.1 Documentation access fail-closed policy
+If required CanonCanvas docs are unavailable, do not claim CanonCanvas is loaded, active, or being followed.
+
+Required recovery flow:
+1. Ask user to enable Web Search and retry doc fetch.
+2. If fetch still fails, provide this URL pack and ask user to copy/paste returned content:
+```text
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/ModuleManifest.yaml
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/Install.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/QuickRefCard.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/MachineManual.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/UserGuide.md
+```
+3. Until docs are available, respond as a normal assistant and explicitly state that CanonCanvas module behavior is not active for that turn.
 
 ## 10) Regression checklist
-1. `canvascanon status` reports lifecycle + key state.
-2. `canvascanon canonize` yields concrete patch and updates last pass timestamp.
-3. `canvascanon cleanup` removes duplication and preserves law.
-4. `canvascanon resolve B2` collapses B and records chosen value.
-5. `canvascanon prune B1,3` strikes targeted options with `❌`.
-6. `canvascanon lastcall` captures context-not-in-`🛜`, preserves OQ integrity, and produces momentum-ready handoff notes.
-7. `canvascanon export markdown` returns clean markdown payload.
-8. Canvas naming enforcement follows `🛜<ProjectName> - <Purpose>` with PascalCase project name when applicable.
+1. `canoncanvas status` reports lifecycle + key state.
+2. `canoncanvas canonize` yields concrete patch and updates last pass timestamp.
+3. `canoncanvas cleanup` removes duplication and preserves law.
+4. `canoncanvas resolve B2` collapses B and records chosen value.
+5. `canoncanvas prune B1,3` strikes targeted options with `❌`.
+6. `canoncanvas lastcall` captures context-not-in-`🛜`, preserves OQ integrity, and produces momentum-ready handoff notes.
+7. `canoncanvas export markdown` returns clean markdown payload.
+8. Canvas naming enforcement follows `🛜 <ProjectName> - <CanvasPurpose>` with PascalCase project name when applicable, and never includes module names.
 9. OQ formatting rules enforce: no canvas-embedded shorthand helper line, header-based questions, ordered options, stable letters, keep-list semantics, strikeout pruning, and resolved collapse with vote-emoji preservation.
 10. Material decisions retain footnote markers with rationale/context in `Appendix A: Footnotes`.
 11. Missing canvas/sections triggers fail-closed clarification request.

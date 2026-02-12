@@ -1,6 +1,6 @@
-# CanvasCanon QuickRefCard (derived)
+# CanonCanvas QuickRefCard (derived)
 
-ModuleID: CanvasCanon
+ModuleID: CanonCanvas
 Version: 0.2.0
 DocRole: QuickRefCard
 Audience: Users (pocket cheat sheet)
@@ -12,16 +12,16 @@ Audience: Users (pocket cheat sheet)
 - ResponseEnvelope: `main_plus_patch` (or `markdown_payload` for export).
 
 ## Lifecycle
-- `canvascanon load`
-- `canvascanon activate`
-- `canvascanon sleep`
-- `canvascanon unload`
-- `canvascanon status`
+- `canoncanvas load`
+- `canoncanvas activate`
+- `canoncanvas sleep`
+- `canoncanvas unload`
+- `canoncanvas status`
 
 ## Canon passes
-- `canvascanon canonize`
-- `canvascanon cleanup` (alias: `🧹CleanUp`)
-- `canvascanon lastcall` (alias: `🍺LastCall`)
+- `canoncanvas canonize`
+- `canoncanvas cleanup` (alias: `🧹CleanUp`)
+- `canoncanvas lastcall` (alias: `🍺LastCall`)
 - LastCall output must include:
   - canon sync of recent decisions/constraints
   - Appendix A footnote capture for decision reasoning/context changes
@@ -30,10 +30,10 @@ Audience: Users (pocket cheat sheet)
   - optional one-line "note to younger self"
 
 ## Open Questions controls
-- Resolve: `canvascanon resolve B2` (or shorthand `B2`)
+- Resolve: `canoncanvas resolve B2` (or shorthand `B2`)
 - Multi-answer shorthand: `C2, F3, G1` or `B2 C3 D1`
 - Optional answer marker: leading `❓`, `[?]`, `[OQ]`, `[Answers]`
-- Prune: `canvascanon prune B1,3,D3` (or `❌B1,3,D3` / `Bx4`)
+- Prune: `canoncanvas prune B1,3,D3` (or `❌B1,3,D3` / `Bx4`)
 - Keep-list shorthand (single-select default): `B1,3,5` keeps listed options and strikes other B options
 - Choose-many override: if question says choose-many/select all that apply, `B1,3,5` selects many and does not auto-prune others
 - OQ question format: `### B) Title` (header, not bullet)
@@ -43,12 +43,12 @@ Audience: Users (pocket cheat sheet)
 - Do not add shorthand helper lines inside canvas; if needed, provide a tiny cheat sheet in chat only.
 
 ## Export
-- `canvascanon export markdown` (alias: `🛜export`)
+- `canoncanvas export markdown` (alias: `🛜export`)
 
 ## Naming
-- Use `🛜<ProjectName> - <Purpose>` for CanvasCanon canvases.
+- Use `🛜 <ProjectName> - <CanvasPurpose>` for CanonCanvas canvases.
 - Use PascalCase for `<ProjectName>` when applicable.
-- Example: `🛜LogKit - dev R6`
+- Example: `🛜 LogKit - dev R6`
 
 ## OQ hygiene
 - Stable question letters.

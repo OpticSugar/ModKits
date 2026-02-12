@@ -1,14 +1,14 @@
-module: "CanvasCanon"
+module: "CanonCanvas"
 module_emoji: "🛜"
-module_aliases: ["canvascanon", "canvas canon", "🛜"]
+module_aliases: ["canoncanvas", "canon canvas", "🛜"]
 version: "0.2.0"
 mission: "Canvas-as-canon workflow for fork-survivable project memory and decision governance."
 must_preserve:
   - "durable long-term project memory"
-  - "record it in canvas canon"
+  - "record it in canon canvas"
   - "Appendix A: Footnotes"
   - "grab the torch"
-  - "🛜CanvasCanonMark"
+  - "🛜CanonCanvasMark"
   - "🧹CleanUpPass"
   - "🍺LastCallPass"
   - "❓OpenQuestionTag"
@@ -19,6 +19,7 @@ must_preserve:
   - "🥉PreferredOptionBronze"
   - "👎🏼DeprioritizedOption"
 engage_policy: "OFFER"
+intent_policy: "infer_high_confidence"
 single_emoji_activate: true
 
 use_when:

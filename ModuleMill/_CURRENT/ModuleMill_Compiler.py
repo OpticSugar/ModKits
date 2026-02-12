@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.6
+ModuleMill Compiler v0.7
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -13,6 +13,7 @@ from typing import Dict, List, Set, Tuple
 DOC_ROLES = {"Install", "QuickRefCard", "MachineManual", "UserGuide"}
 FRAMEWORK_MODULE_IDS = {"ModuleMill", "KitRegistry"}
 ENGAGE_POLICIES = {"AUTO", "OFFER", "MANUAL"}
+INTENT_POLICIES = {"explicit_only", "infer_high_confidence"}
 REQUIRED_MANIFEST_KEYS = {
     "module",
     "module_emoji",
@@ -21,6 +22,7 @@ REQUIRED_MANIFEST_KEYS = {
     "mission",
     "must_preserve",
     "engage_policy",
+    "intent_policy",
     "single_emoji_activate",
     "use_when",
     "do_not_use_when",
@@ -53,6 +55,10 @@ META_PATTERNS = {
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 EMOJI_RE = re.compile(r"[\u2600-\u27bf\U0001F300-\U0001FAFF]")
 PASCAL_CASE_RE = re.compile(r"^[A-Z][A-Za-z0-9]*$")
+INTENT_SIGNAL_KEYWORDS = {
+    "natural-language intent handling": {"natural-language", "natural language", "intent inference", "inferred"},
+    "confidence gating": {"high confidence", "low confidence", "clarif"},
+}
 
 
 def read_text(path: Path) -> str:
@@ -467,6 +473,7 @@ def lint_manifest_contract_parity(
     userguide_text = doc_texts.get("userguide", "")
     machinemanual_text = doc_texts.get("machinemanual", "")
     quickref_text = doc_texts.get("quickref", "")
+    intent_policy = str(manifest.get("intent_policy", "")).strip()
 
     must_preserve = manifest.get("must_preserve", [])
     if not isinstance(must_preserve, list):
@@ -529,6 +536,17 @@ def lint_manifest_contract_parity(
                     errs.append(
                         f"{path.name}: must_preserve_runtime term missing from {role}: '{item}'"
                     )
+
+    if intent_policy == "infer_high_confidence" and userguide_text:
+        userguide_lower = userguide_text.lower()
+        missing_signals: List[str] = []
+        for label, keywords in INTENT_SIGNAL_KEYWORDS.items():
+            if not any(key in userguide_lower for key in keywords):
+                missing_signals.append(label)
+        if missing_signals:
+            warns.append(
+                f"{path.name}: intent_policy=infer_high_confidence but UserGuide is missing signal(s): {', '.join(missing_signals)}"
+            )
 
     if not strict or not module:
         return
@@ -657,6 +675,10 @@ def lint_manifest_file(path: Path, strict: bool = False) -> Tuple[List[str], Lis
     engage_policy = str(manifest.get("engage_policy", "")).strip()
     if engage_policy and engage_policy not in ENGAGE_POLICIES:
         errs.append(f"{path.name}: engage_policy '{engage_policy}' not in {sorted(ENGAGE_POLICIES)}")
+
+    intent_policy = str(manifest.get("intent_policy", "")).strip()
+    if intent_policy and intent_policy not in INTENT_POLICIES:
+        errs.append(f"{path.name}: intent_policy '{intent_policy}' not in {sorted(INTENT_POLICIES)}")
 
     version = str(manifest.get("version", "")).strip()
     if version and not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", version):

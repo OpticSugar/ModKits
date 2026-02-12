@@ -1,8 +1,8 @@
 # 🏭 ModuleMill DevGuide
-(Developer Canon for ModuleKit Engineering) v0.6.0
+(Developer Canon for ModuleKit Engineering) v0.7.0
 
 ModuleID: ModuleMill
-Version: 0.6.0
+Version: 0.7.0
 DocRole: UserGuide
 Audience: Module developers (Codex-first), maintainers, and auditors
 
@@ -103,6 +103,14 @@ Rules:
 - Bare-token overload is forbidden (for example `3`, `ok`, lone emoji).
 - If a module defines emoji aliases, docs must preserve them and map each alias deterministically to one behavior.
 
+### 4.1.1 Natural-language intent layer (required)
+- Runtime modules must support command invocation from either explicit syntax or clear natural-language intent.
+- If user phrasing maps with high confidence to exactly one canonical command, execute it without forcing exact syntax.
+- If confidence is low, or multiple commands are plausible, ask one brief clarification question.
+- Confidence decisions must use live chat context and current module state (for example hold/release state).
+- Natural-language intent execution never bypasses safety gates, required inputs, or fail-closed constraints.
+- Design for mixed typing + speech-to-text input: prefer frictionless execution when confidence is high.
+
 ### 4.2 ModuleManifest contract (required)
 Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with these keys:
 - `module`
@@ -113,6 +121,7 @@ Every runtime module must include `<Module>/_CURRENT/ModuleManifest.yaml` with t
 - `must_preserve` (list of critical invariants that must not be compressed away)
 - `must_preserve_runtime` (optional list; if present, each term must appear in UserGuide + MachineManual + QuickRefCard)
 - `engage_policy` (`AUTO | OFFER | MANUAL`)
+- `intent_policy` (`explicit_only | infer_high_confidence`)
 - `single_emoji_activate` (`true|false`)
 - `use_when` (list)
 - `do_not_use_when` (list)
@@ -125,6 +134,7 @@ Purpose:
 - Decouple trigger/selection metadata from long-form docs.
 - Enable deterministic arbitration and fail-closed behavior before loading large documents.
 - Preserve module identity and core guarantees even when documents are refactored or shortened.
+- Make command-intent handling explicit (exact syntax only vs high-confidence natural-language inference).
 
 ### 4.3 Emoji glossary (required for user-facing modules)
 Any module that exposes emoji aliases must include an `EmojiGlossary` section in its `UserGuide`.
@@ -264,9 +274,10 @@ Registry guardrail:
 ### 9.5 Failure behavior
 If registry or docs cannot be fetched:
 - fail closed
-- ask for pasted registry entry or required module doc
-- in enterprise/work environments, instruct user to enable Web Search before retrying fetch
-- do not fabricate module behavior
+- ask the user to enable Web Search before retrying fetch (especially in enterprise/work environments)
+- if fetch still fails, provide a copy/paste-ready code block with required doc URLs and ask the user to paste needed docs
+- do not claim module activation or pretend module-compliant execution while docs are unavailable
+- if offering best-effort help anyway, label it as non-module improvisation
 
 ## 10) Tooling and verification
 ### 10.1 Minimum lint pass
@@ -280,6 +291,8 @@ If registry or docs cannot be fetched:
 - `ModuleManifest` doc pointers map to existing local files in `_CURRENT`.
 - `must_preserve` exists and every invariant term appears in canonical `UserGuide`.
 - If `must_preserve_runtime` is provided, each term appears in `UserGuide`, `MachineManual`, and `QuickRefCard`.
+- `intent_policy` exists in `ModuleManifest.yaml` and uses a supported value.
+- For `intent_policy=infer_high_confidence`, canonical docs include confidence policy (`high => execute`, `low => clarify`).
 - Strict lint fails when an inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`), which indicates a dropped emoji base token.
 - Strict lint enforces emoji-alias parity from UserGuide command-table aliases into `MachineManual` and `QuickRefCard`.
 - Manual parity check: behavior-critical guided-improv directives in `UserGuide` are preserved in `MachineManual` and `QuickRefCard`.

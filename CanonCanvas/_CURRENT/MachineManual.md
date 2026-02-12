@@ -1,9 +1,9 @@
-# CanvasCanon MachineManual (derived)
+# CanonCanvas MachineManual (derived)
 
-ModuleID: CanvasCanon
+ModuleID: CanonCanvas
 Version: 0.2.0
 DocRole: MachineManual
-Audience: Assistants operating CanvasCanon at runtime
+Audience: Assistants operating CanonCanvas at runtime
 
 ---
 
@@ -19,27 +19,27 @@ Audience: Assistants operating CanvasCanon at runtime
 
 ## 1) Minimal state
 Maintain:
-- `canvascanon.active`
-- `canvascanon.canvas_name`
-- `canvascanon.canvas_bound`
-- `canvascanon.last_canon_pass_at`
-- `canvascanon.open_questions_index`
-- `canvascanon.resolved_index`
-- `canvascanon.footnote_counter`
+- `canoncanvas.active`
+- `canoncanvas.canvas_name`
+- `canoncanvas.canvas_bound`
+- `canoncanvas.last_canon_pass_at`
+- `canoncanvas.open_questions_index`
+- `canoncanvas.resolved_index`
+- `canoncanvas.footnote_counter`
 
 ## 2) Lifecycle controls
-- `canvascanon load`: initialize state and activate
-- `canvascanon activate`: set active true
-- `canvascanon sleep`: set active false, preserve state
-- `canvascanon unload`: clear state
-- `canvascanon status`: emit structured status
+- `canoncanvas load`: initialize state and activate
+- `canoncanvas activate`: set active true
+- `canoncanvas sleep`: set active false, preserve state
+- `canoncanvas unload`: clear state
+- `canoncanvas status`: emit structured status
 
 ## 3) Command interpretation
 ### 3.1 Canon/care commands
-- `canvascanon canonize`: produce canon patch from recent decisions.
-- `canvascanon cleanup`: remove duplication/noise while preserving rules.
-- `canvascanon lastcall`: pre-handoff continuity pass (canon sync + OQ integrity + momentum handoff capture).
-- `🧹CleanUp` is an alias for `canvascanon cleanup`.
+- `canoncanvas canonize`: produce canon patch from recent decisions.
+- `canoncanvas cleanup`: remove duplication/noise while preserving rules.
+- `canoncanvas lastcall`: pre-handoff continuity pass (canon sync + OQ integrity + momentum handoff capture).
+- `🧹CleanUp` is an alias for `canoncanvas cleanup`.
 - For `canonize|cleanup|lastcall`, preserve rationale traceability:
   - maintain `Appendix A: Footnotes` when present or fail closed if missing where rationale markers are required
   - keep inline markers (`[1]`, `[2]`, ...) attached to material decisions/rules
@@ -47,10 +47,10 @@ Maintain:
   - do not drop rationale footnotes unless the linked decision is explicitly removed/superseded
 
 ### 3.2 Open Questions operations
-- `canvascanon resolve <letter><option>` accepts `B2` shorthand.
+- `canoncanvas resolve <letter><option>` accepts `B2` shorthand.
 - Multi-question answer lines are valid: `C2, F3, G1` or `B2 C3 D1`.
 - Optional answer-mode marker is accepted when present: leading `❓`, `[?]`, `[OQ]`, or `[Answers]`.
-- `canvascanon prune <refs>` accepts `B1,3,D3`; emoji alias `❌B1,3,D3` is equivalent.
+- `canoncanvas prune <refs>` accepts `B1,3,D3`; emoji alias `❌B1,3,D3` is equivalent.
 - Inline prune syntax is valid: `Bx4`, `Bx2,5` (`x` is case-insensitive).
 - Lone trailing `❌` on a canvas line is prune intent for that line item.
 - Keep-list semantics: in single-select questions, `B1,3,5` means keep listed options and strike all others in B.
@@ -60,10 +60,10 @@ Maintain:
 - OQ questions are markdown headers (`### B) ...`), not bullets.
 
 ### 3.3 Export
-- `canvascanon export markdown` returns the current canonical canvas as markdown payload.
+- `canoncanvas export markdown` returns the current canonical canvas as markdown payload.
 
 ## 4) Open Questions enforcement
-- Use OQ terminology (`Open Questions` / `OQ`) consistently; do not emit `OC`.
+- Use OQ terminology (`Open Questions` / `OQ`) consistently in all outputs.
 - OQ section appears before Resolved Decisions; unresolved and resolved items are not mixed in one active list.
 - Recommended heading pair is `## ❓ Open questions` then `## ↔️ Resolved decisions`.
 - Keep stable question letters.
@@ -85,7 +85,7 @@ Maintain:
 - Do not mix unresolved queue with resolved records.
 
 ## 5) Fork protocol
-On `canvascanon lastcall` / `🍺LastCall`:
+On `canoncanvas lastcall` / `🍺LastCall`:
 1. Run canon sync on recent context:
    - write newly settled decisions/rules into canonical sections
    - apply pending OQ actions reflected in chat (`B2`, `❌B1,3`, keep-list effects, resolved collapses)
@@ -107,13 +107,13 @@ On `canvascanon lastcall` / `🍺LastCall`:
    - this is additive only and never replaces required handoff facts
 
 ## 6) Naming rules
-- Enforce canvas title format: `🛜<ProjectName> - <Purpose>`.
-- Require `🛜` prefix for all CanvasCanon-bound canvases.
+- Enforce canvas title format: `🛜 <ProjectName> - <CanvasPurpose>`.
+- Require `🛜` prefix for all CanonCanvas-bound canvases.
 - Use PascalCase for `<ProjectName>` when applicable.
-- Runtime validator (strict): `^🛜[A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
-- If a CanvasCanon-bound title fails the validator, fail closed and request a corrected title before continuing canon operations.
-- Reference example: `🛜LogKit - dev R6`.
-- Module folder and references use PascalCase `CanvasCanon` unless user overrides naming policy.
+- Runtime validator (strict): `^🛜 [A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
+- If a CanonCanvas-bound title fails the validator, fail closed and request a corrected title before continuing canon operations.
+- Reference example: `🛜 LogKit - dev R6`.
+- Module folder and references use PascalCase `CanonCanvas` unless user overrides naming policy.
 
 ## 7) Failure handling
 If canvas is unavailable, stale, or structurally ambiguous:

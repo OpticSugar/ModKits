@@ -17,6 +17,7 @@ must_preserve:
   - "🛂PrintGateAlias"
   - "🫟InkTestAlias"
 engage_policy: "OFFER"
+intent_policy: "infer_high_confidence"
 single_emoji_activate: true
 
 use_when:

@@ -11,6 +11,14 @@ LogKit captures durable signals from chat into a reliable log lifecycle:
 
 The goal is one module that can handle software issues, product ideas, feedback inboxes, household inventory logs, and creative production workflows.
 
+### Mission backstory (why this exists)
+LogKit exists because high-value discoveries in chat tend to disappear once the thread moves on. The module turns fragile conversational memory into durable, queryable records without requiring a separate app workflow mid-conversation.
+
+Non-negotiable intent:
+- preserve retrieval-grade records, not just short-term notes
+- keep commit explicit so accidental logging does not pollute the ledger
+- preserve emoji-first operator ergonomics while maintaining ASCII canon fallback
+
 ## Scope
 - Canonical runtime ledger in chat: `LogKit Log` canvas (emoji alias: `🖨️ Log`).
 - Portable transfer format: `🛅 LogPak` (`.jsonl`).
@@ -23,6 +31,20 @@ The goal is one module that can handle software issues, product ideas, feedback 
 - Emoji aliases stay first-class for ergonomics, while ASCII canon remains mandatory for deterministic fallback.
 - Fail-closed preconditions can feel strict, but they prevent silent corruption of ledger state.
 
+## Guardrailed improvisation contract
+LogKit is structured, but not robotic. Assistants should improvise wording in summaries and recommendations while preserving deterministic contracts.
+
+Safe improv zones:
+- title/description phrasing for captured entries
+- concise recap language in `main_plus_microtail` responses
+- query guidance wording during retrieval help
+
+Locked zones:
+- command semantics
+- commit/flush gating behavior
+- schema requirements
+- ledger guardrails and fail-closed checks
+
 ## Examples
 - Capture then commit all:
   - `🖨️Log: tighten module lint checks`
@@ -32,6 +54,17 @@ The goal is one module that can handle software issues, product ideas, feedback 
 - Export and retrieve:
   - `🛅 export lane=infra`
   - `🗄️ find lint regressions`
+
+## Use-case playbooks
+- Software/dev workflow:
+  - capture regressions, architecture decisions, and patch notes into lane-specific streams
+  - export `🛅 LogPak` for handoff or incident review
+- Product and UX workflow:
+  - log feedback snippets, hypotheses, and decision outcomes with traceable revisions
+  - retrieve prior rationale quickly when roadmap debates recur
+- Personal/home operations:
+  - track inventory changes, recurring issues, and purchase decisions with clear audit history
+  - keep one durable record model across contexts instead of ad hoc note formats
 
 ## Canonical Commands
 
@@ -54,6 +87,13 @@ The goal is one module that can handle software issues, product ideas, feedback 
 ### Trigger Rule
 - Any user message containing `🖨️` authorizes logging intent for the current turn.
 - Authorization does not imply commit. Commit is explicit via `logkit commit all` (or alias `🖨️Flush`).
+
+### Natural-language intent inference
+- LogKit accepts explicit syntax and natural-language command intent.
+- If wording maps with high confidence to a single canon command, execute that command.
+- If confidence is low or multiple commands are plausible, ask one short clarification.
+- Confidence should consider current lifecycle, queue state, and immediate turn context.
+- Inferred intent never bypasses commit/overwrite safety checks or fail-closed artifact rules.
 
 ## Emoji-First Alias Contract
 - Emoji aliases are first-class language, not decorative hints.
@@ -104,6 +144,7 @@ Volatile runtime state keys:
 - Emoji alias: `🖨️ Log`
 - If emoji rendering is unavailable or ambiguous, always use `LogKit Log`.
 - Assistants must never infer names from visually blank emoji-prefixed tokens; unresolved names fail closed.
+- Older docs may reference only `🖨️ Log`; treat that as the same canonical ledger target.
 
 ## Required Ledger Guardrails
 1. Single-ledger rule: exactly one ledger canvas per chat named `LogKit Log` or `🖨️ Log`.
@@ -236,6 +277,31 @@ When multiple modules may respond:
 | `🫟` | `InkTestAlias` | InkTest triage rubric metaphor for confidence-based capture. |
 
 Rule: when a documented emoji alias exists, do not omit it from operational guidance; publish both ASCII canon and emoji alias forms.
+
+## Recovery and drift checks
+If behavior feels partially installed or inconsistent:
+1. Run `logkit status` and verify lifecycle + ledger health.
+2. Confirm active canvas naming and META header preconditions.
+3. Use a minimal smoke flow:
+  - `🖨️Log: smoke entry`
+  - `🖨️Flush`
+  - `🗄️ find smoke entry`
+4. If any precondition is ambiguous, fail closed, report the exact blocker, and request the missing artifact/input.
+
+## Documentation access fail-closed policy
+If required LogKit docs are unavailable, do not claim LogKit is loaded, active, or being followed.
+
+Required recovery flow:
+1. Ask user to enable Web Search and retry doc fetch.
+2. If fetch still fails, provide this URL pack and ask user to copy/paste returned content:
+```text
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/ModuleManifest.yaml
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/Install.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md
+https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md
+```
+3. Until docs are available, respond as a normal assistant and explicitly state that LogKit module behavior is not active for that turn.
 
 ## Regression Minimum
 Must pass before release:

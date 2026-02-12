@@ -53,9 +53,9 @@ Each module entry must include:
 - Version: `0.2.0`
 - Compatibility: `Uses ModuleMill-style doc roles; ask user to choose on output-shape collisions.`
 
-### Module: CanvasCanon
+### Module: CanonCanvas
 - ModuleEmoji: `🛜`
-- ModuleAliases: `canvascanon`, `canvas canon`, `🛜`
+- ModuleAliases: `canoncanvas`, `canon canvas`, `🛜`
 - Mission: Canvas-as-canon workflow for fork-survivable project memory and decision governance.
 - 🎛️ EngagePolicy: `OFFER`
 - 🧲 NeedSignals:
@@ -67,11 +67,11 @@ Each module entry must include:
 - DefaultLoad: `no`
 - SingleEmojiActivate: `yes`
 - Docs:
-  - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/ModuleManifest.yaml`
-  - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/Install.md`
-  - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/QuickRefCard.md`
-  - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/MachineManual.md`
-  - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanvasCanon/_CURRENT/UserGuide.md`
+  - Manifest: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/ModuleManifest.yaml`
+  - Install: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/Install.md`
+  - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/QuickRefCard.md`
+  - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/MachineManual.md`
+  - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/UserGuide.md`
 - Version: `0.2.0`
 - Compatibility: `Uses ModuleMill-style doc roles, ASCII-first canon commands, and fail-closed arbitration on output-shape conflicts.`
 
@@ -115,4 +115,8 @@ Each module entry must include:
   - If module is loaded but inactive, activate it.
   - If module is not loaded and `SingleEmojiActivate=yes`, load then activate it.
   - If multiple modules share an emoji alias, fail closed and ask user to choose.
-- Fetch failure: fail closed and request pasted registry entry or required module doc.
+- Fetch failure (strict, required):
+  - Never claim any module is loaded/active when required docs were not successfully fetched.
+  - Step A: ask user to enable Web Search and retry fetch.
+  - Step B: if fetch still fails, provide a code block with the exact module doc URLs and ask user to paste the returned content.
+  - If both steps fail or are declined, continue as a normal assistant and explicitly state module behavior is not active.
