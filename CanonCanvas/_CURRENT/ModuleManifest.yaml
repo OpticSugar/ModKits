@@ -1,11 +1,26 @@
 module: "CanonCanvas"
 module_emoji: "🛜"
 module_aliases: ["canoncanvas", "canon canvas", "🛜"]
-version: "0.2.0"
-mission: "Canvas-as-canon workflow for fork-survivable project memory and decision governance."
+version: "0.3.4"
+mission: "Canvas-as-canon framework for dynamic project memory, standardized header patterns, LastCall ritual discipline, official younger-self note headering, and fork-survivable continuity."
 must_preserve:
   - "durable long-term project memory"
   - "record it in canon canvas"
+  - "canvas-first memory discipline"
+  - "headers appear only when needed"
+  - "do not pre-populate empty sections"
+  - "standard header library (WIP)"
+  - "LastCall is treated as a ritual command and never rendered as a canvas header title."
+  - "Never render `🍺LastCall` or variants such as `🍺 Last Call snapshot` as section headers."
+  - "`## 👴🏼 Fork Handoff Notes` is used (when needed) as the final section and is continuously consumed/pruned rather than allowed to accumulate."
+  - "remove consumed items and clear the section when empty."
+  - '`🍺LastCall` should end with a short, creative "note to younger self" tail line by default.'
+  - "official younger-self note header"
+  - "### 🚸 assistant's 👴🏼 note to → 📝 → younger 👶🏻 self"
+  - "Do not assume a client exists."
+  - "If client wording is short and available, capture it verbatim."
+  - "lastcall is a safety net"
+  - "canvases are durable across chat forks"
   - "Appendix A: Footnotes"
   - "grab the torch"
   - "🛜CanonCanvasMark"
@@ -18,6 +33,14 @@ must_preserve:
   - "🥈PreferredOptionSilver"
   - "🥉PreferredOptionBronze"
   - "👎🏼DeprioritizedOption"
+  - "⚖️ClientRequestsTag"
+  - "💡OurIdeasTag"
+  - "💾SavePointMarker"
+  - "⚡ForkedMarker"
+  - "👴🏼ForkHandoffNotesHeader"
+  - "📝YoungerSelfNoteToken"
+  - "🚸YoungerSelfNoteHeaderTag"
+  - "👶🏻YoungerSelfRecipientTag"
 engage_policy: "OFFER"
 intent_policy: "infer_high_confidence"
 single_emoji_activate: true
@@ -26,6 +49,7 @@ use_when:
   - "User wants durable project canon in canvas instead of chat transcript"
   - "User needs Open Questions governance, resolution, and prune workflow"
   - "User is preparing a fork and wants structured handoff notes"
+  - "User wants clear separation between mandatory client asks and additive internal ideas"
 
 do_not_use_when:
   - "User explicitly requests a different module with conflicting output shape"
@@ -34,6 +58,8 @@ do_not_use_when:
 required_inputs:
   - "Current canonical canvas content"
   - "Decision updates from user/chat"
+  - "Client-context signal when provided"
+  - "Fork signal context when provided (`💾` / `⚡`)"
 
 response_envelope: "main_plus_patch"
 failure_mode: "fail_closed_ask"

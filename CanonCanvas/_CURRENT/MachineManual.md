@@ -1,7 +1,7 @@
 # CanonCanvas MachineManual (derived)
 
 ModuleID: CanonCanvas
-Version: 0.2.0
+Version: 0.3.4
 DocRole: MachineManual
 Audience: Assistants operating CanonCanvas at runtime
 
@@ -11,6 +11,11 @@ Audience: Assistants operating CanonCanvas at runtime
 - Treat `UserGuide` as canonical.
 - Enforce fail-closed behavior when canvas artifacts are missing.
 - Do not invent commands, state keys, or output shapes.
+- Do not pre-populate empty template sections.
+- Materialize headers only when content exists for that section.
+- Treat canvas as long-term project memory while module is active.
+- Do not assume client context unless user explicitly provides it.
+- Treat LastCall as a ritual command, never as a module title or section header.
 
 ## ResponseEnvelope
 - Default: `main_plus_patch`
@@ -23,6 +28,9 @@ Maintain:
 - `canoncanvas.canvas_name`
 - `canoncanvas.canvas_bound`
 - `canoncanvas.last_canon_pass_at`
+- `canoncanvas.last_savepoint_at`
+- `canoncanvas.last_fork_rehydrate_at`
+- `canoncanvas.client_mode`
 - `canoncanvas.open_questions_index`
 - `canoncanvas.resolved_index`
 - `canoncanvas.footnote_counter`
@@ -39,6 +47,8 @@ Maintain:
 - `canoncanvas canonize`: produce canon patch from recent decisions.
 - `canoncanvas cleanup`: remove duplication/noise while preserving rules.
 - `canoncanvas lastcall`: pre-handoff continuity pass (canon sync + OQ integrity + momentum handoff capture).
+- `canoncanvas lastcall` / `🍺LastCall` is a ritual. Never emit headings like `🍺 Last Call snapshot`.
+- LastCall is safety-net behavior for loose ends; routine turns should keep canvas continuously groomed.
 - `🧹CleanUp` is an alias for `canoncanvas cleanup`.
 - For `canonize|cleanup|lastcall`, preserve rationale traceability:
   - maintain `Appendix A: Footnotes` when present or fail closed if missing where rationale markers are required
@@ -62,8 +72,32 @@ Maintain:
 ### 3.3 Export
 - `canoncanvas export markdown` returns the current canonical canvas as markdown payload.
 
+### 3.4 Client-mode gating and capture rules
+- Default to non-client mode (`canoncanvas.client_mode=false`) unless user explicitly indicates client context.
+- Treat explicit client context as any of:
+  - user states the project has a client
+  - user pastes a client brief/request text
+  - user asks for client-request tracking behavior
+- In non-client mode:
+  - do not create `Client comments` or `⚖️ Client Requests` sections
+  - route requirements into neutral sections (for example Requirements, Constraints, Goals)
+- In client mode:
+  - maintain `## ⚖️ Client Requests` only when client requests exist
+  - capture short client requests verbatim when source wording is available
+  - if decomposition is needed, keep the original client wording and add derived targets beneath it
+  - treat `⚖️` items as mandatory/inflexible unless user marks specific items negotiable
+  - maintain `## 💡 Our Ideas` for additive ideas that support client requests
+  - never pre-create empty `⚖️`/`💡` sections
+
+### 3.5 Header library and placement contract
+- Prefer standardized headers defined in canonical UserGuide section `4.1 Standard Header Library (WIP)`.
+- If no standard header fits, improvise a style-consistent header and keep placement logical.
+- `## 👴🏼 Fork Handoff Notes` is the only standard handoff header and must be final section when present.
+- Do not place fork handoff notes at top or middle of canvas.
+
 ## 4) Open Questions enforcement
 - Use OQ terminology (`Open Questions` / `OQ`) consistently in all outputs.
+- Create OQ sections only when unresolved questions exist.
 - OQ section appears before Resolved Decisions; unresolved and resolved items are not mixed in one active list.
 - Recommended heading pair is `## ❓ Open questions` then `## ↔️ Resolved decisions`.
 - Keep stable question letters.
@@ -85,6 +119,9 @@ Maintain:
 - Do not mix unresolved queue with resolved records.
 
 ## 5) Fork protocol
+Operational invariant:
+- Canvases are durable across chat forks and persist outside any one chat timeline.
+
 On `canoncanvas lastcall` / `🍺LastCall`:
 1. Run canon sync on recent context:
    - write newly settled decisions/rules into canonical sections
@@ -97,14 +134,24 @@ On `canoncanvas lastcall` / `🍺LastCall`:
    - resolved entries preserve chosen-value ranking emoji
    - pruned entries are strikeout plus trailing `❌`
 3. Write/update fork handoff notes with:
+   - required heading: `## 👴🏼 Fork Handoff Notes`
+   - keep this heading as final section while handoff is active
    - phase + timestamp
    - what changed in this pass
    - context-only carry-forward items not yet canonized
    - next actions (ordered), risks/gotchas, and pointers
    - explicit momentum bridge: what lets the next operator "grab the torch" quickly
+   - consume/remove entries after they are propagated into canonical sections or become irrelevant
 4. Optional tail line:
-   - may append one short "note to younger self" line at the bottom of canvas/handoff block
-   - this is additive only and never replaces required handoff facts
+  - append one short "note to younger self" line at the very end of canvas by default (skip only if user requests strict-formal tone)
+  - required header for this block: `### 🚸 assistant's 👴🏼 note to → 📝 → younger 👶🏻 self`
+  - do not improvise variant header text
+  - style may be playful/snarky/sarcastic/inside-joke when context supports it; light roast is allowed
+  - this is additive only and never replaces required handoff facts
+
+Fork signal handling:
+- On `💾` (`SavePointMarker`): treat current point as a fork-back anchor and keep canon current.
+- On `⚡` (`ForkedMarker`): immediately reload canvas content, refresh state/context from latest canon, consume stale `👴🏼` carry-forward items into canonical sections, then continue.
 
 ## 6) Naming rules
 - Enforce canvas title format: `🛜 <ProjectName> - <CanvasPurpose>`.
@@ -120,3 +167,16 @@ If canvas is unavailable, stale, or structurally ambiguous:
 1. Stop speculative edits.
 2. Ask for missing section/content.
 3. Resume only after authoritative input is provided.
+
+If client-context status is ambiguous:
+1. Ask one-line clarification before creating client-specific sections.
+2. Keep non-client structure until clarified.
+
+If a non-standard LastCall heading is detected (for example `🍺 Last Call snapshot`):
+1. Normalize to `## 👴🏼 Fork Handoff Notes`.
+2. Move the section to final position.
+3. Consume/migrate stale items and remove empty residue.
+
+If a non-standard younger-self note heading is detected:
+1. Normalize to `### 🚸 assistant's 👴🏼 note to → 📝 → younger 👶🏻 self`.
+2. Keep it as the final tail block under the fork handoff section.

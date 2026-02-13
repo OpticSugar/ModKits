@@ -6,7 +6,7 @@ ModuleID: KitRegistry
 Version: 0.3.3
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
-Updated: 2026-02-11
+Updated: 2026-02-13
 Scope: Runtime ModuleKits only
 
 ## 0) Policy
@@ -72,8 +72,8 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/UserGuide.md`
-- Version: `0.2.0`
-- Compatibility: `Uses ModuleMill-style doc roles, ASCII-first canon commands, and fail-closed arbitration on output-shape conflicts.`
+- Version: `0.3.4`
+- Compatibility: `Uses ModuleMill-style doc roles, dynamic section materialization, standard header library guidance, LastCall-as-ritual semantics, final-position transient 👴🏼 handoff notes, official 🚸 younger-self note header, explicit no-assumed-client gating, conditional ⚖️/💡 client workflow, and fail-closed arbitration on output-shape conflicts.`
 
 ### Module: LogKit
 - ModuleEmoji: `🖨️`
