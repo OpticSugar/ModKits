@@ -293,7 +293,7 @@ If registry or docs cannot be fetched:
 - If `must_preserve_runtime` is provided, each term appears in `UserGuide`, `MachineManual`, and `QuickRefCard`.
 - `intent_policy` exists in `ModuleManifest.yaml` and uses a supported value.
 - For `intent_policy=infer_high_confidence`, canonical docs include confidence policy (`high => execute`, `low => clarify`).
-- Strict lint fails when an inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`), which indicates a dropped emoji base token.
+- Strict lint ignores lone variation-selector render noise (`\ufe0e`/`\ufe0f`) and treats emoji aliases with/without VS markers (for example `🖨️`/`🖨`) as equivalent.
 - Strict lint enforces emoji-alias parity from UserGuide command-table aliases into `MachineManual` and `QuickRefCard`.
 - Manual parity check: behavior-critical guided-improv directives in `UserGuide` are preserved in `MachineManual` and `QuickRefCard`.
 - Strict parity checks pass for lifecycle command/state coverage between `UserGuide` and `MachineManual`.

@@ -116,7 +116,7 @@ Run compiler lint and enforce:
 - `intent_policy` exists and is valid (`explicit_only` or `infer_high_confidence`)
 - For inference-enabled modules, UserGuide includes explicit confidence behavior (`high => execute`, `low => clarify`)
 - Every `Emoji + PascalCaseName` feature name in `EmojiGlossary` has matching anti-drift protection in `must_preserve`
-- Strict mode fails if any inline code span starts with variation selector bytes (`\ufe0e`/`\ufe0f`) because this indicates dropped emoji bases.
+- Strict mode ignores lone variation-selector render noise (`\ufe0e`/`\ufe0f`) and normalizes emoji aliases with/without VS markers (for example `🖨️`/`🖨`).
 - Strict mode enforces emoji alias parity from UserGuide command aliases into `MachineManual` and `QuickRefCard`.
 - ChatGPT global-instruction ` ```text ` block length stays <= 1400 chars (reserves room for user personalization).
 - Manual parity check: behavior-critical guided-improv directives are preserved from `UserGuide` into derived docs.

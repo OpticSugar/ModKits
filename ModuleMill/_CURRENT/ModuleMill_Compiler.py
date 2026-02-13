@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ModuleMill Compiler v0.7.1
+ModuleMill Compiler v0.7.2
 - lint: validate metadata, role hygiene, and ModuleManifest contract checks
 - extract: print a requested section by heading
 """
@@ -64,6 +64,7 @@ META_PATTERNS = {
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 EMOJI_RE = re.compile(r"[\u2600-\u27bf\U0001F300-\U0001FAFF]")
+VARIATION_SELECTOR_RE = re.compile(r"[\ufe0e\ufe0f]")
 PASCAL_CASE_RE = re.compile(r"^[A-Z][A-Za-z0-9]*$")
 INTENT_SIGNAL_KEYWORDS = {
     "natural-language intent handling": {"natural-language", "natural language", "intent inference", "inferred"},
@@ -222,7 +223,10 @@ def find_heading_section_lines(text: str, needle: str) -> List[str]:
 
 
 def normalize_emoji_tokens(raw: str) -> str:
-    return "".join(EMOJI_RE.findall(raw))
+    # Ignore text/emoji variation selectors so aliases like `🖨️` and `🖨`
+    # are treated as the same emoji token across renderers.
+    normalized = VARIATION_SELECTOR_RE.sub("", raw)
+    return "".join(EMOJI_RE.findall(normalized))
 
 
 def is_pascal_case_term(raw: str) -> bool:
@@ -353,10 +357,14 @@ def lint_emoji_glossary_contract(path: Path, text: str, strict: bool, errs: List
 
 
 def lint_inline_code_emoji_render_safety(path: Path, text: str, strict: bool, errs: List[str], warns: List[str]) -> None:
-    # Variation-selector-leading spans (for example `️ Log`) indicate a dropped emoji base.
+    # Variation-selector-leading spans can indicate dropped emoji bases.
+    # If no emoji can be recovered after normalization, treat the span as
+    # corrupted render noise and ignore it.
     for m in re.finditer(r"`([^`]+)`", text):
         token = m.group(1)
         if token and token[0] in ("\ufe0e", "\ufe0f"):
+            if not normalize_emoji_tokens(token):
+                continue
             line_no = text.count("\n", 0, m.start()) + 1
             route_issue(
                 f"{path.name}:{line_no}: inline code span starts with variation selector; likely missing emoji base token",
