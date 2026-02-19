@@ -1,7 +1,7 @@
 # CanonCanvas Install (derived)
 
 ModuleID: CanonCanvas
-Version: 0.3.4
+Version: 0.3.6
 DocRole: Install
 Audience: Users + assistants (bootstrap + recovery)
 
@@ -24,6 +24,12 @@ ASCII canon equivalents:
 - Treat canvas as authoritative canon.
 - Keep chat exploratory and compile conclusions into canvas patches.
 - Treat canvas as long-term memory for durable project progress.
+- CanonCanvas operates on markdown canvases.
+- Look-before-leap binding: open an existing matching `🛜` canvas before creating a new one.
+- Treat user-opened canvas as primary selection signal.
+- If active-canvas telemetry is unclear, request exact-title bind confirmation (`use 🛜 <ProjectName> - <CanvasPurpose>`).
+- Never suggest non-existent UI controls for setting active canvas.
+- Never create a duplicate canvas as a workaround for bind uncertainty.
 - Build sections dynamically; do not prefill empty outlines.
 - Do not assume a client exists; client sections are conditional.
 
@@ -46,6 +52,8 @@ Fork signal helpers:
 - Use `🛜 <ProjectName> - <CanvasPurpose>` for any CanonCanvas-bound canvas.
 - Use PascalCase for `<ProjectName>` when applicable.
 - Example: `🛜 LogKit - dev R6`
+- Re-open the existing matching `🛜` canvas when present; do not create duplicates by default.
+- Create a new `🛜` canvas only when no suitable match exists or user explicitly requests a new canvas.
 
 ## 5) Header library (WIP)
 - Use standard recurring headers from UserGuide `4.1` before inventing new ones.

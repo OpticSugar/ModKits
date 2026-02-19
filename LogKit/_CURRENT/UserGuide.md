@@ -1,7 +1,7 @@
 # LogKit UserGuide
 
 ModuleID: LogKit
-Version: 0.4.4
+Version: 0.4.6
 DocRole: UserGuide
 Audience: Users, developers, and assistants operating LogKit
 
@@ -20,7 +20,7 @@ Non-negotiable intent:
 - preserve emoji-first operator ergonomics while maintaining ASCII canon fallback
 
 ## Scope
-- Default runtime ledger in chat: `🖨️ Log` canvas (capital `L` required).
+- Default runtime ledger in chat: `🖨️ Log` JSON code canvas (capital `L` required).
 - Additional ledgers are allowed when needed and must be named `🖨️ <PurposeName>`.
 - Every LogKit ledger canvas name must start with `🖨️ ` (emoji + one space).
 - Portable transfer format: `🛅 LogPak` (`.jsonl`).
@@ -140,7 +140,7 @@ Volatile runtime state keys:
 - `logkit.pending`: array of uncommitted candidates
 - `logkit.last_chip_set`: map of chip id to candidate payload
 - `logkit.config`: config object (schema below)
-- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate|ambiguous_target`
+- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|wrong_type|duplicate|duplicate_default|ambiguous_target`
 
 ## Canvas Naming Contract
 - Single-active-ledger rule: multi-ledger is allowed, but each write turn targets exactly one active ledger.
@@ -149,6 +149,14 @@ Volatile runtime state keys:
 - Default ledger canvas name is `🖨️ Log` (capital `L` required).
 - Additional ledgers must be named `🖨️ <PurposeName>`.
 - The `🖨️` emoji must be the first character in every ledger canvas name.
+- LogKit ledger canvases must be JSON code canvases.
+- Look-before-leap binding: discover/open existing `🖨️` ledgers before creating any new ledger.
+- User-side binding signal: opening a ledger canvas in UI is the primary target-selection control.
+- If runtime cannot read active-canvas state, request one explicit bind confirmation (`use 🖨️ <Name>`) and treat it as authoritative.
+- Never instruct non-existent UI controls for setting active canvas.
+- Bind uncertainty alone is never permission to create a new ledger.
+- Never create a second `🖨️ Log` when one already exists.
+- Create an additional ledger only when user explicitly requests one.
 - No ASCII fallback canvas name is allowed for canonical operations.
 - Never rename any ledger to a legacy ASCII fallback name.
 - Assistants must never emit or treat a lone variation selector (`U+FE0F`) as a valid alias token.
@@ -158,8 +166,10 @@ Volatile runtime state keys:
 ## Required Ledger Guardrails
 1. Multi-ledger allowed, but exactly one target ledger may be active for a write turn.
 2. Target-ledger naming rule: active ledger name must match `🖨️ <Name>` (default `🖨️ Log`).
-3. Pre-write checks (both required):
+3. Pre-write checks (all required):
 - Active canvas is the selected target ledger.
+- If active-canvas telemetry is unavailable, explicit user bind confirmation for exact title is accepted as target proof.
+- Active target is a JSON code canvas.
 - Line 1 META header exists exactly:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -291,12 +301,14 @@ Rule: when a documented emoji alias exists, do not omit it from operational guid
 ## Recovery and drift checks
 If behavior feels partially installed or inconsistent:
 1. Run `logkit status` and verify lifecycle + ledger health.
-2. Confirm active target ledger follows `🖨️ <Name>` and META header preconditions.
-3. Use a minimal smoke flow:
+2. Confirm active target ledger follows `🖨️ <Name>`, is a JSON code canvas, and meets META header preconditions.
+3. If assistant cannot detect active target reliably, keep intended ledger open and send explicit bind text (`use 🖨️ Log` or exact `use 🖨️ <Name>`).
+4. Confirm there is not more than one canvas named `🖨️ Log`.
+5. Use a minimal smoke flow:
   - `🖨️Log: smoke entry`
   - `🖨️Flush`
   - `🗄️ find smoke entry`
-4. If any precondition is ambiguous, fail closed, report the exact blocker, and request the missing artifact/input.
+6. If any precondition is ambiguous, fail closed, report the exact blocker, and request the missing artifact/input.
 
 ## Documentation access fail-closed policy
 If required LogKit docs are unavailable, do not claim LogKit is loaded, active, or being followed.
@@ -316,14 +328,17 @@ https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGu
 ## Regression Minimum
 Must pass before release:
 1. Missing ledger fails closed and queues pending.
-2. Wrong or ambiguous target ledger never commits.
-3. `🖨️` alone does not flush.
-4. `🖨️Flush` commits and clears pending.
-5. Chip commit (`🖨️001,003`) writes selected only.
-6. Amend creates linked revision behavior.
-7. Export emits JSONL with provenance record.
-8. Retrieval returns only attached/indexed artifacts.
-9. Security policy blocks restricted export.
+2. Wrong-type target ledger (non-JSON canvas) fails closed and never commits.
+3. Duplicate default ledger (`🖨️ Log`) fails closed until a winner is selected.
+4. Wrong or ambiguous target ledger never commits.
+5. `🖨️` alone does not flush.
+6. `🖨️Flush` commits and clears pending.
+7. Chip commit (`🖨️001,003`) writes selected only.
+8. Amend creates linked revision behavior.
+9. Export emits JSONL with provenance record.
+10. Retrieval returns only attached/indexed artifacts.
+11. Security policy blocks restricted export.
+12. If active-canvas signal is missing, explicit `use 🖨️ <Name>` binds target and avoids duplicate-creation fallback.
 
 ## Version Notes
 - Previous runtime lineage mapped to `0.3.2`.
@@ -332,3 +347,5 @@ Must pass before release:
 - `0.4.2` adds explicit ID suffix formula, required `time`, and headline-style title guidance.
 - `0.4.3` removed legacy ASCII fallback naming and standardized emoji-ledger operations.
 - `0.4.4` sets default ledger name to `🖨️ Log` (capital `L`) and allows additional ledgers via `🖨️ <PurposeName>`.
+- `0.4.5` enforces look-before-leap binding, JSON code-canvas requirement, and duplicate-default fail-closed behavior.
+- `0.4.6` formalizes UI-open/exact-title binding semantics and forbids duplicate-creation fallback when active-canvas telemetry is missing.

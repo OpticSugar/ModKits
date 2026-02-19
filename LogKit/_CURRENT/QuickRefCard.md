@@ -1,20 +1,26 @@
 # LogKit QuickRef
 
 ModuleID: LogKit
-Version: 0.4.4
+Version: 0.4.6
 DocRole: QuickRefCard
 Audience: Users and assistants
 
 ## Startup
 1. `logkit load [lane]`
 2. `logkit activate`
-3. Confirm target ledger is `🖨️ <Name>` with valid META header (default `🖨️ Log`, capital `L`)
+3. Look-before-leap: open existing `🖨️` target first (default `🖨️ Log`); create only if none exists or user explicitly asks.
+4. Confirm target ledger is `🖨️ <Name>` JSON code canvas with valid META header (default `🖨️ Log`, capital `L`)
+5. If active-canvas signal is unclear, ask for exact title (`use 🖨️ <Name>`) and bind that title; do not create a duplicate fallback ledger.
 
 ## Guardrails
 - Multi-ledger allowed, but only one target ledger may be active for a write turn.
+- Never create a second `🖨️ Log` if one already exists.
+- Opening the canvas in UI is the primary user selection signal; never tell user to use non-existent "set active" controls.
 - Pre-write checks required:
   - active canvas is selected target `🖨️ <Name>`
+  - if active telemetry is unavailable, explicit user bind confirmation for exact title is accepted
   - default target name uses capital `L`: `🖨️ Log`
+  - target canvas type is JSON code canvas
   - META line 1 is:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
@@ -53,7 +59,7 @@ Hard rule: if an emoji shortcut exists, it is always valid input.
 - `logkit.pending`: pending entries queue
 - `logkit.lane`: active lane
 - `logkit.config`: runtime policy profile
-- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|duplicate|ambiguous_target`
+- `logkit.ledger_health`: `ok|missing|inactive|invalid_meta|wrong_type|duplicate|duplicate_default|ambiguous_target`
 
 ## Entry Schema Minimum
 Required:
@@ -91,5 +97,8 @@ Retrieval only works against attached/indexed LogPak/Vault artifacts in the curr
 - Default canonical ledger name is `🖨️ Log` (capital `L`).
 - Additional ledger names follow `🖨️ <PurposeName>`.
 - `🖨️` must be the first character in any ledger canvas name.
+- LogKit ledgers must be JSON code canvases.
+- Bind/open existing canonical ledger before creating any new ledger.
+- If bind state is unclear, ask for exact target title and bind that title instead of creating a new default.
 - If emoji rendering is unreliable, fail closed and ask user to confirm/open target `🖨️ <Name>`.
 - Never rename the ledger to a legacy ASCII fallback name.

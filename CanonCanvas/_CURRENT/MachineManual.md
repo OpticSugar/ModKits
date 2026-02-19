@@ -1,7 +1,7 @@
 # CanonCanvas MachineManual (derived)
 
 ModuleID: CanonCanvas
-Version: 0.3.4
+Version: 0.3.6
 DocRole: MachineManual
 Audience: Assistants operating CanonCanvas at runtime
 
@@ -10,6 +10,9 @@ Audience: Assistants operating CanonCanvas at runtime
 ## Runtime contract
 - Treat `UserGuide` as canonical.
 - Enforce fail-closed behavior when canvas artifacts are missing.
+- CanonCanvas target must be a markdown canvas.
+- Bind/open existing matching `🛜` canvas before creating new canvases.
+- Treat user-opened canvas as primary selection signal; never invent hidden UI controls.
 - Do not invent commands, state keys, or output shapes.
 - Do not pre-populate empty template sections.
 - Materialize headers only when content exists for that section.
@@ -41,6 +44,17 @@ Maintain:
 - `canoncanvas sleep`: set active false, preserve state
 - `canoncanvas unload`: clear state
 - `canoncanvas status`: emit structured status
+
+### 2.1 Canvas binding routine
+Before canon operations:
+1. Discover canvases whose names start with `🛜 `.
+2. If `canoncanvas.canvas_name` already points to an existing canvas, open/bind that canvas.
+3. Otherwise, if one matching canvas exists for the current project/purpose, bind it and do not create a new one.
+4. Create a new `🛜` canvas only when no suitable match exists or user explicitly requests a new canvas.
+5. Verify bound canvas type is markdown and title matches naming validator.
+6. If active-canvas telemetry is unavailable, ask for exact-title bind confirmation (`use 🛜 <ProjectName> - <CanvasPurpose>`) and bind that title.
+7. Never create a new canvas to bypass missing active-canvas telemetry.
+8. If multiple matches are ambiguous, fail closed and ask user to choose one winner.
 
 ## 3) Command interpretation
 ### 3.1 Canon/care commands
@@ -156,6 +170,8 @@ Fork signal handling:
 ## 6) Naming rules
 - Enforce canvas title format: `🛜 <ProjectName> - <CanvasPurpose>`.
 - Require `🛜` prefix for all CanonCanvas-bound canvases.
+- CanonCanvas-bound canvases must be markdown canvases.
+- Re-open existing matching canvases; do not create duplicates by default.
 - Use PascalCase for `<ProjectName>` when applicable.
 - Runtime validator (strict): `^🛜 [A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
 - If a CanonCanvas-bound title fails the validator, fail closed and request a corrected title before continuing canon operations.
@@ -167,6 +183,18 @@ If canvas is unavailable, stale, or structurally ambiguous:
 1. Stop speculative edits.
 2. Ask for missing section/content.
 3. Resume only after authoritative input is provided.
+
+If a matching canvas exists but is wrong type (non-markdown):
+1. Fail closed and do not write canon updates into that canvas.
+2. Ask user to select or create a markdown `🛜` canvas target.
+
+If multiple matching `🛜` canvases exist:
+1. Fail closed and ask user to choose one canonical winner.
+2. Bind winner and continue without creating another duplicate by default.
+
+If active-canvas telemetry is unavailable and no explicit title confirmation is provided:
+1. Fail closed and request exact bind text (`use 🛜 <ProjectName> - <CanvasPurpose>`).
+2. Do not create a new canvas as workaround.
 
 If client-context status is ambiguous:
 1. Ask one-line clarification before creating client-specific sections.

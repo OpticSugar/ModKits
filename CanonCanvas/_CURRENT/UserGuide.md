@@ -1,7 +1,7 @@
 # CanonCanvas UserGuide (canonical)
 
 ModuleID: CanonCanvas
-Version: 0.3.4
+Version: 0.3.6
 DocRole: UserGuide
 Audience: Humans + module engineers (canonical source of truth)
 
@@ -126,7 +126,10 @@ Command semantics guardrail:
 ### 3.1 Chat vs canvas contract
 - Chat is exploration.
 - Canvas is compiled canon.
+- CanonCanvas targets markdown canvases.
 - Never rely on chat transcript as canonical state if canvas exists.
+- Opening a canvas in the UI is the primary user-side target-selection control.
+- Never instruct non-existent UI controls for setting active canvas.
 
 ### 3.2 Canon inclusion rule
 If content changes future decisions or behavior, include it in canvas.
@@ -179,6 +182,14 @@ Required footnote capture:
 
 ### 3.5 Fail-closed
 If the target canvas or required sections are missing/ambiguous, stop speculative edits and ask for exact section or latest canvas content.
+
+If a matching `🛜` canvas exists but is wrong type (non-markdown), fail closed and request a markdown target before proceeding.
+
+If multiple matching `🛜` canvases exist, fail closed and ask user to choose one canonical winner before continuing.
+
+If active-canvas telemetry is unavailable, request explicit bind confirmation with exact title (`use 🛜 <ProjectName> - <CanvasPurpose>`) and bind that target.
+
+Do not create a new canvas solely to bypass missing active-canvas telemetry.
 
 Fail-closed is mandatory because fabricated memory is worse than missing memory:
 - if unsure, ask
@@ -533,6 +544,10 @@ Runtime behavior:
 - CanonCanvas branding emoji is `🛜`.
 - Any canvas that follows CanonCanvas rules must start with `🛜 ` (emoji + space).
 - Required canvas title format: `🛜 <ProjectName> - <CanvasPurpose>`.
+- CanonCanvas-bound canvases must be markdown canvases.
+- Look-before-leap binding: reopen existing matching `🛜` canvas before creating new.
+- Create a new `🛜` canvas only when no suitable match exists or user explicitly requests a new one.
+- If bind state is unclear, require exact-title bind confirmation; do not create duplicate canvases as a workaround.
 - Use PascalCase for `<ProjectName>` when applicable.
 - Canvas title must never include module names (`CanvasCanon`, `CanonCanvas`).
 - Naming validator (strict): `^🛜 [A-Z][A-Za-z0-9]*(?:[A-Z][A-Za-z0-9]*)* - .+$`
@@ -591,15 +606,18 @@ https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/U
 6. `canoncanvas lastcall` captures context-not-in-`🛜`, preserves OQ integrity, and produces momentum-ready handoff notes.
 7. `canoncanvas export markdown` returns clean markdown payload.
 8. Canvas naming enforcement follows `🛜 <ProjectName> - <CanvasPurpose>` with PascalCase project name when applicable, and never includes module names.
-9. OQ formatting rules enforce: no canvas-embedded shorthand helper line, header-based questions, ordered options, stable letters, keep-list semantics, strikeout pruning, and resolved collapse with vote-emoji preservation.
-10. Material decisions retain footnote markers with rationale/context in `Appendix A: Footnotes`.
-11. Missing canvas/sections triggers fail-closed clarification request.
-12. CanonCanvas does not pre-populate empty templates; sections appear only when needed.
-13. LastCall is used as safety net, while routine turns keep canvas continuously groomed.
-14. On `⚡`, assistant re-reads canvas before resuming project work.
-15. Without explicit client context, CanonCanvas does not auto-create client-specific headers.
-16. In client mode, short client-source text is preserved verbatim under `⚖️` and additive design work is tracked under `💡`.
-17. LastCall is treated as a ritual command and never rendered as a canvas header title.
-18. `## 👴🏼 Fork Handoff Notes` is used (when needed) as the final section and is continuously consumed/pruned rather than allowed to accumulate.
-19. `🍺LastCall` should end with a short, creative "note to younger self" tail line by default.
-20. Younger-self tail notes use the exact official header `### 🚸 assistant's 👴🏼 note to → 📝 → younger 👶🏻 self` when present.
+9. CanonCanvas fails closed when a candidate target is non-markdown and requests a markdown `🛜` target.
+10. CanonCanvas binds/reuses an existing matching `🛜` canvas and avoids duplicate creation by default.
+11. If active-canvas telemetry is missing, CanonCanvas accepts explicit exact-title bind confirmation and does not create duplicate fallback canvases.
+12. OQ formatting rules enforce: no canvas-embedded shorthand helper line, header-based questions, ordered options, stable letters, keep-list semantics, strikeout pruning, and resolved collapse with vote-emoji preservation.
+13. Material decisions retain footnote markers with rationale/context in `Appendix A: Footnotes`.
+14. Missing canvas/sections triggers fail-closed clarification request.
+15. CanonCanvas does not pre-populate empty templates; sections appear only when needed.
+16. LastCall is used as safety net, while routine turns keep canvas continuously groomed.
+17. On `⚡`, assistant re-reads canvas before resuming project work.
+18. Without explicit client context, CanonCanvas does not auto-create client-specific headers.
+19. In client mode, short client-source text is preserved verbatim under `⚖️` and additive design work is tracked under `💡`.
+20. LastCall is treated as a ritual command and never rendered as a canvas header title.
+21. `## 👴🏼 Fork Handoff Notes` is used (when needed) as the final section and is continuously consumed/pruned rather than allowed to accumulate.
+22. `🍺LastCall` should end with a short, creative "note to younger self" tail line by default.
+23. Younger-self tail notes use the exact official header `### 🚸 assistant's 👴🏼 note to → 📝 → younger 👶🏻 self` when present.

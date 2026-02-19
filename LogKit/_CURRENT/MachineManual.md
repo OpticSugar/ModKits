@@ -1,7 +1,7 @@
 # LogKit MachineManual
 
 ModuleID: LogKit
-Version: 0.4.4
+Version: 0.4.6
 DocRole: MachineManual
 Audience: Assistant runtime operator
 
@@ -11,6 +11,9 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 ## Non-negotiables
 - Treat `UserGuide.md` as canon.
 - Write only to one active target ledger named `🖨️ <Name>` (default `🖨️ Log`, capital `L`) with valid META header.
+- Target ledger must be a JSON code canvas.
+- Look-before-leap: bind/open existing canonical ledger before creating any new ledger.
+- Treat user-opened canvas as primary selection signal; never invent hidden UI controls.
 - `🖨️` authorizes logging intent; it does not flush.
 - Commit pending only on `logkit commit all` / `🖨️Flush`.
 - If required artifacts are missing, fail closed and queue pending.
@@ -47,14 +50,20 @@ Operate LogKit safely with fail-closed writes, explicit commit control, and conf
 ## Ledger Validation Routine
 Before any write:
 1. Discover candidate ledgers whose names start with `🖨️ `.
-2. Verify exactly one target ledger is selected for the write turn.
-3. Verify active canvas equals selected target ledger.
-4. Verify selected target ledger name is either default `🖨️ Log` (capital `L`) or `🖨️ <PurposeName>`.
-5. Verify line 1 META header:
+2. If `🖨️ Log` exists, bind/open it for default flow and do not create another default ledger.
+3. Allow new ledger creation only when no suitable existing ledger exists or user explicitly requests an additional ledger.
+4. Fail closed if more than one canvas is named `🖨️ Log` (duplicate default).
+5. Verify exactly one target ledger is selected for the write turn.
+6. Verify active canvas equals selected target ledger.
+7. If active-canvas telemetry is unavailable, ask for explicit target confirmation (`use 🖨️ <Name>`) and bind that exact title.
+8. Never create a new ledger to bypass missing active-canvas telemetry.
+9. Verify selected target ledger name is either default `🖨️ Log` (capital `L`) or `🖨️ <PurposeName>`.
+10. Verify target ledger is a JSON code canvas.
+11. Verify line 1 META header:
 ```json
 {"_":"META","tool":"LogKit","format":"PrettyJSONWithSentries","schema":"logkit.entry.v1"}
 ```
-6. If any check fails, set `logkit.ledger_health` and queue pending.
+12. If any check fails, set `logkit.ledger_health` and queue pending.
 
 ## Triage Routine
 - Honor `logkit.config.triage_mode` (`strict|balanced|capture_all`).
@@ -111,6 +120,9 @@ When a user message includes only emoji tokens:
 ## Failure Behavior
 - Missing ledger/canvas/meta: fail closed and provide exact remediation.
 - Ambiguous target when multiple ledgers exist: fail closed and request explicit target (`🖨️ <PurposeName>`).
+- Missing active-canvas telemetry without explicit title confirmation: fail closed and request `use 🖨️ <Name>`.
+- Wrong canvas type for selected target: fail closed and require a JSON code canvas target.
+- Duplicate default ledger (`🖨️ Log`) candidates: fail closed and request explicit winner.
 - Unavailable service/index: return failure and request artifact attachment.
 - Ambiguous or malformed emoji-only names (for example lone `️`): fail closed and require explicit `🖨️ <Name>` confirmation.
 - Never rename the ledger canvas to a legacy ASCII fallback name.

@@ -1,12 +1,12 @@
 # 📇 KitRegistry
-Runtime Module Index v0.3.3
+Runtime Module Index v0.3.7
 
 RegistryID: KitRegistry
 ModuleID: KitRegistry
-Version: 0.3.3
+Version: 0.3.7
 DocRole: UserGuide
 Audience: Runtime assistants and module operators
-Updated: 2026-02-13
+Updated: 2026-02-19
 Scope: Runtime ModuleKits only
 
 ## 0) Policy
@@ -72,8 +72,8 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/CanonCanvas/_CURRENT/UserGuide.md`
-- Version: `0.3.4`
-- Compatibility: `Uses ModuleMill-style doc roles, dynamic section materialization, standard header library guidance, LastCall-as-ritual semantics, final-position transient 👴🏼 handoff notes, official 🚸 younger-self note header, explicit no-assumed-client gating, conditional ⚖️/💡 client workflow, and fail-closed arbitration on output-shape conflicts.`
+- Version: `0.3.6`
+- Compatibility: `Uses ModuleMill-style doc roles, dynamic section materialization, standard header library guidance, LastCall-as-ritual semantics, final-position transient 👴🏼 handoff notes, official 🚸 younger-self note header, explicit no-assumed-client gating, conditional ⚖️/💡 client workflow, markdown-canvas binding guardrails, active-canvas exact-title bind fallback, duplicate-prevention preflight, and fail-closed arbitration on output-shape conflicts.`
 
 ### Module: LogKit
 - ModuleEmoji: `🖨️`
@@ -94,14 +94,28 @@ Each module entry must include:
   - QuickRef: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/QuickRefCard.md`
   - MachineManual: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/MachineManual.md`
   - UserGuide: `https://raw.githubusercontent.com/OpticSugar/ModKits/main/LogKit/_CURRENT/UserGuide.md`
-- Version: `0.4.4`
-- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, emoji-first alias mapping, and emoji-first ledger naming (default `🖨️ Log`).`
+- Version: `0.4.6`
+- Compatibility: `Uses ModuleMill-style doc roles, explicit lifecycle controls, fail-closed ledger guards, configurable triage/security policies, emoji-first alias mapping, emoji-first ledger naming (default `🖨️ Log`), JSON code-canvas binding guardrails, active-canvas exact-title bind fallback, and duplicate-prevention preflight.`
 
 ## 3) Boot contract (for BootStub consumers)
-- In a virgin chat, first assistant message must include a one-line boot warning:
-  - `Unless you type HALT/cancel, I auto-boot modules on my next reply.`
-- If user sends `HALT`, `cancel`, or `skip modules` before the second assistant response, do not auto-boot for that chat.
-- If no halt/cancel signal appears, auto-load `DefaultLoad=yes` modules on the second assistant response using Manifest + QuickRef first.
+- No auto-boot. Load/activate only on explicit invoke.
+- Explicit invoke forms:
+  - exact module emoji (`📠`, `🛜`, `🖨️`)
+  - module name/alias
+  - clear natural-language launch intent
+- Conversational intent rule:
+  - high-confidence single-module match => load+activate
+  - ambiguous => ask one short clarifier
+- Module purpose quick map:
+  - `📠 FaxAx`: response shaping (short/long, hold/release feedback stack)
+  - `🛜 CanonCanvas`: durable project-memory canvas and decision governance
+  - `🖨️ LogKit`: durable logging canvas lifecycle (capture/commit/export/retrieve)
+- On invoke, load `ModuleManifest.yaml` then `QuickRefCard.md`; escalate to other docs only if needed.
+- Launch gate: do not perform module-specific actions until `ModuleManifest.yaml` + `QuickRefCard.md` fetch succeeds.
+- Canvas bind discipline:
+  - bind/reuse existing matching canvas first
+  - if bind state is unclear, ask for exact title and bind that title
+  - do not invent hidden UI controls or create duplicate-canvas workarounds
 - Fetch discipline (mandatory):
   - Resolve module docs from registry URLs first; do not browse for module names.
   - Allowed doc sources are `raw.githubusercontent.com/OpticSugar/ModKits` (preferred) and direct GitHub mirrors only if raw links fail.

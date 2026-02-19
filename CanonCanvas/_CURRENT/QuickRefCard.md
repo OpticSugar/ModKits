@@ -1,7 +1,7 @@
 # CanonCanvas QuickRefCard (derived)
 
 ModuleID: CanonCanvas
-Version: 0.3.4
+Version: 0.3.6
 DocRole: QuickRefCard
 Audience: Users (pocket cheat sheet)
 
@@ -10,6 +10,10 @@ Audience: Users (pocket cheat sheet)
 ## Core
 - Chat is exploration; canvas is canon.
 - Canvas is long-term project memory while CanonCanvas is active.
+- CanonCanvas targets markdown canvases only.
+- Look-before-leap: bind/open existing matching `🛜` canvas before creating any new one.
+- Opening the canvas in UI is the primary user selection signal; never instruct non-existent "set active" controls.
+- If bind state is unclear, ask for exact-title confirmation (`use 🛜 <ProjectName> - <CanvasPurpose>`) and bind that title.
 - Sections are dynamic: create only when needed; avoid empty template prefill.
 - Do not assume client context; use client sections only when explicitly requested/provided.
 - ResponseEnvelope: `main_plus_patch` (or `markdown_payload` for export).
@@ -56,6 +60,9 @@ Audience: Users (pocket cheat sheet)
 - Use `🛜 <ProjectName> - <CanvasPurpose>` for CanonCanvas canvases.
 - Use PascalCase for `<ProjectName>` when applicable.
 - Example: `🛜 LogKit - dev R6`
+- Re-open existing matching `🛜` canvas when present; avoid duplicate creation by default.
+- Create a new `🛜` canvas only when no match exists or user explicitly asks for a new one.
+- Do not create a new canvas as a workaround for missing active-canvas telemetry.
 
 ## Header library (WIP)
 - Prefer standard recurring headers from UserGuide `4.1`.

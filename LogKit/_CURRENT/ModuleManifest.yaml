@@ -1,7 +1,7 @@
 module: "LogKit"
 module_emoji: "🖨️"
 module_aliases: ["logkit", "log kit", "🖨️"]
-version: "0.4.4"
+version: "0.4.6"
 mission: "Capture durable signals from chat and run a full log lifecycle from triage to retrieval."
 must_preserve:
   - "authorizes logging intent"
@@ -32,7 +32,8 @@ do_not_use_when:
   - "Another module is explicitly invoked with conflicting output shape"
 
 required_inputs:
-  - "One active 🖨️ <LogName> canvas with valid META header (default 🖨️ Log)"
+  - "One active 🖨️ <LogName> JSON code canvas with valid META header (default 🖨️ Log)"
+  - "If active-canvas telemetry is unavailable, explicit bind confirmation with exact ledger title (`use 🖨️ <Name>`)"
   - "User prompt and active chat context"
   - "Optional attached/indexed LogPak or LogVault artifacts for retrieval"
 

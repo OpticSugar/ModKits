@@ -1,7 +1,7 @@
 module: "CanonCanvas"
 module_emoji: "🛜"
 module_aliases: ["canoncanvas", "canon canvas", "🛜"]
-version: "0.3.4"
+version: "0.3.6"
 mission: "Canvas-as-canon framework for dynamic project memory, standardized header patterns, LastCall ritual discipline, official younger-self note headering, and fork-survivable continuity."
 must_preserve:
   - "durable long-term project memory"
@@ -56,7 +56,8 @@ do_not_use_when:
   - "Authoritative canvas content is unavailable and user declines to provide it"
 
 required_inputs:
-  - "Current canonical canvas content"
+  - "Current canonical markdown canvas content (`🛜 <ProjectName> - <CanvasPurpose>`)"
+  - "If active-canvas telemetry is unavailable, explicit exact-title bind confirmation (`use 🛜 <ProjectName> - <CanvasPurpose>`)"
   - "Decision updates from user/chat"
   - "Client-context signal when provided"
   - "Fork signal context when provided (`💾` / `⚡`)"
